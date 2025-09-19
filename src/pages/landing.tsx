@@ -169,7 +169,7 @@ export function LandingPage() {
               </CardHeader>
               <CardContent className="space-y-6">
                 <ul className="space-y-3">
-                  {t("landing.pricing.firstStep.features", { returnObjects: true }).map((feature: string, index: number) => (
+                  {(t("landing.pricing.firstStep.features", { returnObjects: true }) as string[]).map((feature: string, index: number) => (
                     <li key={index} className="flex items-center gap-3">
                       <div className="w-2 h-2 bg-secondary rounded-full flex-shrink-0"></div>
                       <span className="text-foreground-muted">{feature}</span>
@@ -207,7 +207,7 @@ export function LandingPage() {
               </CardHeader>
               <CardContent className="space-y-6">
                 <ul className="space-y-3">
-                  {t("landing.pricing.personalGrowth.features", { returnObjects: true }).map((feature: string, index: number) => (
+                  {(t("landing.pricing.personalGrowth.features", { returnObjects: true }) as string[]).map((feature: string, index: number) => (
                     <li key={index} className="flex items-center gap-3">
                       <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0"></div>
                       <span className="text-foreground-muted">{feature}</span>
@@ -242,7 +242,7 @@ export function LandingPage() {
               </CardHeader>
               <CardContent className="space-y-6">
                 <ul className="space-y-3">
-                  {t("landing.pricing.expandedHorizons.features", { returnObjects: true }).map((feature: string, index: number) => (
+                  {(t("landing.pricing.expandedHorizons.features", { returnObjects: true }) as string[]).map((feature: string, index: number) => (
                     <li key={index} className="flex items-center gap-3">
                       <div className="w-2 h-2 bg-secondary rounded-full flex-shrink-0"></div>
                       <span className="text-foreground-muted">{feature}</span>

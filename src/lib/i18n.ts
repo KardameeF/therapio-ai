@@ -173,6 +173,57 @@ const resources = {
           special: "Password must contain at least one special character"
         },
         confirmPassword: "Passwords do not match"
+      },
+      admin: {
+        title: "Admin Dashboard",
+        subtitle: "Manage users, subscriptions, and usage analytics",
+        tabs: {
+          users: "Users",
+          subscriptions: "Subscriptions",
+          usage: "Usage"
+        },
+        users: {
+          title: "User Management",
+          columns: {
+            userId: "User ID",
+            name: "Name",
+            locale: "Locale",
+            role: "Role",
+            createdAt: "Created At"
+          }
+        },
+        subscriptions: {
+          title: "Subscription Management",
+          columns: {
+            id: "ID",
+            userId: "User ID",
+            plan: "Plan",
+            status: "Status",
+            periodStart: "Period Start",
+            periodEnd: "Period End"
+          }
+        },
+        usage: {
+          title: "Usage Analytics",
+          columns: {
+            id: "ID",
+            userId: "User ID",
+            aiMessages: "AI Messages",
+            voiceMinutes: "Voice Minutes",
+            ocrPages: "OCR Pages",
+            periodStart: "Period Start",
+            periodEnd: "Period End"
+          }
+        },
+        accessDenied: {
+          title: "Access Denied",
+          description: "You do not have admin privileges to access this page."
+        },
+        error: {
+          title: "Error",
+          profile: "Failed to load user profile",
+          fetch: "Failed to fetch admin data"
+        }
       }
     }
   },
@@ -346,6 +397,57 @@ const resources = {
           special: "Паролата трябва да съдържа поне един специален символ"
         },
         confirmPassword: "Паролите не съвпадат"
+      },
+      admin: {
+        title: "Администраторски панел",
+        subtitle: "Управление на потребители, абонаменти и анализи на използване",
+        tabs: {
+          users: "Потребители",
+          subscriptions: "Абонаменти",
+          usage: "Използване"
+        },
+        users: {
+          title: "Управление на потребители",
+          columns: {
+            userId: "ID на потребителя",
+            name: "Име",
+            locale: "Език",
+            role: "Роля",
+            createdAt: "Създаден на"
+          }
+        },
+        subscriptions: {
+          title: "Управление на абонаменти",
+          columns: {
+            id: "ID",
+            userId: "ID на потребителя",
+            plan: "План",
+            status: "Статус",
+            periodStart: "Начало на периода",
+            periodEnd: "Край на периода"
+          }
+        },
+        usage: {
+          title: "Анализи на използване",
+          columns: {
+            id: "ID",
+            userId: "ID на потребителя",
+            aiMessages: "AI съобщения",
+            voiceMinutes: "Гласови минути",
+            ocrPages: "OCR страници",
+            periodStart: "Начало на периода",
+            periodEnd: "Край на периода"
+          }
+        },
+        accessDenied: {
+          title: "Достъп отказан",
+          description: "Нямате административни права за достъп до тази страница."
+        },
+        error: {
+          title: "Грешка",
+          profile: "Неуспешно зареждане на потребителския профил",
+          fetch: "Неуспешно зареждане на административните данни"
+        }
       }
     }
   }
