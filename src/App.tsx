@@ -22,6 +22,8 @@ import { TermsPage } from "./pages/legal/terms";
 import { PrivacyPage } from "./pages/legal/privacy";
 import { GDPRPage } from "./pages/legal/gdpr";
 import { CookiesPage } from "./pages/legal/cookies";
+import { SuccessPage } from "./pages/success";
+import { CancelPage } from "./pages/cancel";
 
 // Initialize Sentry
 initSentry();
@@ -56,6 +58,26 @@ export default function App() {
             <Route 
               path="/auth/callback" 
               element={<AuthCallbackPage />} 
+            />
+
+            {/* Stripe Checkout pages */}
+            <Route 
+              path="/success" 
+              element={
+                <>
+                  <Header />
+                  <SuccessPage />
+                </>
+              } 
+            />
+            <Route 
+              path="/cancel" 
+              element={
+                <>
+                  <Header />
+                  <CancelPage />
+                </>
+              } 
             />
 
             {/* Protected routes */}

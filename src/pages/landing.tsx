@@ -4,9 +4,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../co
 import { Brain, Heart, Target, TrendingUp, Sparkles, Shield, Users } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useSEO } from "../hooks/use-seo";
+import { useStripeCheckout } from "../hooks/useStripeCheckout";
+
+// Stripe Price IDs - Replace with your actual price IDs from Stripe Dashboard
+const STRIPE_PRICE_IDS = {
+  PERSONAL_GROWTH: 'price_1234567890', // Replace with actual Personal Growth price ID (€20/month)
+  EXPANDED_HORIZONS: 'price_0987654321', // Replace with actual Expanded Horizons price ID (€40/month)
+};
 
 export function LandingPage() {
   const { t } = useTranslation();
+  const { createCheckoutSession, loading, error } = useStripeCheckout();
   
   useSEO({
     title: "Therapio AI - AI-Powered Mental Wellness Companion",
@@ -151,6 +159,19 @@ export function LandingPage() {
             </p>
           </div>
           
+          {/* Error Display */}
+          {error && (
+            <div className="mb-8 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <div className="flex items-center gap-2 text-red-800">
+                <span className="font-medium">Checkout Error:</span>
+                <span>{error.message}</span>
+              </div>
+              {error.details && (
+                <p className="text-red-600 text-sm mt-1">{error.details}</p>
+              )}
+            </div>
+          )}
+
           <div className="grid md:grid-cols-3 gap-8">
             {/* First Step - Free */}
             <Card className="relative overflow-hidden">
@@ -214,11 +235,13 @@ export function LandingPage() {
                     </li>
                   ))}
                 </ul>
-                <Link to="/login">
-                  <Button className="w-full">
-                    {t("landing.pricing.personalGrowth.cta")}
-                  </Button>
-                </Link>
+                <Button 
+                  className="w-full" 
+                  onClick={() => createCheckoutSession(STRIPE_PRICE_IDS.PERSONAL_GROWTH)}
+                  disabled={loading}
+                >
+                  {loading ? 'Processing...' : t("landing.pricing.personalGrowth.cta")}
+                </Button>
               </CardContent>
             </Card>
 
@@ -249,11 +272,14 @@ export function LandingPage() {
                     </li>
                   ))}
                 </ul>
-                <Link to="/login">
-                  <Button variant="secondary" className="w-full">
-                    {t("landing.pricing.expandedHorizons.cta")}
-                  </Button>
-                </Link>
+                <Button 
+                  variant="secondary" 
+                  className="w-full"
+                  onClick={() => createCheckoutSession(STRIPE_PRICE_IDS.EXPANDED_HORIZONS)}
+                  disabled={loading}
+                >
+                  {loading ? 'Processing...' : t("landing.pricing.expandedHorizons.cta")}
+                </Button>
               </CardContent>
             </Card>
           </div>

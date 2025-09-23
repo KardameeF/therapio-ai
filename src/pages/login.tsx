@@ -32,11 +32,15 @@ export function LoginPage() {
     register,
     handleSubmit,
     watch,
-    formState: { errors }
-  } = useForm<LoginFormData>();
+    formState: { errors, isValid }
+  } = useForm<LoginFormData>({
+    mode: 'onChange',
+    reValidateMode: 'onChange'
+  });
 
   const from = (location.state as any)?.from?.pathname || "/app";
   const password = watch("password");
+  const confirmPassword = watch("confirmPassword");
 
   const validatePassword = (password: string) => {
     // Use the regex pattern: ^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$
@@ -51,6 +55,18 @@ export function LoginPage() {
       if (!/[^A-Za-z\d]/.test(password)) return t("validation.password.special");
     }
     return true;
+  };
+
+  // Check if form is valid for submission
+  const isFormValid = () => {
+    if (!isSignUp) return isValid;
+    
+    // For signup, check if all fields are valid including password confirmation
+    const hasValidPassword = password && validatePassword(password) === true;
+    const passwordsMatch = password && confirmPassword && password === confirmPassword;
+    const hasRequiredFields = password && confirmPassword;
+    
+    return hasValidPassword && passwordsMatch && hasRequiredFields && isValid;
   };
 
   const onSubmit = async (data: LoginFormData) => {
@@ -192,6 +208,40 @@ export function LoginPage() {
               {errors.password && (
                 <p className="text-sm text-accent">{errors.password.message}</p>
               )}
+              {isSignUp && password && (
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2 text-xs">
+                    <div className={`w-2 h-2 rounded-full ${password.length >= 8 ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                    <span className={password.length >= 8 ? 'text-green-600' : 'text-gray-500'}>
+                      {t("validation.password.minLength")}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs">
+                    <div className={`w-2 h-2 rounded-full ${/[a-z]/.test(password) ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                    <span className={/[a-z]/.test(password) ? 'text-green-600' : 'text-gray-500'}>
+                      {t("validation.password.lowercase")}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs">
+                    <div className={`w-2 h-2 rounded-full ${/[A-Z]/.test(password) ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                    <span className={/[A-Z]/.test(password) ? 'text-green-600' : 'text-gray-500'}>
+                      {t("validation.password.uppercase")}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs">
+                    <div className={`w-2 h-2 rounded-full ${/\d/.test(password) ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                    <span className={/\d/.test(password) ? 'text-green-600' : 'text-gray-500'}>
+                      {t("validation.password.number")}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs">
+                    <div className={`w-2 h-2 rounded-full ${/[^A-Za-z\d]/.test(password) ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                    <span className={/[^A-Za-z\d]/.test(password) ? 'text-green-600' : 'text-gray-500'}>
+                      {t("validation.password.special")}
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
 
             {isSignUp && (
@@ -216,7 +266,11 @@ export function LoginPage() {
               <p className="text-sm text-accent bg-accent/10 p-3 rounded-lg">{error}</p>
             )}
 
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button 
+              type="submit" 
+              className="w-full" 
+              disabled={loading || !isFormValid()}
+            >
               {loading ? "Loading..." : (isSignUp ? t("auth.signup") : t("auth.login"))}
             </Button>
           </form>
