@@ -599,7 +599,7 @@ function LoginForm() {
 // Main component that wraps the form with reCAPTCHA provider
 export function LoginPage() {
   return (
-    <GoogleReCaptchaProvider reCaptchaKey={import.meta.env.VITE_RECAPTCHA_KEY}>
+    <GoogleReCaptchaProvider reCaptchaKey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}>
       <LoginForm />
     </GoogleReCaptchaProvider>
   );

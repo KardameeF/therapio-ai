@@ -12,7 +12,7 @@ const requiredEnvVars = [
   'VITE_SUPABASE_ANON_KEY',
   'VITE_STRIPE_PUBLIC_KEY',
   'VITE_SENTRY_DSN',
-  'VITE_RECAPTCHA_KEY'
+  'VITE_RECAPTCHA_SITE_KEY'
 ];
 
 const missingEnvVars = requiredEnvVars.filter(varName => !import.meta.env[varName]);

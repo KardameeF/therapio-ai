@@ -5,7 +5,7 @@ interface ImportMetaEnv {
   readonly VITE_SUPABASE_ANON_KEY: string
   readonly VITE_STRIPE_PUBLIC_KEY: string
   readonly VITE_SENTRY_DSN: string
-  readonly VITE_RECAPTCHA_KEY: string
+  readonly VITE_RECAPTCHA_SITE_KEY: string
 }
 
 interface ImportMeta {

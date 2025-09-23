@@ -7,7 +7,7 @@ declare global {
   }
 }
 
-const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_KEY;
+const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
 export const loadRecaptcha = (): Promise<void> => {
   return new Promise((resolve, reject) => {
