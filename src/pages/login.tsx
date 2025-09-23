@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Button } from "../components/ui/button";
@@ -9,8 +9,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/ui/tabs"
 import { useAuth } from "../providers/AuthProvider";
 import { useTranslation } from "react-i18next";
 import { Brain, Eye, EyeOff } from "lucide-react";
-// @ts-ignore
-import ReCAPTCHA from "react-google-recaptcha";
+import { GoogleReCaptchaProvider, useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useToast } from "../hooks/use-toast";
 import { supabase } from "../lib/supabaseClient";
 
@@ -26,25 +25,21 @@ interface SignupFormData {
   confirmPassword: string;
 }
 
-export function LoginPage() {
+// Inner component that uses the reCAPTCHA hook
+function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [showSignupPassword, setShowSignupPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
-  const [loginCaptchaToken, setLoginCaptchaToken] = useState<string | null>(null);
-  const [signupCaptchaToken, setSignupCaptchaToken] = useState<string | null>(null);
   const [captchaError, setCaptchaError] = useState<string | null>(null);
   const { signIn, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
   const { toast } = useToast();
-  
-  // reCAPTCHA refs
-  const loginRecaptchaRef = useRef<ReCAPTCHA>(null);
-  const signupRecaptchaRef = useRef<ReCAPTCHA>(null);
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   // Login form
   const loginForm = useForm<LoginFormData>({
@@ -89,9 +84,8 @@ export function LoginPage() {
   const isLoginFormValid = () => {
     const hasValidEmail = loginEmail && /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(loginEmail);
     const hasValidPassword = loginPassword && loginPassword.length > 0;
-    const hasCaptcha = loginCaptchaToken && loginCaptchaToken.length > 0;
     
-    return hasValidEmail && hasValidPassword && hasCaptcha;
+    return hasValidEmail && hasValidPassword;
   };
 
   // Check if signup form is valid for submission
@@ -100,9 +94,8 @@ export function LoginPage() {
     const hasValidPassword = signupPassword && validatePassword(signupPassword) === true;
     const passwordsMatch = signupPassword && confirmPassword && signupPassword === confirmPassword;
     const hasRequiredFields = signupPassword && confirmPassword;
-    const hasCaptcha = signupCaptchaToken && signupCaptchaToken.length > 0;
     
-    return hasValidEmail && hasValidPassword && passwordsMatch && hasRequiredFields && hasCaptcha;
+    return hasValidEmail && hasValidPassword && passwordsMatch && hasRequiredFields;
   };
 
   // Verify CAPTCHA token with Netlify function
@@ -130,18 +123,22 @@ export function LoginPage() {
     setCaptchaError(null);
 
     try {
-      // Verify CAPTCHA token
-      if (!loginCaptchaToken) {
+      // Execute reCAPTCHA v3
+      if (!executeRecaptcha) {
         setCaptchaError(t("auth.captchaError"));
         return;
       }
 
-      const captchaValid = await verifyCaptcha(loginCaptchaToken);
+      const token = await executeRecaptcha('login');
+      if (!token) {
+        setCaptchaError(t("auth.captchaError"));
+        return;
+      }
+
+      // Verify CAPTCHA token
+      const captchaValid = await verifyCaptcha(token);
       if (!captchaValid) {
         setCaptchaError(t("auth.captchaFailed"));
-        // Reset CAPTCHA
-        setLoginCaptchaToken(null);
-        loginRecaptchaRef.current?.reset();
         return;
       }
 
@@ -186,18 +183,22 @@ export function LoginPage() {
     setCaptchaError(null);
 
     try {
-      // Verify CAPTCHA token
-      if (!signupCaptchaToken) {
+      // Execute reCAPTCHA v3
+      if (!executeRecaptcha) {
         setCaptchaError(t("auth.captchaError"));
         return;
       }
 
-      const captchaValid = await verifyCaptcha(signupCaptchaToken);
+      const token = await executeRecaptcha('signup');
+      if (!token) {
+        setCaptchaError(t("auth.captchaError"));
+        return;
+      }
+
+      // Verify CAPTCHA token
+      const captchaValid = await verifyCaptcha(token);
       if (!captchaValid) {
         setCaptchaError(t("auth.captchaFailed"));
-        // Reset CAPTCHA
-        setSignupCaptchaToken(null);
-        signupRecaptchaRef.current?.reset();
         return;
       }
 
@@ -404,24 +405,6 @@ export function LoginPage() {
                   </button>
                 </div>
 
-                <div className="flex justify-center">
-                  <ReCAPTCHA
-                    ref={loginRecaptchaRef}
-                    sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-                    onChange={(token: string | null) => {
-                      setLoginCaptchaToken(token);
-                      setCaptchaError(null);
-                    }}
-                    onExpired={() => {
-                      setLoginCaptchaToken(null);
-                    }}
-                    onError={() => {
-                      setLoginCaptchaToken(null);
-                      setCaptchaError(t("auth.captchaError"));
-                    }}
-                  />
-                </div>
-
                 {captchaError && (
                   <p className="text-sm text-accent">{captchaError}</p>
                 )}
@@ -557,24 +540,6 @@ export function LoginPage() {
                   )}
                 </div>
 
-                <div className="flex justify-center">
-                  <ReCAPTCHA
-                    ref={signupRecaptchaRef}
-                    sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-                    onChange={(token: string | null) => {
-                      setSignupCaptchaToken(token);
-                      setCaptchaError(null);
-                    }}
-                    onExpired={() => {
-                      setSignupCaptchaToken(null);
-                    }}
-                    onError={() => {
-                      setSignupCaptchaToken(null);
-                      setCaptchaError(t("auth.captchaError"));
-                    }}
-                  />
-                </div>
-
                 {captchaError && (
                   <p className="text-sm text-accent">{captchaError}</p>
                 )}
@@ -628,5 +593,14 @@ export function LoginPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+// Main component that wraps the form with reCAPTCHA provider
+export function LoginPage() {
+  return (
+    <GoogleReCaptchaProvider reCaptchaKey={import.meta.env.VITE_RECAPTCHA_KEY}>
+      <LoginForm />
+    </GoogleReCaptchaProvider>
   );
 }
