@@ -24,6 +24,7 @@ import { GDPRPage } from "./pages/legal/gdpr";
 import { CookiesPage } from "./pages/legal/cookies";
 import { SuccessPage } from "./pages/success";
 import { CancelPage } from "./pages/cancel";
+import { ResetPasswordPage } from "./pages/reset-password";
 
 // Initialize Sentry
 initSentry();
@@ -76,6 +77,15 @@ export default function App() {
                 <>
                   <Header />
                   <CancelPage />
+                </>
+              } 
+            />
+            <Route 
+              path="/reset-password" 
+              element={
+                <>
+                  <Header />
+                  <ResetPasswordPage />
                 </>
               } 
             />

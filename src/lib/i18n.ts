@@ -24,6 +24,9 @@ const resources = {
         gdpr: "GDPR",
         cookies: "Cookies"
       },
+      header: {
+        loginOrSignup: "Login or Sign Up"
+      },
       auth: {
         login: "Login",
         signup: "Sign Up",
@@ -38,7 +41,22 @@ const resources = {
         dontHaveAccount: "Don't have an account?",
         forgotPassword: "Forgot password?",
         createAccount: "Create your account",
-        welcomeBack: "Welcome back"
+        welcomeBack: "Welcome back",
+        loginSuccess: "You have been logged in successfully.",
+        signupSuccess: "Account created successfully!",
+        checkEmail: "Please check your email to confirm your account.",
+        loginFailed: "Login failed",
+        signupFailed: "Registration failed",
+        unexpectedError: "An unexpected error occurred",
+        error: "Error",
+        tryAgain: "An unexpected error occurred. Please try again.",
+        emailRequired: "Email required",
+        enterEmailFirst: "Please enter your email address first.",
+        resetFailed: "Reset failed",
+        resetEmailSent: "Reset email sent",
+        checkEmailReset: "Please check your email for password reset instructions.",
+        captchaError: "Please complete the CAPTCHA",
+        captchaFailed: "CAPTCHA verification failed"
       },
       theme: {
         light: "Light",
@@ -248,6 +266,9 @@ const resources = {
         gdpr: "GDPR",
         cookies: "Бисквитки"
       },
+      header: {
+        loginOrSignup: "Влезте или се регистрирайте"
+      },
       auth: {
         login: "Вход",
         signup: "Регистрация",
@@ -262,7 +283,22 @@ const resources = {
         dontHaveAccount: "Нямате акаунт?",
         forgotPassword: "Забравена парола?",
         createAccount: "Създайте своя акаунт",
-        welcomeBack: "Добре дошли отново"
+        welcomeBack: "Добре дошли отново",
+        loginSuccess: "Влязохте успешно в системата.",
+        signupSuccess: "Акаунтът е създаден успешно!",
+        checkEmail: "Моля, проверете имейла си за потвърждение на акаунта.",
+        loginFailed: "Входът неуспешен",
+        signupFailed: "Регистрацията неуспешна",
+        unexpectedError: "Възникна неочаквана грешка",
+        error: "Грешка",
+        tryAgain: "Възникна неочаквана грешка. Моля, опитайте отново.",
+        emailRequired: "Изисква се имейл",
+        enterEmailFirst: "Моля, въведете имейл адреса си първо.",
+        resetFailed: "Нулирането неуспешно",
+        resetEmailSent: "Имейл за нулиране изпратен",
+        checkEmailReset: "Моля, проверете имейла си за инструкции за нулиране на паролата.",
+        captchaError: "Моля, завършете CAPTCHA",
+        captchaFailed: "Верификацията на CAPTCHA неуспешна"
       },
       theme: {
         light: "Светло",
