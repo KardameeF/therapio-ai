@@ -86,10 +86,25 @@ const resources = {
         save: "Save Goal"
       },
       billing: {
-        title: "Billing",
-        manageBilling: "Manage Billing",
+        title: "Subscription & Billing",
+        manageBilling: "Manage Subscription",
         currentPlan: "Current Plan",
-        upgrade: "Upgrade Plan"
+        upgrade: "Upgrade",
+        perMonth: "/month",
+        plans: {
+          first_step: {
+            name: "First Step",
+            description: "30 messages/month • 30 days history"
+          },
+          personal_growth: {
+            name: "Personal Growth",
+            description: "500 messages/month • Voice assistant • 90 days history"
+          },
+          expanded_horizons: {
+            name: "Expanded Horizons",
+            description: "1500 messages/month • Voice + OCR • 180 days history"
+          }
+        }
       },
       landing: {
         hero: {
@@ -328,10 +343,25 @@ const resources = {
         save: "Запази цел"
       },
       billing: {
-        title: "Плащания",
-        manageBilling: "Управление на плащанията",
+        title: "Абонамент и плащания",
+        manageBilling: "Управление на абонамент",
         currentPlan: "Текущ план",
-        upgrade: "Надграждане на плана"
+        upgrade: "Надгради",
+        perMonth: "/месец",
+        plans: {
+          first_step: {
+            name: "First Step",
+            description: "30 съобщения/месец • 30 дни история"
+          },
+          personal_growth: {
+            name: "Personal Growth",
+            description: "500 съобщения/месец • Гласов асистент • 90 дни история"
+          },
+          expanded_horizons: {
+            name: "Expanded Horizons",
+            description: "1500 съобщения/месец • Глас + OCR • 180 дни история"
+          }
+        }
       },
       landing: {
         hero: {

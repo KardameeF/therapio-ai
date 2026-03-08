@@ -1,170 +1,147 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
-import { useTranslation } from "react-i18next";
-import { stripePromise } from "../lib/stripe";
 import { supabase } from "../lib/supabaseClient";
 import { useAuth } from "../providers/AuthProvider";
-import { CreditCard, ExternalLink } from "lucide-react";
 
 export function BillingPage() {
   const [loading, setLoading] = useState(false);
-  const { t } = useTranslation();
+  const [currentPlan, setCurrentPlan] = useState<string>("first_step");
   const { user } = useAuth();
+
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("subscriptions")
+      .select("plan_type, status")
+      .eq("user_id", user.id)
+      .single()
+      .then(({ data }) => {
+        if (data?.status === "active") setCurrentPlan(data.plan_type);
+      });
+  }, [user]);
+
+  // Показва EUR като основна, BGN в скоби до 06.01.2026, след това само EUR
+  const formatPrice = (eur: number): string => {
+    const bgn = (eur * 1.95583).toFixed(2);
+    const cutoffDate = new Date("2026-01-06");
+    const today = new Date();
+    if (today < cutoffDate) {
+      return `€${eur.toFixed(2)} (${bgn} лв.)`;
+    }
+    return `€${eur.toFixed(2)}`;
+  };
 
   const handleManageBilling = async () => {
     if (!user) return;
-    
+
     setLoading(true);
     try {
-      // Call Supabase Edge Function to create Stripe customer portal session
-      const { data, error } = await supabase.functions.invoke('stripe-webhook', {
-        body: { action: 'create_portal_session', user_id: user.id }
+      const session = await supabase.auth.getSession();
+      const token = session.data.session?.access_token;
+      const response = await fetch("/.netlify/functions/billing-portal", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ user_id: user.id }),
       });
-
-      if (error) throw error;
-
-      // Redirect to Stripe customer portal
-      if (data.url) {
-        window.location.href = data.url;
-      }
+      const data = await response.json();
+      if (data.url) window.location.href = data.url;
+      else throw new Error(data.error || "No URL returned");
     } catch (error) {
       console.error('Error creating portal session:', error);
-      // Fallback: show message about contacting support
-      alert('Please contact support to manage your billing');
+      alert('Грешка при отваряне на портала. Опитай отново.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleUpgrade = async () => {
+  const handleUpgrade = async (priceId: string) => {
     if (!user) return;
-    
+
     setLoading(true);
     try {
-      // Call Supabase Edge Function to create Stripe checkout session
-      const { data, error } = await supabase.functions.invoke('stripe-webhook', {
-        body: { action: 'create_checkout_session', user_id: user.id, price_id: 'price_premium' }
+      const session = await supabase.auth.getSession();
+      const token = session.data.session?.access_token;
+      const response = await fetch("/.netlify/functions/create-checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ priceId, user_id: user.id }),
       });
-
-      if (error) throw error;
-
-      // Redirect to Stripe checkout
-      if (data.url) {
-        window.location.href = data.url;
-      }
+      const data = await response.json();
+      if (data.url) window.location.href = data.url;
+      else throw new Error(data.error || "No URL returned");
     } catch (error) {
-      console.error('Error creating checkout session:', error);
-      alert('Error creating checkout session. Please try again.');
+      console.error('Error creating checkout:', error);
+      alert('Грешка при стартиране на плащането. Опитай отново.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">{t("billing.title")}</h1>
-        <p className="text-muted-foreground">Manage your subscription and billing</p>
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <CreditCard className="h-5 w-5" />
-              Current Plan
-            </CardTitle>
-            <CardDescription>Your current subscription details</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex justify-between items-center">
-              <span className="font-medium">Free Plan</span>
-              <span className="text-sm text-muted-foreground">$0/month</span>
-            </div>
-            
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span>Mood entries</span>
-                <span className="text-muted-foreground">5/month</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Sleep & stress entries</span>
-                <span className="text-muted-foreground">5/month</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Goals</span>
-                <span className="text-muted-foreground">3 active</span>
-              </div>
-            </div>
-
-            <Button 
-              onClick={handleManageBilling} 
-              disabled={loading}
-              className="w-full"
-            >
-              {loading ? "Loading..." : "Manage Billing"}
-              <ExternalLink className="ml-2 h-4 w-4" />
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Upgrade to Premium</CardTitle>
-            <CardDescription>Unlock unlimited tracking and AI insights</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex justify-between items-center">
-              <span className="font-medium">Premium Plan</span>
-              <span className="text-sm text-muted-foreground">$9.99/month</span>
-            </div>
-            
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span>Mood entries</span>
-                <span className="text-green-600">Unlimited</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Sleep & stress entries</span>
-                <span className="text-green-600">Unlimited</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Goals</span>
-                <span className="text-green-600">Unlimited</span>
-              </div>
-              <div className="flex justify-between">
-                <span>AI Insights</span>
-                <span className="text-green-600">✓</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Export Data</span>
-                <span className="text-green-600">✓</span>
-              </div>
-            </div>
-
-            <Button 
-              onClick={handleUpgrade} 
-              disabled={loading}
-              className="w-full"
-              variant="default"
-            >
-              {loading ? "Loading..." : "Upgrade Now"}
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
+    <div className="grid gap-6 md:grid-cols-3">
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <span>First Step</span>
+            {currentPlan === "first_step" && (
+              <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                Текущ план
+              </span>
+            )}
+          </CardTitle>
+          <CardDescription>{formatPrice(0)}/месец</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-2 text-sm">
+          <div>30 съобщения</div>
+          <div>gpt-4o-mini</div>
+          <div>30 дни история</div>
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>Billing History</CardTitle>
-          <CardDescription>Your recent invoices and payments</CardDescription>
+          <CardTitle className="flex items-center justify-between">
+            <span>Personal Growth</span>
+            {currentPlan === "personal_growth" && (
+              <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                Текущ план
+              </span>
+            )}
+          </CardTitle>
+          <CardDescription>{formatPrice(19.99)}/месец</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-8 text-muted-foreground">
-            <p>No billing history available.</p>
-            <p className="text-sm mt-1">Your invoices will appear here after your first payment.</p>
-          </div>
+          <Button
+            onClick={() => handleUpgrade("price_1S8qnIDVd6WnP7HIrd5qxgrt")}
+            disabled={loading}
+            className="w-full"
+          >
+            {loading ? "Зареждане..." : "Избери план"}
+          </Button>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <span>Expanded Horizons</span>
+            {currentPlan === "expanded_horizons" && (
+              <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                Текущ план
+              </span>
+            )}
+          </CardTitle>
+          <CardDescription>{formatPrice(39.99)}/месец</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button
+            onClick={() => handleUpgrade("price_1S8qoxDVd6WnP7HI4Vjfan7y")}
+            disabled={loading}
+            className="w-full"
+          >
+            {loading ? "Зареждане..." : "Избери план"}
+          </Button>
         </CardContent>
       </Card>
     </div>
