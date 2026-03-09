@@ -33,13 +33,21 @@ export const handler: Handler = async (event) => {
 
   try {
     // Parse request body
-    const { priceId } = JSON.parse(event.body || '{}');
+    const { priceId, user_id, plan_type } = JSON.parse(event.body || '{}');
 
     if (!priceId) {
       return {
         statusCode: 400,
         headers: corsHeaders,
         body: JSON.stringify({ error: 'Missing priceId' }),
+      };
+    }
+
+    if (!user_id) {
+      return {
+        statusCode: 400,
+        headers: corsHeaders,
+        body: JSON.stringify({ error: 'Missing user_id' }),
       };
     }
 
@@ -53,10 +61,18 @@ export const handler: Handler = async (event) => {
           quantity: 1,
         },
       ],
+      metadata: {
+        user_id: user_id || '',
+        plan_type: plan_type || '',
+      },
+      subscription_data: {
+        metadata: {
+          user_id: user_id || '',
+          plan_type: plan_type || '',
+        },
+      },
       success_url: `${process.env.URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.URL}/cancel`,
-      // Add customer email if available from authentication
-      // customer_email: userEmail, // You can add this later when integrating with auth
     });
 
     return {
