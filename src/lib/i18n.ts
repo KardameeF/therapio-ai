@@ -6,8 +6,8 @@ const resources = {
   en: {
     translation: {
       app: {
-        title: "Therapio AI",
-        tagline: "Your AI-powered mental wellness companion"
+        title: "Eterapp",
+        tagline: "Your assistant for emotional support"
       },
       nav: {
         home: "Home",
@@ -108,90 +108,90 @@ const resources = {
       },
       landing: {
         hero: {
-          badge: "AI-Powered Mental Wellness",
-          title: "Therapio AI",
-          tagline: "Your AI-powered mental wellness companion",
-          cta: "Start Your Journey",
+          badge: "AI-Powered Emotional Support",
+          title: "Eterapp",
+          tagline: "Feel heard. Understood. Supported.",
+          subtitle: "Eterapp is your assistant for emotional support — available 24/7, non-judgmental, fully confidential.",
+          cta: "Start for Free",
           signIn: "Sign In",
           trust: {
             secure: "Secure & Private",
-            users: "10,000+ Users",
-            ai: "AI-Powered Insights"
+            users: "BG/EN",
+            ai: "AI-Powered"
           }
         },
         features: {
-          title: "Everything you need for",
-          subtitle: "mental wellness",
-          description: "Comprehensive tools designed with care to support your emotional well-being journey.",
+          title: "Everything you need",
+          description: "Tools crafted with care for your emotional well-being.",
+          ai: {
+            title: "AI Chat Assistant",
+            description: "Talk to Eterapp anytime. It understands you and responds with empathy."
+          },
           mood: {
-            title: "Mood Tracking",
-            description: "Track your daily mood and emotional patterns with AI insights to understand your well-being."
+            title: "Mood Journal",
+            description: "Track your emotions and discover patterns over time."
           },
           sleep: {
             title: "Sleep & Stress",
-            description: "Monitor your sleep quality and stress levels for better overall wellness and recovery."
+            description: "Monitor your sleep and stress for better self-awareness and balance."
           },
           goals: {
-            title: "Goal Setting",
-            description: "Set and track your mental health and wellness goals with personalized guidance."
-          },
-          ai: {
-            title: "AI Insights",
-            description: "Get personalized recommendations and insights based on your wellness data."
+            title: "Wellness Goals",
+            description: "Set small, achievable goals and celebrate every step forward."
           }
         },
         pricing: {
-          title: "Choose your wellness journey",
+          title: "Choose Your Plan",
           subtitle: "Plans designed to support your mental health at every stage",
           firstStep: {
             name: "First Step",
-            price: "Free",
-            description: "Perfect for getting started with mental wellness tracking",
+            price: "€0",
+            period: "/month",
+            description: "The ideal start, no commitment",
             features: [
-              "5 mood entries per month",
-              "5 sleep & stress entries per month",
-              "3 active goals",
-              "Basic insights",
-              "Community support"
+              "30 AI messages/month",
+              "gpt-4o-mini model",
+              "30 days history",
+              "BG/EN support"
             ],
-            cta: "Get Started Free"
+            cta: "Start for Free"
           },
           personalGrowth: {
             name: "Personal Growth",
-            price: "$19.99",
+            price: "€19.99",
             period: "/month",
-            description: "For those ready to dive deeper into their wellness journey",
+            description: "For deeper emotional work",
             features: [
-              "Unlimited mood tracking",
-              "Unlimited sleep & stress tracking",
-              "Unlimited goals",
-              "Advanced AI insights",
-              "Progress analytics",
+              "500 AI messages/month",
+              "gpt-4o model",
+              "Voice assistant (30 min)",
+              "90 days history",
+              "Mood tracker",
               "Priority support"
             ],
-            cta: "Start Personal Growth"
+            cta: "Choose Plan"
           },
           expandedHorizons: {
             name: "Expanded Horizons",
-            price: "$39.99",
+            price: "€39.99",
             period: "/month",
-            description: "Complete wellness transformation with premium features",
+            description: "Full transformation with all features",
             features: [
-              "Everything in Personal Growth",
-              "Personal wellness coach",
-              "Custom wellness plans",
-              "Advanced stress management tools",
-              "Sleep optimization insights",
-              "24/7 premium support",
-              "Data export & analysis"
+              "1500 AI messages/month",
+              "gpt-4o model",
+              "Voice assistant (120 min)",
+              "Images (OCR)",
+              "180 days history",
+              "Full analytics",
+              "Priority support"
             ],
-            cta: "Begin Transformation"
+            cta: "Choose Plan"
           }
         },
         cta: {
-          title: "Ready to start your wellness journey?",
-          description: "Join thousands of people who are already using Therapio AI to improve their mental health and well-being.",
-          button: "Get Started Free",
+          title: "Ready to feel better?",
+          description: "Join Eterapp for free. No credit card required.",
+          button: "Start Free Today",
           privacy: "Learn About Privacy"
         }
       },
@@ -257,14 +257,22 @@ const resources = {
           profile: "Failed to load user profile",
           fetch: "Failed to fetch admin data"
         }
+      },
+      footer: {
+        rights: "© 2026 Eterapp. All rights reserved.",
+        disclaimer: "Eterapp is not a medical service. In case of emergency, call 112 or the Trust Hotline 0800 1 8 400.",
+        terms: "Terms",
+        privacy: "Privacy",
+        gdpr: "GDPR",
+        cookies: "Cookies"
       }
     }
   },
   bg: {
     translation: {
       app: {
-        title: "Therapio AI",
-        tagline: "Вашият AI-асистент за психично благополучие"
+        title: "Eterapp",
+        tagline: "Твоят асистент за емоционална подкрепа"
       },
       nav: {
         home: "Начало",
@@ -365,90 +373,90 @@ const resources = {
       },
       landing: {
         hero: {
-          badge: "AI-Задвижвано Психично Благополучие",
-          title: "Therapio AI",
-          tagline: "Вашият AI-асистент за психично благополучие",
-          cta: "Започнете пътешествието",
+          badge: "AI-Задвижвана Емоционална Подкрепа",
+          title: "Eterapp",
+          tagline: "Почувствай се чут. Разбран. Подкрепен.",
+          subtitle: "Eterapp е твоят асистент за емоционална подкрепа — наличен 24/7, без осъждане, изцяло поверително.",
+          cta: "Започни безплатно",
           signIn: "Вход",
           trust: {
             secure: "Сигурно и поверително",
-            users: "10,000+ Потребители",
-            ai: "AI-Задвижвани прозрения"
+            users: "BG/EN",
+            ai: "AI-Задвижвано"
           }
         },
         features: {
-          title: "Всичко, от което се нуждаете за",
-          subtitle: "психично благополучие",
-          description: "Цялостни инструменти, създадени с грижа за подпомагане на вашето емоционално благополучие.",
+          title: "Всичко, от което се нуждаеш",
+          description: "Инструменти, създадени с грижа за твоето емоционално благополучие.",
+          ai: {
+            title: "AI Чат Асистент",
+            description: "Говори с Eterapp по всяко време. Разбира те, отговаря с емпатия."
+          },
           mood: {
-            title: "Проследяване на настроението",
-            description: "Проследявайте ежедневното си настроение и емоционални модели с AI прозрения за разбиране на благополучието си."
+            title: "Дневник на настроението",
+            description: "Проследявай емоциите си и разкривай патерните с течение на времето."
           },
           sleep: {
-            title: "Сън и Стрес",
-            description: "Следете качеството на съня и нивата на стрес за по-добро общо благополучие и възстановяване."
+            title: "Сън и стрес",
+            description: "Следи съня и стреса си за по-добро самопознание и равновесие."
           },
           goals: {
-            title: "Поставяне на цели",
-            description: "Поставете и проследявайте целите си за психично здраве и благополучие с персонализирано ръководство."
-          },
-          ai: {
-            title: "AI Прозрения",
-            description: "Получавайте персонализирани препоръки и прозрения въз основа на вашите данни за благополучие."
+            title: "Цели за благополучие",
+            description: "Поставяй малки, постижими цели и празнувай всяка стъпка напред."
           }
         },
         pricing: {
-          title: "Изберете своето пътешествие към благополучие",
-          subtitle: "Планове, създадени да подкрепят психичното ви здраве на всеки етап",
+          title: "Избери своя план",
+          subtitle: "Планове, създадени да подкрепят психичното ти здраве на всеки етап",
           firstStep: {
-            name: "Първа стъпка",
-            price: "Безплатно",
-            description: "Идеално за започване с проследяване на психичното благополучие",
+            name: "First Step",
+            price: "€0",
+            period: "/месец",
+            description: "Идеален старт без ангажимент",
             features: [
-              "5 записа за настроение на месец",
-              "5 записа за сън и стрес на месец",
-              "3 активни цели",
-              "Основни прозрения",
-              "Подкрепа от общността"
+              "30 AI съобщения/месец",
+              "gpt-4o-mini модел",
+              "30 дни история",
+              "BG/EN поддръжка"
             ],
-            cta: "Започнете безплатно"
+            cta: "Започни безплатно"
           },
           personalGrowth: {
-            name: "Личностен растеж",
-            price: "$19.99",
+            name: "Personal Growth",
+            price: "€19.99",
             period: "/месец",
-            description: "За тези, които са готови да се потопят по-дълбоко в пътешествието си към благополучие",
+            description: "За задълбочена емоционална работа",
             features: [
-              "Неограничено проследяване на настроението",
-              "Неограничено проследяване на съня и стреса",
-              "Неограничени цели",
-              "Разширени AI прозрения",
-              "Анализ на прогрес",
+              "500 AI съобщения/месец",
+              "gpt-4o модел",
+              "Гласов асистент (30 мин)",
+              "90 дни история",
+              "Mood tracker",
               "Приоритетна поддръжка"
             ],
-            cta: "Започнете личностен растеж"
+            cta: "Избери план"
           },
           expandedHorizons: {
-            name: "Разширени хоризонти",
-            price: "$39.99",
+            name: "Expanded Horizons",
+            price: "€39.99",
             period: "/месец",
-            description: "Пълна трансформация на благополучието с премиум функции",
+            description: "Пълна трансформация с всички функции",
             features: [
-              "Всичко от Личностен растеж",
-              "Персонален треньор за благополучие",
-              "Персонализирани планове за благополучие",
-              "Разширени инструменти за управление на стреса",
-              "Прозрения за оптимизация на съня",
-              "24/7 премиум поддръжка",
-              "Експорт и анализ на данни"
+              "1500 AI съобщения/месец",
+              "gpt-4o модел",
+              "Гласов асистент (120 мин)",
+              "Изображения (OCR)",
+              "180 дни история",
+              "Пълен анализ",
+              "Приоритетна поддръжка"
             ],
-            cta: "Започнете трансформацията"
+            cta: "Избери план"
           }
         },
         cta: {
-          title: "Готови да започнете пътешествието си към благополучие?",
-          description: "Присъединете се към хиляди хора, които вече използват Therapio AI за подобряване на психичното си здраве и благополучие.",
-          button: "Започнете безплатно",
+          title: "Готов ли си да се почувстваш по-добре?",
+          description: "Присъедини се към Eterapp безплатно. Без кредитна карта.",
+          button: "Започни безплатно днес",
           privacy: "Научете за поверителността"
         }
       },
@@ -514,6 +522,14 @@ const resources = {
           profile: "Неуспешно зареждане на потребителския профил",
           fetch: "Неуспешно зареждане на административните данни"
         }
+      },
+      footer: {
+        rights: "© 2026 Eterapp. Всички права запазени.",
+        disclaimer: "Eterapp не е медицинска услуга. При спешност се обади на 112 или Телефон на доверието 0800 1 8 400.",
+        terms: "Условия",
+        privacy: "Поверителност",
+        gdpr: "GDPR",
+        cookies: "Бисквитки"
       }
     }
   }
@@ -524,11 +540,15 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    fallbackLng: "en",
+    fallbackLng: "bg",
+    supportedLngs: ["bg", "en"],
     debug: false,
-    interpolation: {
-      escapeValue: false
-    }
+    interpolation: { escapeValue: false },
+    detection: {
+      order: ["localStorage", "navigator"],
+      caches: ["localStorage"],
+      lookupLocalStorage: "etherapp_language",
+    },
   });
 
 export default i18n;

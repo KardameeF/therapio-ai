@@ -9,7 +9,7 @@ export function CancelPage() {
   const { t } = useTranslation();
   
   useSEO({
-    title: "Payment Cancelled - Therapio AI",
+    title: "Payment Cancelled - Eterapp",
     description: "Your payment was cancelled. You can try again or explore our free features.",
   });
 

@@ -17,7 +17,7 @@ export function TermsPage() {
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
           <p>
-            By accessing and using Therapio AI ("the Service"), you accept and agree to be bound by the terms and provision of this agreement.
+            By accessing and using Eterapp ("the Service"), you accept and agree to be bound by the terms and provision of this agreement.
           </p>
         </CardContent>
       </Card>
@@ -28,7 +28,7 @@ export function TermsPage() {
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
           <p>
-            Therapio AI is a mental wellness application that provides mood tracking, sleep monitoring, stress assessment, and goal setting features. The Service uses artificial intelligence to provide insights and recommendations for mental health and wellness.
+            Eterapp is a mental wellness application that provides mood tracking, sleep monitoring, stress assessment, and goal setting features. The Service uses artificial intelligence to provide insights and recommendations for mental health and wellness.
           </p>
         </CardContent>
       </Card>
@@ -53,7 +53,7 @@ export function TermsPage() {
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
           <p>
-            <strong>Important:</strong> Therapio AI is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.
+            <strong>Important:</strong> Eterapp is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.
           </p>
         </CardContent>
       </Card>
@@ -75,7 +75,7 @@ export function TermsPage() {
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
           <p>
-            In no event shall Therapio AI be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses.
+            In no event shall Eterapp be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses.
           </p>
         </CardContent>
       </Card>

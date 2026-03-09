@@ -4,9 +4,11 @@ import { useTranslation } from "react-i18next";
 export function LocaleSwitch() {
   const { i18n } = useTranslation();
   
-  const currentLocale = i18n.language;
+  const currentLocale = i18n.language?.startsWith('en') ? 'en' : 'bg';
   const toggleLocale = () => {
-    i18n.changeLanguage(currentLocale === 'en' ? 'bg' : 'en');
+    const newLang = currentLocale === 'bg' ? 'en' : 'bg';
+    i18n.changeLanguage(newLang);
+    localStorage.setItem('etherapp_language', newLang);
   };
 
   return (

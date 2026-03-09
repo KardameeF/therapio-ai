@@ -4,7 +4,7 @@
 import { supabase } from "./lib/supabaseClient";
 import { initSentry } from "./lib/sentry";
 
-console.log("🧪 Testing Therapio AI Setup...");
+console.log("🧪 Testing Eterapp Setup...");
 
 // Test environment variables
 const requiredEnvVars = [

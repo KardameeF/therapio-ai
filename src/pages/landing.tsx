@@ -1,318 +1,315 @@
 import { Link } from "react-router-dom";
-import { Button } from "../components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
-import { Brain, Heart, Target, TrendingUp, Sparkles, Shield, Users } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useTheme } from "../providers/theme-provider";
+import { Button } from "../components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../components/ui/card";
 import { useSEO } from "../hooks/use-seo";
-import { useStripeCheckout } from "../hooks/useStripeCheckout";
+import {
+  Sparkles,
+  Shield,
+  Globe,
+  Zap,
+  MessageCircle,
+  Heart,
+  Moon,
+  Target,
+  Check,
+} from "lucide-react";
 
-// Stripe Price IDs - Replace with your actual price IDs from Stripe Dashboard
 const STRIPE_PRICE_IDS = {
-  PERSONAL_GROWTH: 'price_1234567890', // Replace with actual Personal Growth price ID (€20/month)
-  EXPANDED_HORIZONS: 'price_0987654321', // Replace with actual Expanded Horizons price ID (€40/month)
+  PERSONAL_GROWTH: "price_1S8qnIDVd6WnP7HIrd5qxgrt",
+  EXPANDED_HORIZONS: "price_1S8qoxDVd6WnP7HI4Vjfan7y",
 };
 
 export function LandingPage() {
   const { t } = useTranslation();
-  const { createCheckoutSession, loading, error } = useStripeCheckout();
-  
+  const { theme } = useTheme();
+  const resolvedTheme =
+    theme === "system"
+      ? window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light"
+      : theme;
+
   useSEO({
-    title: "Therapio AI - AI-Powered Mental Wellness Companion",
-    description: "Track your mood, sleep, stress, and goals with AI-powered insights. Start your mental wellness journey with Therapio AI today.",
-    keywords: "mental health, wellness, mood tracking, sleep tracking, stress management, AI therapy, self-care, mindfulness",
+    title: "Eterapp — Твоят асистент за емоционална подкрепа",
+    description: "Eterapp е твоят асистент за емоционална подкрепа, наличен 24/7.",
+    keywords: "психично здраве, емоционална подкрепа, асистент, настроение, стрес, Eterapp",
   });
+
+  const features = [
+    { Icon: MessageCircle, titleKey: "landing.features.ai.title", descKey: "landing.features.ai.description" },
+    { Icon: Heart,         titleKey: "landing.features.mood.title", descKey: "landing.features.mood.description" },
+    { Icon: Moon,          titleKey: "landing.features.sleep.title", descKey: "landing.features.sleep.description" },
+    { Icon: Target,        titleKey: "landing.features.goals.title", descKey: "landing.features.goals.description" },
+  ];
+
+  const plans = [
+    {
+      key: "first_step",
+      nameKey: "landing.pricing.firstStep.name",
+      price: t("landing.pricing.firstStep.price"),
+      period: t("landing.pricing.firstStep.period"),
+      bgnNote: null as string | null,
+      descKey: "landing.pricing.firstStep.description",
+      popular: false,
+      featuresKey: "landing.pricing.firstStep.features",
+      ctaKey: "landing.pricing.firstStep.cta",
+      ctaVariant: "outline" as const,
+      priceId: null as string | null,
+    },
+    {
+      key: "personal_growth",
+      nameKey: "landing.pricing.personalGrowth.name",
+      price: t("landing.pricing.personalGrowth.price"),
+      period: t("landing.pricing.personalGrowth.period"),
+      bgnNote: "(39.09 лв.)",
+      descKey: "landing.pricing.personalGrowth.description",
+      popular: true,
+      featuresKey: "landing.pricing.personalGrowth.features",
+      ctaKey: "landing.pricing.personalGrowth.cta",
+      ctaVariant: "default" as const,
+      priceId: STRIPE_PRICE_IDS.PERSONAL_GROWTH,
+    },
+    {
+      key: "expanded_horizons",
+      nameKey: "landing.pricing.expandedHorizons.name",
+      price: t("landing.pricing.expandedHorizons.price"),
+      period: t("landing.pricing.expandedHorizons.period"),
+      bgnNote: "(78.22 лв.)",
+      descKey: "landing.pricing.expandedHorizons.description",
+      popular: false,
+      featuresKey: "landing.pricing.expandedHorizons.features",
+      ctaKey: "landing.pricing.expandedHorizons.cta",
+      ctaVariant: "secondary" as const,
+      priceId: STRIPE_PRICE_IDS.EXPANDED_HORIZONS,
+    },
+  ];
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      {/* Hero Section */}
-      <section className="relative flex-1 flex items-center justify-center px-4 py-20 overflow-hidden">
-        {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-secondary/5 to-transparent"></div>
-        
-        {/* Abstract shapes */}
-        <div className="absolute top-20 left-10 w-32 h-32 bg-primary/10 rounded-full blur-2xl"></div>
-        <div className="absolute bottom-20 right-10 w-40 h-40 bg-secondary/10 rounded-full blur-2xl"></div>
-        
-        <div className="relative max-w-5xl mx-auto text-center space-y-10">
-          <div className="space-y-6">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
-              <Sparkles className="h-4 w-4" />
-              {t("landing.hero.badge")}
-            </div>
-            
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight font-heading">
-              <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                {t("landing.hero.title")}
-              </span>
-            </h1>
-            
-            <p className="text-xl md:text-2xl text-foreground-muted max-w-3xl mx-auto leading-relaxed">
-              {t("landing.hero.tagline")}
-            </p>
+
+      {/* ── HERO ── */}
+      <section className="relative flex items-center justify-center px-4 py-24 md:py-32 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-violet-500/8 via-cyan-500/5 to-transparent pointer-events-none" />
+        <div className="absolute top-24 left-8 w-40 h-40 bg-violet-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-16 right-8 w-56 h-56 bg-cyan-400/8 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative max-w-4xl mx-auto text-center space-y-8">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-violet-500/10 border border-violet-400/20 text-sm text-violet-400">
+            <Sparkles className="w-3.5 h-3.5" />
+            {t("landing.hero.badge")}
           </div>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+
+          {/* Headline */}
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-tight">
+            {t("landing.hero.tagline")}
+          </h1>
+
+          {/* Subtitle */}
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            {t("landing.hero.subtitle")}
+          </p>
+
+          {/* CTA buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-2">
             <Link to="/login">
-              <Button size="lg" className="w-full sm:w-auto text-lg px-8 py-4">
+              <Button size="lg" className="w-full sm:w-auto text-base px-8 py-5">
                 {t("landing.hero.cta")}
               </Button>
             </Link>
-            <Link to="/login">
-              <Button size="lg" variant="outline" className="w-full sm:w-auto text-lg px-8 py-4">
+            <a href="#features">
+              <Button size="lg" variant="outline" className="w-full sm:w-auto text-base px-8 py-5">
                 {t("landing.hero.signIn")}
               </Button>
-            </Link>
+            </a>
           </div>
-          
-          {/* Trust indicators */}
-          <div className="flex flex-wrap justify-center items-center gap-8 text-sm text-foreground-muted pt-8">
-            <div className="flex items-center gap-2">
-              <Shield className="h-4 w-4 text-primary" />
+
+          {/* Trust badges */}
+          <div className="flex items-center gap-6 flex-wrap justify-center pt-4">
+            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+              <Shield className="w-4 h-4 text-violet-400" />
               <span>{t("landing.hero.trust.secure")}</span>
             </div>
-            <div className="flex items-center gap-2">
-              <Users className="h-4 w-4 text-primary" />
+            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+              <Globe className="w-4 h-4 text-violet-400" />
               <span>{t("landing.hero.trust.users")}</span>
             </div>
-            <div className="flex items-center gap-2">
-              <Brain className="h-4 w-4 text-primary" />
+            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+              <Zap className="w-4 h-4 text-violet-400" />
               <span>{t("landing.hero.trust.ai")}</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 px-4">
+      {/* ── FEATURES ── */}
+      <section id="features" className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold font-heading mb-6">
+          <div className="text-center mb-14">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
               {t("landing.features.title")}
-              <span className="text-primary"> {t("landing.features.subtitle")}</span>
             </h2>
-            <p className="text-xl text-foreground-muted max-w-2xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-xl mx-auto">
               {t("landing.features.description")}
             </p>
           </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <Card className="group hover:scale-105 transition-transform duration-300">
-              <CardHeader className="text-center">
-                <div className="mx-auto w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
-                  <Heart className="h-8 w-8 text-primary" />
-                </div>
-                <CardTitle className="text-xl">{t("landing.features.mood.title")}</CardTitle>
-                <CardDescription className="text-base">
-                  {t("landing.features.mood.description")}
-                </CardDescription>
-              </CardHeader>
-            </Card>
-            
-            <Card className="group hover:scale-105 transition-transform duration-300">
-              <CardHeader className="text-center">
-                <div className="mx-auto w-16 h-16 bg-secondary/10 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-secondary/20 transition-colors">
-                  <Brain className="h-8 w-8 text-secondary-600" />
-                </div>
-                <CardTitle className="text-xl">{t("landing.features.sleep.title")}</CardTitle>
-                <CardDescription className="text-base">
-                  {t("landing.features.sleep.description")}
-                </CardDescription>
-              </CardHeader>
-            </Card>
-            
-            <Card className="group hover:scale-105 transition-transform duration-300">
-              <CardHeader className="text-center">
-                <div className="mx-auto w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
-                  <Target className="h-8 w-8 text-primary" />
-                </div>
-                <CardTitle className="text-xl">{t("landing.features.goals.title")}</CardTitle>
-                <CardDescription className="text-base">
-                  {t("landing.features.goals.description")}
-                </CardDescription>
-              </CardHeader>
-            </Card>
-            
-            <Card className="group hover:scale-105 transition-transform duration-300">
-              <CardHeader className="text-center">
-                <div className="mx-auto w-16 h-16 bg-secondary/10 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-secondary/20 transition-colors">
-                  <TrendingUp className="h-8 w-8 text-secondary-600" />
-                </div>
-                <CardTitle className="text-xl">{t("landing.features.ai.title")}</CardTitle>
-                <CardDescription className="text-base">
-                  {t("landing.features.ai.description")}
-                </CardDescription>
-              </CardHeader>
-            </Card>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {features.map(({ Icon, titleKey, descKey }) => (
+              <Card
+                key={titleKey}
+                className="group border border-border/50 hover:border-violet-400/30 hover:shadow-lg hover:-translate-y-1 transition-all duration-200"
+              >
+                <CardHeader>
+                  <div className="w-10 h-10 rounded-xl bg-violet-500/10 flex items-center justify-center mb-4">
+                    <Icon className="w-5 h-5 text-violet-400" />
+                  </div>
+                  <CardTitle className="text-lg">{t(titleKey)}</CardTitle>
+                  <CardDescription className="text-sm leading-relaxed">{t(descKey)}</CardDescription>
+                </CardHeader>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Pricing Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-primary/5 to-secondary/5">
+      {/* ── PRICING ── */}
+      <section className="py-20 px-4 bg-gradient-to-r from-violet-500/5 to-cyan-500/5">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold font-heading mb-6">
-              {t("landing.pricing.title")}
-            </h2>
-            <p className="text-xl text-foreground-muted">
-              {t("landing.pricing.subtitle")}
-            </p>
+          <div className="text-center mb-14">
+            <h2 className="text-4xl font-bold mb-4">{t("landing.pricing.title")}</h2>
+            <p className="text-xl text-muted-foreground">{t("landing.pricing.subtitle")}</p>
           </div>
-          
-          {/* Error Display */}
-          {error && (
-            <div className="mb-8 p-4 bg-red-50 border border-red-200 rounded-lg">
-              <div className="flex items-center gap-2 text-red-800">
-                <span className="font-medium">Checkout Error:</span>
-                <span>{error.message}</span>
-              </div>
-              {error.details && (
-                <p className="text-red-600 text-sm mt-1">{error.details}</p>
-              )}
-            </div>
-          )}
 
           <div className="grid md:grid-cols-3 gap-8">
-            {/* First Step - Free */}
-            <Card className="relative overflow-hidden">
-              <CardHeader className="text-center pb-4">
-                <div className="inline-flex items-center px-3 py-1 rounded-full bg-secondary/20 text-secondary-700 text-sm font-medium mb-4">
-                  {t("landing.pricing.firstStep.name")}
-                </div>
-                <div className="space-y-2">
-                  <div className="text-4xl font-bold text-foreground">
-                    {t("landing.pricing.firstStep.price")}
-                  </div>
-                  <p className="text-foreground-muted">
-                    {t("landing.pricing.firstStep.description")}
-                  </p>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <ul className="space-y-3">
-                  {(t("landing.pricing.firstStep.features", { returnObjects: true }) as string[]).map((feature: string, index: number) => (
-                    <li key={index} className="flex items-center gap-3">
-                      <div className="w-2 h-2 bg-secondary rounded-full flex-shrink-0"></div>
-                      <span className="text-foreground-muted">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                <Link to="/login">
-                  <Button variant="outline" className="w-full">
-                    {t("landing.pricing.firstStep.cta")}
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-
-            {/* Personal Growth - $19.99 */}
-            <Card className="relative overflow-hidden border-2 border-primary">
-              <div className="absolute top-0 right-0 bg-primary text-primary-foreground px-4 py-1 text-sm font-medium rounded-bl-lg">
-                Popular
-              </div>
-              <CardHeader className="text-center pb-4 pt-8">
-                <div className="inline-flex items-center px-3 py-1 rounded-full bg-primary/20 text-primary text-sm font-medium mb-4">
-                  {t("landing.pricing.personalGrowth.name")}
-                </div>
-                <div className="space-y-2">
-                  <div className="text-4xl font-bold text-foreground">
-                    {t("landing.pricing.personalGrowth.price")}
-                    <span className="text-lg text-foreground-muted">
-                      {t("landing.pricing.personalGrowth.period")}
-                    </span>
-                  </div>
-                  <p className="text-foreground-muted">
-                    {t("landing.pricing.personalGrowth.description")}
-                  </p>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <ul className="space-y-3">
-                  {(t("landing.pricing.personalGrowth.features", { returnObjects: true }) as string[]).map((feature: string, index: number) => (
-                    <li key={index} className="flex items-center gap-3">
-                      <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0"></div>
-                      <span className="text-foreground-muted">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                <Button 
-                  className="w-full" 
-                  onClick={() => createCheckoutSession(STRIPE_PRICE_IDS.PERSONAL_GROWTH)}
-                  disabled={loading}
+            {plans.map((plan) => {
+              const planFeatures = t(plan.featuresKey, { returnObjects: true }) as string[];
+              return (
+                <Card
+                  key={plan.key}
+                  className={`relative overflow-hidden ${
+                    plan.popular
+                      ? "border-2 border-primary shadow-lg shadow-primary/10"
+                      : "border border-border/50"
+                  }`}
                 >
-                  {loading ? 'Processing...' : t("landing.pricing.personalGrowth.cta")}
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Expanded Horizons - $39.99 */}
-            <Card className="relative overflow-hidden">
-              <CardHeader className="text-center pb-4">
-                <div className="inline-flex items-center px-3 py-1 rounded-full bg-secondary/20 text-secondary-700 text-sm font-medium mb-4">
-                  {t("landing.pricing.expandedHorizons.name")}
-                </div>
-                <div className="space-y-2">
-                  <div className="text-4xl font-bold text-foreground">
-                    {t("landing.pricing.expandedHorizons.price")}
-                    <span className="text-lg text-foreground-muted">
-                      {t("landing.pricing.expandedHorizons.period")}
-                    </span>
-                  </div>
-                  <p className="text-foreground-muted">
-                    {t("landing.pricing.expandedHorizons.description")}
-                  </p>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <ul className="space-y-3">
-                  {(t("landing.pricing.expandedHorizons.features", { returnObjects: true }) as string[]).map((feature: string, index: number) => (
-                    <li key={index} className="flex items-center gap-3">
-                      <div className="w-2 h-2 bg-secondary rounded-full flex-shrink-0"></div>
-                      <span className="text-foreground-muted">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                <Button 
-                  variant="secondary" 
-                  className="w-full"
-                  onClick={() => createCheckoutSession(STRIPE_PRICE_IDS.EXPANDED_HORIZONS)}
-                  disabled={loading}
-                >
-                  {loading ? 'Processing...' : t("landing.pricing.expandedHorizons.cta")}
-                </Button>
-              </CardContent>
-            </Card>
+                  {plan.popular && (
+                    <div className="absolute top-0 right-0 bg-primary text-primary-foreground px-4 py-1 text-xs font-semibold rounded-bl-lg">
+                      {t("landing.pricing.popular", "Популярен")}
+                    </div>
+                  )}
+                  <CardHeader className={`text-center pb-4 ${plan.popular ? "pt-10" : "pt-6"}`}>
+                    <div
+                      className={`inline-flex items-center self-center px-3 py-1 rounded-full text-sm font-medium mb-4 ${
+                        plan.popular
+                          ? "bg-primary/15 text-primary"
+                          : "bg-secondary text-secondary-foreground"
+                      }`}
+                    >
+                      {t(plan.nameKey)}
+                    </div>
+                    <div className="space-y-1">
+                      <div className="text-4xl font-bold">
+                        {plan.price}
+                        <span className="text-lg font-normal text-muted-foreground">{plan.period}</span>
+                      </div>
+                      {plan.bgnNote && (
+                        <p className="text-xs text-muted-foreground">{plan.bgnNote}</p>
+                      )}
+                      <p className="text-sm text-muted-foreground pt-1">{t(plan.descKey)}</p>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <ul className="space-y-2.5">
+                      {Array.isArray(planFeatures) && planFeatures.map((feat) => (
+                        <li key={feat} className="flex items-start gap-2.5 text-sm">
+                          <Check className="w-4 h-4 text-violet-400 shrink-0 mt-0.5" />
+                          <span className="text-muted-foreground">{feat}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    {plan.priceId ? (
+                      <Link to={`/login?plan=${plan.key}`}>
+                        <Button variant={plan.ctaVariant} className="w-full">
+                          {t(plan.ctaKey)}
+                        </Button>
+                      </Link>
+                    ) : (
+                      <Link to="/login">
+                        <Button variant={plan.ctaVariant} className="w-full">
+                          {t(plan.ctaKey)}
+                        </Button>
+                      </Link>
+                    )}
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* ── CTA ── */}
       <section className="py-20 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <Card className="bg-gradient-to-r from-primary/10 to-secondary/10 border-primary/20">
-            <CardContent className="py-16">
-              <h2 className="text-4xl font-bold font-heading mb-6">
-                {t("landing.cta.title")}
-              </h2>
-              <p className="text-xl text-foreground-muted mb-8 max-w-2xl mx-auto">
+        <div className="max-w-3xl mx-auto text-center">
+          <Card className="bg-gradient-to-r from-violet-500/10 to-cyan-500/10 border-primary/20">
+            <CardContent className="py-16 space-y-6">
+              <h2 className="text-4xl font-bold">{t("landing.cta.title")}</h2>
+              <p className="text-xl text-muted-foreground max-w-xl mx-auto">
                 {t("landing.cta.description")}
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link to="/login">
-                  <Button size="lg" className="w-full sm:w-auto text-lg px-8 py-4">
-                    {t("landing.cta.button")}
-                  </Button>
-                </Link>
-                <Link to="/legal/privacy">
-                  <Button size="lg" variant="ghost" className="w-full sm:w-auto text-lg px-8 py-4">
-                    {t("landing.cta.privacy")}
-                  </Button>
-                </Link>
-              </div>
+              <Link to="/login">
+                <Button size="lg" className="text-base px-10 py-5 mt-2">
+                  {t("landing.cta.button")}
+                </Button>
+              </Link>
             </CardContent>
           </Card>
         </div>
       </section>
+
+      {/* ── FOOTER ── */}
+      <footer className="border-t border-border bg-background py-10 px-4 text-center text-sm text-muted-foreground space-y-3">
+        <p>{t("footer.rights")}</p>
+        <p className="max-w-xl mx-auto leading-relaxed">{t("footer.disclaimer")}</p>
+        <div className="flex justify-center gap-4 flex-wrap pt-1">
+          <Link
+            to="/legal/terms"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            {t("footer.terms")}
+          </Link>
+
+          <a
+            href="https://www.iubenda.com/privacy-policy/83536904"
+            className={`iubenda-noiframe iubenda-embed text-sm ${
+              resolvedTheme === "dark" ? "iubenda-white" : "iubenda-black"
+            }`}
+            title="Политика за поверителност"
+          >
+            {t("footer.privacy")}
+          </a>
+
+          <Link
+            to="/legal/gdpr"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            {t("footer.gdpr")}
+          </Link>
+
+          <a
+            href="https://www.iubenda.com/privacy-policy/83536904/cookie-policy"
+            className={`iubenda-noiframe iubenda-embed text-sm ${
+              resolvedTheme === "dark" ? "iubenda-white" : "iubenda-black"
+            }`}
+            title="Политика за Бисквитки"
+          >
+            {t("footer.cookies")}
+          </a>
+        </div>
+      </footer>
     </div>
   );
 }

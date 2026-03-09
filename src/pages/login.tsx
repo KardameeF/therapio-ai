@@ -240,9 +240,11 @@ function LoginForm() {
   const handleGoogleSignIn = async () => {
     setLoading(true);
     setError(null);
-
     try {
       const { error } = await signInWithGoogle();
+      // signInWithGoogle прави browser redirect към Google.
+      // НЕ викай navigate() тук — браузърът сам ще се пренасочи.
+      // Ако има error ПРЕДИ redirect (мрежова грешка и т.н.), показваме го.
       if (error) {
         setError(error.message);
         toast({
@@ -250,22 +252,17 @@ function LoginForm() {
           title: "Google sign-in failed",
           description: error.message,
         });
-      } else {
-        toast({
-          variant: "success",
-          title: "Welcome!",
-          description: "You have been logged in successfully.",
-        });
-        navigate(from, { replace: true });
+        setLoading(false);
       }
+      // Ако няма error — браузърът вече се redirect-ва към Google,
+      // loading остава true докато страницата се смени.
     } catch (err) {
       setError("An unexpected error occurred");
       toast({
         variant: "destructive",
         title: "Sign-in failed",
-        description: "An unexpected error occurred. Please try again.",
+        description: "Please try again.",
       });
-    } finally {
       setLoading(false);
     }
   };

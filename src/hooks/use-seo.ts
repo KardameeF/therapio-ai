@@ -11,9 +11,9 @@ interface SEOProps {
 }
 
 export function useSEO({
-  title = "Therapio AI - Your AI-powered mental wellness companion",
-  description = "Track your mood, sleep, stress, and goals with AI-powered insights. Start your mental wellness journey with Therapio AI.",
-  keywords = "mental health, wellness, mood tracking, sleep tracking, stress management, AI, therapy, self-care",
+  title = "Eterapp — Твоят асистент за емоционална подкрепа",
+  description = "Eterapp е твоят асистент за емоционална подкрепа, наличен 24/7.",
+  keywords = "психично здраве, емоционална подкрепа, асистент, настроение, стрес, Eterapp",
   ogTitle,
   ogDescription,
   ogImage = "/og-image.png",
@@ -43,7 +43,7 @@ export function useSEO({
     updateMetaTag("theme-color", "#A0C4FF");
     updateMetaTag("apple-mobile-web-app-capable", "yes");
     updateMetaTag("apple-mobile-web-app-status-bar-style", "default");
-    updateMetaTag("apple-mobile-web-app-title", "Therapio AI");
+    updateMetaTag("apple-mobile-web-app-title", "Eterapp");
     
   }, [title, description, keywords, ogTitle, ogDescription, ogImage, twitterCard]);
 }

@@ -11,6 +11,7 @@ import { RecaptchaWrapper } from "./components/recaptcha-wrapper";
 import { LandingPage } from "./pages/landing";
 import { LoginPage } from "./pages/login";
 import { AuthCallbackPage } from "./pages/auth-callback";
+import { ChatPage } from "./pages/chat";
 import { DashboardPage } from "./pages/dashboard";
 import { MoodPage } from "./pages/mood";
 import { SleepStressPage } from "./pages/sleep-stress";
@@ -92,8 +93,10 @@ export default function App() {
 
             {/* Protected routes */}
             <Route element={<GuardedRoute />}>
+              <Route path="/app" element={<ChatPage />} />
+
               <Route element={<AppLayout />}>
-                <Route path="/app" element={<DashboardPage />} />
+                <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/mood" element={<MoodPage />} />
                 <Route path="/sleep-stress" element={<SleepStressPage />} />
                 <Route path="/goals" element={<GoalsPage />} />

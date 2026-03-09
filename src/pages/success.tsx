@@ -12,8 +12,8 @@ export function SuccessPage() {
   const { t } = useTranslation();
   
   useSEO({
-    title: "Payment Successful - Therapio AI",
-    description: "Your subscription has been activated successfully. Start your mental wellness journey with Therapio AI.",
+    title: "Payment Successful - Eterapp",
+    description: "Your subscription has been activated successfully. Start your emotional wellness journey with Eterapp.",
   });
 
   const sessionId = searchParams.get('session_id');

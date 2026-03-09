@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { Brain } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
 import { LocaleSwitch } from "./locale-switch";
 import { AuthMenu } from "./auth-menu";
@@ -7,27 +6,42 @@ import { Button } from "./ui/button";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../providers/AuthProvider";
 
+function EtheraLogo() {
+  return (
+    <div className="flex items-center gap-2 shrink-0">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="14" cy="14" r="12" stroke="url(#eg)" strokeWidth="1.5" fill="none" opacity="0.25"/>
+        <circle cx="14" cy="14" r="7" stroke="url(#eg)" strokeWidth="1.5" fill="none" opacity="0.5"/>
+        <circle cx="14" cy="14" r="2.5" fill="url(#eg)"/>
+        <ellipse cx="14" cy="14" rx="12" ry="4.5" stroke="url(#eg)" strokeWidth="1" fill="none" opacity="0.35" transform="rotate(-30 14 14)"/>
+        <defs>
+          <linearGradient id="eg" x1="2" y1="2" x2="26" y2="26" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#a78bfa"/>
+            <stop offset="100%" stopColor="#22d3ee"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <span className="font-semibold text-lg tracking-tight bg-gradient-to-r from-violet-400 to-cyan-400 bg-clip-text text-transparent">
+        Eterapp
+      </span>
+    </div>
+  );
+}
+
 export function Header() {
   const { t } = useTranslation();
   const { user } = useAuth();
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-border/50 bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/80">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
-        <Link 
-          to="/" 
-          className="flex items-center gap-3 font-semibold group transition-all duration-200"
-        >
-          <div className="relative">
-            <div className="absolute inset-0 bg-primary/20 rounded-xl blur-lg group-hover:bg-primary/30 transition-colors"></div>
-            <Brain className="relative h-8 w-8 text-primary group-hover:text-primary-600 transition-colors" />
-          </div>
-          <span className="text-xl font-heading font-semibold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            {t("app.title")}
-          </span>
+    <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-md">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-6">
+        {/* Logo — home link */}
+        <Link to="/" className="transition-opacity hover:opacity-80">
+          <EtheraLogo />
         </Link>
-        
-        <div className="flex items-center gap-4">
+
+        {/* Right side */}
+        <div className="flex items-center gap-2 md:gap-3">
           <LocaleSwitch />
           <ThemeToggle />
           {user ? (
