@@ -24,6 +24,41 @@ export function ChatPage() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isLoading]);
 
+  useEffect(() => {
+    const loadData = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("messages_used, subscription_plan")
+        .eq("id", session.user.id)
+        .single();
+
+      if (profile) {
+        setMessagesUsed(profile.messages_used ?? 0);
+        const limits: Record<string, number> = {
+          first_step: 30,
+          personal_growth: 500,
+          expanded_horizons: 1500,
+        };
+        setMessagesLimit(limits[profile.subscription_plan] ?? 30);
+      }
+
+      const { data: history } = await supabase
+        .from("chat_messages")
+        .select("id, role, content")
+        .eq("user_id", session.user.id)
+        .order("created_at", { ascending: true })
+        .limit(50);
+
+      if (history && history.length > 0) {
+        setMessages(history as Message[]);
+      }
+    };
+    loadData();
+  }, []);
+
   const handleSend = async () => {
     const text = input.trim();
     if (!text || isLoading) return;
@@ -70,6 +105,14 @@ export function ChatPage() {
       ]);
       setMessagesUsed(data.used ?? messagesUsed + 1);
       setMessagesLimit(data.limit ?? messagesLimit);
+
+      const { data: { session: currentSession } } = await supabase.auth.getSession();
+      if (currentSession) {
+        await supabase.from("chat_messages").insert([
+          { user_id: currentSession.user.id, role: "user", content: text },
+          { user_id: currentSession.user.id, role: "assistant", content: data.reply },
+        ]);
+      }
     } catch {
       setMessages((prev) => [
         ...prev,
