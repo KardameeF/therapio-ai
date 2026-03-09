@@ -171,6 +171,21 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
     throw error;
   }
 
+  // Sync subscription_plan to profiles table (used by chat function for limits)
+  const { error: profileError } = await supabase
+    .from('profiles')
+    .update({
+      subscription_plan: planType,
+      messages_used: 0,
+    })
+    .eq('id', userId);
+
+  if (profileError) {
+    console.error('Error updating profile subscription_plan:', profileError);
+    // Не хвърляме грешка — subscription е записан, само sync-ът фейлна
+  }
+
+  console.log('Successfully synced subscription_plan to profiles for user:', userId);
   console.log('Successfully processed checkout.session.completed for user:', userId);
 }
 
@@ -220,6 +235,17 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
   if (error) {
     console.error('Error updating subscription status to cancelled:', error);
     throw error;
+  }
+
+  // Sync back to first_step in profiles when subscription is cancelled
+  const stripeSubForUser = await stripe.subscriptions.retrieve(subscription.id);
+  const userId = stripeSubForUser.metadata?.user_id;
+
+  if (userId) {
+    await supabase
+      .from('profiles')
+      .update({ subscription_plan: 'first_step' })
+      .eq('id', userId);
   }
 
   console.log('Successfully processed customer.subscription.deleted for subscription:', subscription.id);
