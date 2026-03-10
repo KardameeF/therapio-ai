@@ -78,7 +78,7 @@ export function AppLayout() {
             {isAdmin && (
               <NavLink
                 to="/admin"
-                title={isCollapsed ? "Админ" : undefined}
+                title={isCollapsed ? t("nav.admin") : undefined}
                 className={({ isActive }) =>
                   cn(
                     "flex items-center rounded-xl text-sm font-medium transition-all duration-200",
@@ -90,7 +90,7 @@ export function AppLayout() {
                 }
               >
                 <Shield className="h-5 w-5 shrink-0" />
-                {!isCollapsed && <span>Админ</span>}
+                {!isCollapsed && <span>{t("nav.admin")}</span>}
               </NavLink>
             )}
 
