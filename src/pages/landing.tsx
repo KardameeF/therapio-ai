@@ -266,7 +266,7 @@ export function LandingPage() {
       </section>
 
       {/* ── FOOTER ── */}
-      <footer className="border-t border-border bg-secondary/40 py-10 px-4 text-center text-sm text-muted-foreground space-y-3">
+      <footer className="border-t border-border bg-muted py-10 px-4 text-center text-sm text-muted-foreground space-y-3">
         <p>{t("footer.rights")}</p>
         <p className="max-w-xl mx-auto leading-relaxed">{t("footer.disclaimer")}</p>
         <div className="flex justify-center gap-4 flex-wrap pt-1">

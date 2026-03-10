@@ -426,7 +426,7 @@ export function ChatPage() {
         </header>
 
         {/* CHAT AREA */}
-        <div className="flex-1 overflow-y-auto p-4 md:p-6">
+        <div className="flex-1 overflow-y-auto px-4 py-6">
           {messages.length === 0 && !isLoading ? (
             <div className="flex items-center justify-center h-full">
               <div className="text-center space-y-4 max-w-md">
@@ -441,7 +441,7 @@ export function ChatPage() {
               {messages.map((msg) => (
                 msg.role === "user" ? (
                   <div key={msg.id} className="mb-6 flex justify-end">
-                    <p className="ml-auto max-w-[75%] text-right text-foreground text-base leading-relaxed whitespace-pre-wrap">
+                    <p className="ml-auto max-w-[75%] text-right text-foreground font-medium text-base leading-relaxed whitespace-pre-wrap">
                       {msg.content}
                     </p>
                   </div>
@@ -535,6 +535,15 @@ export function ChatPage() {
             </div>
             <p className="text-center text-xs text-muted-foreground mt-2">
               Eterapp не е медицинска услуга.
+              <span className="text-muted-foreground/40"> · </span>
+              <a
+                href="https://policies.google.com/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-muted-foreground/40 hover:text-muted-foreground/60 transition-colors"
+              >
+                reCAPTCHA
+              </a>
             </p>
           </div>
         </div>

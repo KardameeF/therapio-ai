@@ -155,8 +155,8 @@ export default function AdminDashboard() {
   // Format role badge
   const formatRole = (role: string) => {
     const roleColors = {
-      admin: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
-      user: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+      admin: 'bg-primary/15 text-primary',
+      user: 'bg-secondary text-secondary-foreground',
       premium: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
     };
     
