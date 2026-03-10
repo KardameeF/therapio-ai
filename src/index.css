@@ -5,50 +5,50 @@
 @tailwind utilities;
 
 :root {
-  --background: hsl(48 33% 97%);
-  --foreground: hsl(60 3% 8%);
-  --foreground-muted: hsl(51 3% 44%);
-  --card: hsl(48 33% 97%);
-  --card-foreground: hsl(60 3% 8%);
-  --popover: hsl(48 33% 97%);
-  --popover-foreground: hsl(60 3% 8%);
-  --border: hsl(48 15% 88%);
-  --input: hsl(48 15% 88%);
-  --primary: hsl(15 54% 51%);
-  --primary-foreground: hsl(48 33% 97%);
-  --secondary: hsl(53 29% 94%);
-  --secondary-foreground: hsl(60 3% 8%);
-  --muted: hsl(48 25% 92%);
-  --muted-foreground: hsl(51 3% 44%);
-  --accent: hsl(48 25% 92%);
-  --accent-foreground: hsl(15 54% 51%);
-  --destructive: hsl(0 58% 34%);
-  --destructive-foreground: hsl(48 33% 97%);
-  --ring: hsl(15 54% 51%);
+  --background: 48 33% 97%;
+  --foreground: 60 3% 8%;
+  --foreground-muted: 51 3% 44%;
+  --card: 48 33% 97%;
+  --card-foreground: 60 3% 8%;
+  --popover: 48 33% 97%;
+  --popover-foreground: 60 3% 8%;
+  --border: 48 15% 88%;
+  --input: 48 15% 88%;
+  --primary: 15 54% 51%;
+  --primary-foreground: 48 33% 97%;
+  --secondary: 53 29% 94%;
+  --secondary-foreground: 60 3% 8%;
+  --muted: 48 25% 92%;
+  --muted-foreground: 51 3% 44%;
+  --accent: 48 25% 92%;
+  --accent-foreground: 15 54% 51%;
+  --destructive: 0 58% 34%;
+  --destructive-foreground: 48 33% 97%;
+  --ring: 15 54% 51%;
   --radius: 0.75rem;
 }
 
 .dark {
-  --background: hsl(60 2% 14%);
-  --foreground: hsl(48 33% 97%);
-  --foreground-muted: hsl(48 8% 52%);
-  --card: hsl(60 2% 14%);
-  --card-foreground: hsl(48 33% 97%);
-  --popover: hsl(60 2% 18%);
-  --popover-foreground: hsl(48 33% 97%);
-  --border: hsl(60 2% 22%);
-  --input: hsl(60 2% 22%);
-  --primary: hsl(15 63% 60%);
-  --primary-foreground: hsl(60 2% 8%);
-  --secondary: hsl(60 2% 18%);
-  --secondary-foreground: hsl(50 9% 74%);
-  --muted: hsl(60 2% 18%);
-  --muted-foreground: hsl(48 5% 59%);
-  --accent: hsl(60 2% 20%);
-  --accent-foreground: hsl(15 63% 60%);
-  --destructive: hsl(0 56% 45%);
-  --destructive-foreground: hsl(48 33% 97%);
-  --ring: hsl(15 63% 60%);
+  --background: 60 2% 14%;
+  --foreground: 48 33% 97%;
+  --foreground-muted: 48 8% 52%;
+  --card: 60 2% 14%;
+  --card-foreground: 48 33% 97%;
+  --popover: 60 2% 18%;
+  --popover-foreground: 48 33% 97%;
+  --border: 60 2% 22%;
+  --input: 60 2% 22%;
+  --primary: 15 63% 60%;
+  --primary-foreground: 60 2% 8%;
+  --secondary: 60 2% 18%;
+  --secondary-foreground: 50 9% 74%;
+  --muted: 60 2% 18%;
+  --muted-foreground: 48 5% 59%;
+  --accent: 60 2% 20%;
+  --accent-foreground: 15 63% 60%;
+  --destructive: 0 56% 45%;
+  --destructive-foreground: 48 33% 97%;
+  --ring: 15 63% 60%;
 }
 
 html, body, #root {
@@ -57,8 +57,8 @@ html, body, #root {
 
 body {
   font-family: 'Inter', 'Poppins', system-ui, sans-serif;
-  background-color: var(--background);
-  color: var(--foreground);
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -70,16 +70,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--background);
+  background: hsl(var(--background));
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border);
+  background: hsl(var(--border));
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--foreground-muted);
+  background: hsl(var(--foreground-muted));
 }
 
 /* Smooth transitions */
@@ -89,7 +89,7 @@ body {
 
 /* Focus styles */
 .focus-visible {
-  @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
+  @apply outline-none ring-2 ring-primary ring-offset-2;
 }
 
 /* iubenda consent banner z-index */
