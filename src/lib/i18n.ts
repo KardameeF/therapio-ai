@@ -393,6 +393,12 @@ const resources = {
           fetch: "Failed to fetch admin data"
         }
       },
+      chat: {
+        voiceUpgradeRequired: "Upgrade your plan for voice messages",
+        recording: "Recording... Tap again to stop",
+        transcribing: "Transcribing...",
+        micError: "Cannot access microphone"
+      },
       footer: {
         rights: "© 2026 Eterapp. All rights reserved.",
         disclaimer: "Eterapp is not a medical service. In case of emergency, call 112 or the Trust Hotline 0800 1 8 400.",
@@ -792,6 +798,12 @@ const resources = {
           profile: "Неуспешно зареждане на потребителския профил",
           fetch: "Неуспешно зареждане на административните данни"
         }
+      },
+      chat: {
+        voiceUpgradeRequired: "Надгради плана си за гласови съобщения",
+        recording: "Записва се... Натисни отново за спиране",
+        transcribing: "Транскрибира се...",
+        micError: "Не може да се получи достъп до микрофона"
       },
       footer: {
         rights: "© 2026 Eterapp. Всички права запазени.",

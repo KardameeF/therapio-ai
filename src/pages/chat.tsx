@@ -1,10 +1,12 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Plus, Send, User, Menu, X, PanelLeftOpen, PanelLeftClose, LogOut, Search } from "lucide-react";
+import { Plus, Send, User, Menu, X, PanelLeftOpen, PanelLeftClose, LogOut, Search, Mic, MicOff, Loader2 } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 import { ThemeToggle } from "../components/theme-toggle";
 import { DisplayNamePrompt } from "../components/display-name-prompt";
 import { DisclaimerModal } from "../components/disclaimer-modal";
+import { useVoiceRecorder } from "../hooks/useVoiceRecorder";
+import { useTranslation } from "react-i18next";
 
 interface Message {
   id: string;
@@ -28,6 +30,7 @@ const PLACEHOLDER_PHRASES = [
 
 export function ChatPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
@@ -39,12 +42,17 @@ export function ChatPage() {
   const [streamingMessage, setStreamingMessage] = useState("");
   const [messagesUsed, setMessagesUsed] = useState(0);
   const [messagesLimit, setMessagesLimit] = useState(30);
+  const [currentPlan, setCurrentPlan] = useState("first_step");
   const [chatHistory, setChatHistory] = useState<ChatSession[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
   const [placeholderVisible, setPlaceholderVisible] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const profilePopupRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  const { isRecording, isTranscribing, startRecording, stopAndTranscribe } = useVoiceRecorder();
+  const isPaidPlan = ["personal_growth", "expanded_horizons"].includes(currentPlan);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -84,12 +92,14 @@ export function ChatPage() {
 
       if (profile) {
         setMessagesUsed(profile.messages_used ?? 0);
+        const plan = profile.subscription_plan ?? "first_step";
+        setCurrentPlan(plan);
         const limits: Record<string, number> = {
           first_step: 30,
           personal_growth: 500,
           expanded_horizons: 1500,
         };
-        setMessagesLimit(limits[profile.subscription_plan] ?? 30);
+        setMessagesLimit(limits[plan] ?? 30);
       }
 
       const { data: history } = await supabase
@@ -228,6 +238,22 @@ export function ChatPage() {
   const handleNewChat = () => {
     setMessages([]);
     setInput("");
+  };
+
+  const handleVoiceToggle = async () => {
+    if (isRecording) {
+      try {
+        const text = await stopAndTranscribe();
+        if (text) {
+          setInput((prev) => (prev ? prev + " " + text : text));
+          inputRef.current?.focus();
+        }
+      } catch {
+        // error is set inside the hook
+      }
+    } else {
+      await startRecording();
+    }
   };
 
   const filteredHistory = searchQuery.trim()
@@ -546,12 +572,28 @@ export function ChatPage() {
         {/* INPUT BAR */}
         <div className="shrink-0 px-4 py-4 border-t border-border">
           <div className="max-w-2xl mx-auto w-full">
+
+            {/* Recording indicator */}
+            {isRecording && (
+              <div className="flex items-center gap-2 px-4 py-1.5 text-xs text-destructive bg-destructive/10 rounded-full w-fit mx-auto mb-2">
+                <span className="w-2 h-2 rounded-full bg-destructive animate-pulse" />
+                {t("chat.recording")}
+              </div>
+            )}
+
+            {isTranscribing && (
+              <div className="flex items-center gap-2 px-4 py-1.5 text-xs text-muted-foreground bg-muted rounded-full w-fit mx-auto mb-2">
+                <Loader2 className="w-3 h-3 animate-spin" />
+                {t("chat.transcribing")}
+              </div>
+            )}
+
             <div className="flex items-end gap-2 px-4 py-3 rounded-2xl
               border border-border bg-card
               focus-within:border-primary/50
               transition-colors">
               <div className="relative flex-1">
-                {input.length === 0 && (
+                {input.length === 0 && !isRecording && (
                   <span
                     className="absolute inset-0 flex items-center text-sm text-muted-foreground pointer-events-none select-none"
                     style={{ opacity: placeholderVisible ? 1 : 0, transition: "opacity 0.4s ease-in-out" }}
@@ -560,15 +602,52 @@ export function ChatPage() {
                   </span>
                 )}
                 <textarea
+                  ref={inputRef}
                   value={input}
                   onChange={e => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
                   rows={1}
-                  disabled={isLoading || isStreaming}
+                  disabled={isLoading || isStreaming || isTranscribing}
                   className="w-full bg-transparent resize-none outline-none text-sm
                     text-foreground max-h-32 overflow-y-auto disabled:cursor-not-allowed"
                 />
               </div>
+
+              {/* Mic button */}
+              <div className="relative group">
+                <button
+                  type="button"
+                  onClick={isPaidPlan ? handleVoiceToggle : undefined}
+                  disabled={isTranscribing || isLoading || isStreaming}
+                  className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200
+                    ${!isPaidPlan
+                      ? "text-muted-foreground/30 cursor-not-allowed"
+                      : isRecording
+                        ? "text-destructive bg-destructive/10 animate-pulse"
+                        : isTranscribing
+                          ? "text-muted-foreground"
+                          : "text-muted-foreground hover:text-primary hover:bg-primary/10"
+                    }
+                    disabled:opacity-30 disabled:cursor-not-allowed
+                  `}
+                >
+                  {isTranscribing
+                    ? <Loader2 className="w-4 h-4 animate-spin" />
+                    : isRecording
+                      ? <MicOff className="w-4 h-4" />
+                      : <Mic className="w-4 h-4" />
+                  }
+                </button>
+                {!isPaidPlan && (
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2
+                    px-2 py-1 text-xs bg-popover border border-border
+                    rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100
+                    transition-opacity pointer-events-none z-10">
+                    {t("chat.voiceUpgradeRequired")}
+                  </div>
+                )}
+              </div>
+
               <button
                 onClick={handleSend}
                 disabled={!input.trim() || isLoading || isStreaming}
