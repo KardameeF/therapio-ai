@@ -127,17 +127,17 @@ const resources = {
             title: "AI Chat Assistant",
             description: "Talk to Eterapp anytime. It understands you and responds with empathy."
           },
-          mood: {
-            title: "Mood Journal",
-            description: "Track your emotions and discover patterns over time."
+          privacy: {
+            title: "Full Privacy",
+            description: "Your conversations are encrypted and never shared with third parties."
           },
-          sleep: {
-            title: "Sleep & Stress",
-            description: "Monitor your sleep and stress for better self-awareness and balance."
+          bilingual: {
+            title: "Bulgarian & English",
+            description: "Speak in your native language — Eterapp understands both."
           },
-          goals: {
-            title: "Wellness Goals",
-            description: "Set small, achievable goals and celebrate every step forward."
+          available: {
+            title: "Available 24/7",
+            description: "No waiting, no queues. Here whenever you need it."
           }
         },
         pricing: {
@@ -150,8 +150,8 @@ const resources = {
             description: "The ideal start, no commitment",
             features: [
               "30 AI messages/month",
-              "gpt-4o-mini model",
-              "30 days history",
+              "Basic AI assistant (gpt-4o-mini)",
+              "30 days conversation history",
               "BG/EN support"
             ],
             cta: "Start for Free"
@@ -163,10 +163,8 @@ const resources = {
             description: "For deeper emotional work",
             features: [
               "500 AI messages/month",
-              "gpt-4o model",
-              "Voice assistant (30 min)",
-              "90 days history",
-              "Mood tracker",
+              "More powerful AI assistant (gpt-4o)",
+              "90 days conversation history",
               "Priority support"
             ],
             cta: "Choose Plan"
@@ -178,12 +176,9 @@ const resources = {
             description: "Full transformation with all features",
             features: [
               "1500 AI messages/month",
-              "gpt-4o model",
-              "Voice assistant (120 min)",
-              "Images (OCR)",
-              "180 days history",
-              "Full analytics",
-              "Priority support"
+              "Most powerful AI assistant (gpt-4o)",
+              "180 days conversation history",
+              "Priority support 24/7"
             ],
             cta: "Choose Plan"
           }
@@ -358,16 +353,16 @@ const resources = {
         perMonth: "/месец",
         plans: {
           first_step: {
-            name: "First Step",
+            name: "Първа Стъпка",
             description: "30 съобщения/месец • 30 дни история"
           },
           personal_growth: {
-            name: "Personal Growth",
-            description: "500 съобщения/месец • Гласов асистент • 90 дни история"
+            name: "Личен Растеж",
+            description: "500 съобщения/месец • 90 дни история"
           },
           expanded_horizons: {
-            name: "Expanded Horizons",
-            description: "1500 съобщения/месец • Глас + OCR • 180 дни история"
+            name: "Разширени Хоризонти",
+            description: "1500 съобщения/месец • 180 дни история"
           }
         }
       },
@@ -392,63 +387,58 @@ const resources = {
             title: "AI Чат Асистент",
             description: "Говори с Eterapp по всяко време. Разбира те, отговаря с емпатия."
           },
-          mood: {
-            title: "Дневник на настроението",
-            description: "Проследявай емоциите си и разкривай патерните с течение на времето."
+          privacy: {
+            title: "Пълна поверителност",
+            description: "Разговорите ти са криптирани и никога не се споделят с трети страни."
           },
-          sleep: {
-            title: "Сън и стрес",
-            description: "Следи съня и стреса си за по-добро самопознание и равновесие."
+          bilingual: {
+            title: "Български и Английски",
+            description: "Говори на родния си език — Eterapp разбира и двата."
           },
-          goals: {
-            title: "Цели за благополучие",
-            description: "Поставяй малки, постижими цели и празнувай всяка стъпка напред."
+          available: {
+            title: "Достъпен 24/7",
+            description: "Без чакане, без опашки. Тук съм когато имаш нужда."
           }
         },
         pricing: {
           title: "Избери своя план",
           subtitle: "Планове, създадени да подкрепят психичното ти здраве на всеки етап",
           firstStep: {
-            name: "First Step",
+            name: "Първа Стъпка",
             price: "€0",
             period: "/месец",
             description: "Идеален старт без ангажимент",
             features: [
-              "30 AI съобщения/месец",
-              "gpt-4o-mini модел",
-              "30 дни история",
+              "30 AI съобщения на месец",
+              "Основен AI асистент (gpt-4o-mini)",
+              "30 дни история на разговорите",
               "BG/EN поддръжка"
             ],
             cta: "Започни безплатно"
           },
           personalGrowth: {
-            name: "Personal Growth",
+            name: "Личен Растеж",
             price: "€19.99",
             period: "/месец",
             description: "За задълбочена емоционална работа",
             features: [
-              "500 AI съобщения/месец",
-              "gpt-4o модел",
-              "Гласов асистент (30 мин)",
-              "90 дни история",
-              "Mood tracker",
+              "500 AI съобщения на месец",
+              "По-мощен AI асистент (gpt-4o)",
+              "90 дни история на разговорите",
               "Приоритетна поддръжка"
             ],
             cta: "Избери план"
           },
           expandedHorizons: {
-            name: "Expanded Horizons",
+            name: "Разширени Хоризонти",
             price: "€39.99",
             period: "/месец",
             description: "Пълна трансформация с всички функции",
             features: [
-              "1500 AI съобщения/месец",
-              "gpt-4o модел",
-              "Гласов асистент (120 мин)",
-              "Изображения (OCR)",
-              "180 дни история",
-              "Пълен анализ",
-              "Приоритетна поддръжка"
+              "1500 AI съобщения на месец",
+              "Най-мощният AI асистент (gpt-4o)",
+              "180 дни история на разговорите",
+              "Приоритетна поддръжка 24/7"
             ],
             cta: "Избери план"
           }

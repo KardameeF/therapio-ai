@@ -13,9 +13,6 @@ import {
   Globe,
   Zap,
   MessageCircle,
-  Heart,
-  Moon,
-  Target,
   Check,
 } from "lucide-react";
 
@@ -44,10 +41,10 @@ export function LandingPage() {
   });
 
   const features = [
-    { Icon: MessageCircle, titleKey: "landing.features.ai.title", descKey: "landing.features.ai.description" },
-    { Icon: Heart,         titleKey: "landing.features.mood.title", descKey: "landing.features.mood.description" },
-    { Icon: Moon,          titleKey: "landing.features.sleep.title", descKey: "landing.features.sleep.description" },
-    { Icon: Target,        titleKey: "landing.features.goals.title", descKey: "landing.features.goals.description" },
+    { Icon: MessageCircle, titleKey: "landing.features.ai.title",        descKey: "landing.features.ai.description" },
+    { Icon: Shield,        titleKey: "landing.features.privacy.title",   descKey: "landing.features.privacy.description" },
+    { Icon: Globe,         titleKey: "landing.features.bilingual.title", descKey: "landing.features.bilingual.description" },
+    { Icon: Zap,           titleKey: "landing.features.available.title", descKey: "landing.features.available.description" },
   ];
 
   const plans = [

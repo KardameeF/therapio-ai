@@ -98,7 +98,7 @@ export function BillingPage() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
-            <span>First Step</span>
+            <span>Първа Стъпка</span>
             {currentPlan === "first_step" && (
               <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
                 Текущ план
@@ -108,16 +108,17 @@ export function BillingPage() {
           <CardDescription>{formatPrice(0)}/месец</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3 text-sm text-muted-foreground">
-          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>30 съобщения на месец</span></div>
-          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>Основен асистент</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>30 AI съобщения на месец</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>Основен AI асистент (gpt-4o-mini)</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>30 дни история на разговорите</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>BG/EN поддръжка</span></div>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
-            <span>Personal Growth</span>
+            <span>Личен Растеж</span>
             {currentPlan === "personal_growth" && (
               <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
                 Текущ план
@@ -127,9 +128,9 @@ export function BillingPage() {
           <CardDescription>{formatPrice(19.99)}/месец</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3 text-sm text-muted-foreground">
-          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>500 съобщения на месец</span></div>
-          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>Разширен асистент с по-дълбоко разбиране</span></div>
-          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>Неограничена история на разговорите</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>500 AI съобщения на месец</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>По-мощен AI асистент (gpt-4o)</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>90 дни история на разговорите</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>Приоритетна поддръжка</span></div>
           <Button onClick={() => handleUpgrade("price_1S8qnIDVd6WnP7HIrd5qxgrt")} disabled={loading || currentPlan === "personal_growth"} className="w-full mt-4">
             {loading ? "Зареждане..." : currentPlan === "personal_growth" ? "Текущ план" : "Избери план"}
@@ -140,7 +141,7 @@ export function BillingPage() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
-            <span>Expanded Horizons</span>
+            <span>Разширени Хоризонти</span>
             {currentPlan === "expanded_horizons" && (
               <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
                 Текущ план
@@ -150,9 +151,9 @@ export function BillingPage() {
           <CardDescription>{formatPrice(39.99)}/месец</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3 text-sm text-muted-foreground">
-          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>1500 съобщения на месец</span></div>
-          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>Най-мощният асистент за интензивна подкрепа</span></div>
-          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>Неограничена история на разговорите</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>1500 AI съобщения на месец</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>Най-мощният AI асистент (gpt-4o)</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>180 дни история на разговорите</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>Приоритетна поддръжка 24/7</span></div>
           <Button onClick={() => handleUpgrade("price_1S8qoxDVd6WnP7HI4Vjfan7y")} disabled={loading || currentPlan === "expanded_horizons"} className="w-full mt-4">
             {loading ? "Зареждане..." : currentPlan === "expanded_horizons" ? "Текущ план" : "Избери план"}
