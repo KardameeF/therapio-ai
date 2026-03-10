@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../co
 import { useAuth } from "../providers/AuthProvider";
 import { supabase } from "../lib/supabaseClient";
 import { User, Mail } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface ProfileFormData {
   displayName?: string;
