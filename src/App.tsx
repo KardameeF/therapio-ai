@@ -6,6 +6,7 @@ import { ThemeProvider } from "./providers/theme-provider";
 import { AuthProvider } from "./providers/AuthProvider";
 import { Header } from "./components/header";
 import { GuardedRoute } from "./components/guarded-route";
+import { AdminGuard } from "./components/AdminGuard";
 import { AppLayout } from "./layouts/app-layout";
 import { RecaptchaWrapper } from "./components/recaptcha-wrapper";
 import { LandingPage } from "./pages/landing";
@@ -94,7 +95,11 @@ export default function App() {
               <Route element={<AppLayout />}>
                 <Route path="/billing" element={<BillingPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
-                <Route path="/admin" element={<AdminPage />} />
+
+                {/* Admin-only route — requires role = 'admin' */}
+                <Route element={<AdminGuard />}>
+                  <Route path="/admin" element={<AdminPage />} />
+                </Route>
               </Route>
             </Route>
 
