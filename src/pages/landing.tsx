@@ -111,23 +111,13 @@ export function LandingPage() {
                   </Button>
                 </Link>
               ) : (
-                <>
-                  <Button
-                    size="lg"
-                    className="w-full sm:w-auto text-base px-8 rounded-xl"
-                    onClick={() => { setAuthTab("signup"); setAuthOpen(true); }}
-                  >
-                    {t("landing.hero.cta")}
-                  </Button>
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="w-full sm:w-auto text-base px-8 rounded-xl"
-                    onClick={() => { setAuthTab("login"); setAuthOpen(true); }}
-                  >
-                    {t("landing.hero.signIn")}
-                  </Button>
-                </>
+                <Button
+                  size="lg"
+                  className="w-full sm:w-auto text-base px-8 rounded-xl"
+                  onClick={() => { setAuthTab("signup"); setAuthOpen(true); }}
+                >
+                  {t("landing.hero.cta")}
+                </Button>
               )}
             </div>
 
