@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Plus, Send, User, Menu, X, PanelLeftOpen, PanelLeftClose, LogOut, Search, Mic, MicOff, Loader2 } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
@@ -152,6 +152,7 @@ export function ChatPage() {
     const text = input.trim();
     if (!text || isLoading || isStreaming) return;
 
+    const isFirstMessage = messages.length === 0;
     const userMsg: Message = { id: crypto.randomUUID(), role: "user", content: text };
     const history = [...messages, userMsg];
 
@@ -214,6 +215,10 @@ export function ChatPage() {
           { user_id: currentSession.user.id, role: "assistant", content: data.reply },
         ]);
       }
+
+      if (isFirstMessage && data.reply) {
+        generateChatTitle(text, data.reply);
+      }
     } catch {
       setMessages((prev) => [
         ...prev,
@@ -239,6 +244,39 @@ export function ChatPage() {
     setMessages([]);
     setInput("");
   };
+
+  const generateChatTitle = useCallback(async (userMsg: string, botMsg: string) => {
+    try {
+      const currentLang = t("app.title") ? (document.documentElement.lang || "bg") : "bg";
+      const lang = currentLang.startsWith("en") ? "en" : "bg";
+
+      const res = await fetch("/.netlify/functions/generate-title", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userMessage: userMsg.slice(0, 200),
+          botMessage: botMsg.slice(0, 200),
+          language: lang,
+        }),
+      });
+
+      if (!res.ok) return;
+      const { title } = await res.json();
+
+      setChatHistory((prev) => {
+        const today = new Date().toISOString().slice(0, 10);
+        const existing = prev.find((s) => s.date === today);
+        if (existing) {
+          return prev.map((s) =>
+            s.date === today ? { ...s, preview: title } : s
+          );
+        }
+        return [{ date: today, preview: title, messageCount: 2 }, ...prev];
+      });
+    } catch {
+      // Silent — don't show error to user
+    }
+  }, [t]);
 
   const handleVoiceToggle = async () => {
     if (isRecording) {
@@ -377,7 +415,7 @@ export function ChatPage() {
                   className="w-full text-left px-2 py-2 rounded-lg hover:bg-secondary/60 transition-colors group"
                 >
                   <p className="text-sm font-medium text-foreground truncate group-hover:text-primary transition-colors">
-                    {session.preview}
+                    {session.preview ? session.preview.charAt(0).toUpperCase() + session.preview.slice(1) : "Нов чат"}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">
                     {new Date(session.date).toLocaleDateString("bg-BG", { day: "numeric", month: "short" })}
