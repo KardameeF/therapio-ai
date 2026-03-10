@@ -12,7 +12,7 @@ export function AuthModal({ open, onClose, defaultTab }: AuthModalProps) {
   return (
     <Dialog open={open} onOpenChange={(o) => { if (!o) onClose(); }}>
       <DialogContent
-        className="max-w-md w-full p-0 overflow-hidden"
+        className="max-w-md w-full p-0"
         onInteractOutside={(e) => e.preventDefault()}
       >
         <GoogleReCaptchaProvider reCaptchaKey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}>

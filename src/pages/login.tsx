@@ -159,8 +159,7 @@ function LoginFormInner({ defaultTab = "login" }: { defaultTab?: "login" | "regi
   const btnPrimaryCls = "w-full py-2.5 rounded-xl bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2";
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-background">
-      <div className="w-full max-w-md rounded-2xl border border-border bg-card p-8">
+    <div className="w-full max-w-md rounded-2xl border border-border bg-card p-8">
 
         {/* Logo */}
         <div className="flex justify-center mb-4">
@@ -354,7 +353,6 @@ function LoginFormInner({ defaultTab = "login" }: { defaultTab?: "login" | "regi
           </>
         )}
       </div>
-    </div>
   );
 }
 
@@ -365,7 +363,9 @@ export function LoginForm({ onSuccess, defaultTab = "login" }: { onSuccess?: () 
 export function LoginPage() {
   return (
     <GoogleReCaptchaProvider reCaptchaKey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}>
-      <LoginFormInner />
+      <div className="min-h-screen flex items-center justify-center px-4 bg-background">
+        <LoginFormInner />
+      </div>
     </GoogleReCaptchaProvider>
   );
 }
