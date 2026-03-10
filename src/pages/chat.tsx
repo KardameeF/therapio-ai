@@ -18,6 +18,14 @@ interface ChatSession {
   messageCount: number;
 }
 
+const PLACEHOLDER_PHRASES = [
+  "Как се чувстваш днес?",
+  "Искаш ли да споделиш нещо?",
+  "Тук съм да те изслушам...",
+  "Какво те тревожи?",
+  "Разкажи ми повече...",
+];
+
 export function ChatPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -33,12 +41,25 @@ export function ChatPage() {
   const [messagesLimit, setMessagesLimit] = useState(30);
   const [chatHistory, setChatHistory] = useState<ChatSession[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [placeholderIdx, setPlaceholderIdx] = useState(0);
+  const [placeholderVisible, setPlaceholderVisible] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const profilePopupRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isLoading, isStreaming, streamingMessage]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPlaceholderVisible(false);
+      setTimeout(() => {
+        setPlaceholderIdx((i) => (i + 1) % PLACEHOLDER_PHRASES.length);
+        setPlaceholderVisible(true);
+      }, 400);
+    }, 3500);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -454,7 +475,7 @@ export function ChatPage() {
               </div>
             </div>
           ) : (
-            <div className="max-w-3xl mx-auto space-y-0">
+            <div className="max-w-2xl mx-auto w-full space-y-0">
               {messages.map((msg) => (
                 msg.role === "user" ? (
                   <div key={msg.id} className="mb-6 flex justify-end">
@@ -524,22 +545,30 @@ export function ChatPage() {
 
         {/* INPUT BAR */}
         <div className="shrink-0 px-4 py-4 border-t border-border">
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-2xl mx-auto w-full">
             <div className="flex items-end gap-2 px-4 py-3 rounded-xl
               border border-border bg-background
               focus-within:border-primary/50
               transition-colors">
-              <textarea
-                value={input}
-                onChange={e => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Напиши нещо..."
-                rows={1}
-                disabled={isLoading || isStreaming}
-                className="flex-1 bg-transparent resize-none outline-none text-sm
-                  text-foreground placeholder:text-muted-foreground
-                  max-h-32 overflow-y-auto disabled:cursor-not-allowed"
-              />
+              <div className="relative flex-1">
+                {input.length === 0 && (
+                  <span
+                    className="absolute inset-0 flex items-center text-sm text-muted-foreground pointer-events-none select-none"
+                    style={{ opacity: placeholderVisible ? 1 : 0, transition: "opacity 0.4s ease-in-out" }}
+                  >
+                    {PLACEHOLDER_PHRASES[placeholderIdx]}
+                  </span>
+                )}
+                <textarea
+                  value={input}
+                  onChange={e => setInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  rows={1}
+                  disabled={isLoading || isStreaming}
+                  className="w-full bg-transparent resize-none outline-none text-sm
+                    text-foreground max-h-32 overflow-y-auto disabled:cursor-not-allowed"
+                />
+              </div>
               <button
                 onClick={handleSend}
                 disabled={!input.trim() || isLoading || isStreaming}
