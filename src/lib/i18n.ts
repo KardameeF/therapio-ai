@@ -219,6 +219,8 @@ const resources = {
       profile: {
         title: "Profile",
         subtitle: "Account settings",
+        forgotPassword: "Forgot your password?",
+        resetEmailSent: "✓ Sent! Check your email.",
         accountInfo: {
           title: "Account information",
           subtitle: "Basic data",
@@ -575,6 +577,8 @@ const resources = {
       profile: {
         title: "Профил",
         subtitle: "Настройки на акаунта",
+        forgotPassword: "Забравена паролата си?",
+        resetEmailSent: "✓ Изпратен! Провери имейла си.",
         accountInfo: {
           title: "Информация за акаунта",
           subtitle: "Основни данни",

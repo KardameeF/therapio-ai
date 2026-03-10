@@ -29,6 +29,7 @@ export function ProfilePage() {
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [forgotPasswordSent, setForgotPasswordSent] = useState(false);
   const { user, signOut } = useAuth();
   const { t } = useTranslation();
 
@@ -91,6 +92,17 @@ export function ProfilePage() {
 
   const handleSignOut = async () => {
     await signOut();
+  };
+
+  const handleForgotPassword = async () => {
+    if (!user?.email) return;
+    const { error } = await supabase.auth.resetPasswordForEmail(user.email, {
+      redirectTo: `${window.location.origin}/profile`,
+    });
+    if (!error) {
+      setForgotPasswordSent(true);
+      setTimeout(() => setForgotPasswordSent(false), 30000);
+    }
   };
 
   const onPasswordSubmit = async (data: PasswordFormData) => {
@@ -222,6 +234,16 @@ export function ProfilePage() {
             {pwErrors.currentPassword && (
               <p className="text-xs text-destructive">{t("validation.required")}</p>
             )}
+            <div className="flex justify-end mt-1">
+              <button
+                type="button"
+                onClick={handleForgotPassword}
+                disabled={forgotPasswordSent}
+                className="text-xs text-muted-foreground hover:text-primary transition-colors underline-offset-2 hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {forgotPasswordSent ? t("profile.resetEmailSent") : t("profile.forgotPassword")}
+              </button>
+            </div>
           </div>
 
           {/* New password */}
