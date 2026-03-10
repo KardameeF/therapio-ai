@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Plus, Send, User, Settings, Menu, X } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { Link, useNavigate } from "react-router-dom";
+import { Plus, Send, User, Menu, X, PanelLeftOpen, PanelLeftClose, LogOut } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
+import { ThemeToggle } from "../components/theme-toggle";
+import { DisplayNamePrompt } from "../components/display-name-prompt";
+import { DisclaimerModal } from "../components/disclaimer-modal";
 
 interface Message {
   id: string;
@@ -11,18 +13,34 @@ interface Message {
 }
 
 export function ChatPage() {
-  const { t } = useTranslation();
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [userEmail, setUserEmail] = useState<string>("");
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isStreaming, setIsStreaming] = useState(false);
+  const [streamingMessage, setStreamingMessage] = useState("");
   const [messagesUsed, setMessagesUsed] = useState(0);
   const [messagesLimit, setMessagesLimit] = useState(30);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const profilePopupRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isLoading]);
+  }, [messages, isLoading, isStreaming, streamingMessage]);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (profileOpen && profilePopupRef.current && !profilePopupRef.current.contains(e.target as Node)) {
+        setProfileOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [profileOpen]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -55,13 +73,15 @@ export function ChatPage() {
       if (history && history.length > 0) {
         setMessages(history as Message[]);
       }
+
+      setUserEmail(session.user.email ?? "");
     };
     loadData();
   }, []);
 
   const handleSend = async () => {
     const text = input.trim();
-    if (!text || isLoading) return;
+    if (!text || isLoading || isStreaming) return;
 
     const userMsg: Message = { id: crypto.randomUUID(), role: "user", content: text };
     const history = [...messages, userMsg];
@@ -99,12 +119,24 @@ export function ChatPage() {
         return;
       }
 
-      setMessages((prev) => [
-        ...prev,
-        { id: crypto.randomUUID(), role: "assistant", content: data.reply },
-      ]);
       setMessagesUsed(data.used ?? messagesUsed + 1);
       setMessagesLimit(data.limit ?? messagesLimit);
+
+      const streamText = async (fullText: string) => {
+        setIsStreaming(true);
+        setStreamingMessage("");
+        const words = fullText.split(" ");
+        let current = "";
+        for (let i = 0; i < words.length; i++) {
+          current += (i === 0 ? "" : " ") + words[i];
+          setStreamingMessage(current);
+          await new Promise((r) => setTimeout(r, 30));
+        }
+        setIsStreaming(false);
+        setStreamingMessage("");
+        setMessages((prev) => [...prev, { id: crypto.randomUUID(), role: "assistant", content: fullText }]);
+      };
+      await streamText(data.reply);
 
       const { data: { session: currentSession } } = await supabase.auth.getSession();
       if (currentSession) {
@@ -144,11 +176,13 @@ export function ChatPage() {
 
       {/* SIDEBAR */}
       <aside className={`
-        fixed inset-y-0 left-0 z-50 w-64 flex flex-col
+        fixed inset-y-0 left-0 z-50 flex flex-col
         bg-secondary/50 border-r border-border/50
-        transform transition-transform duration-200
-        md:relative md:translate-x-0
-        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+        transform transition-all duration-200
+        md:relative
+        ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+        md:translate-x-0
+        ${sidebarCollapsed ? "md:w-0 md:overflow-hidden md:min-w-0" : "w-64"}
       `}>
         {/* Лого */}
         <div className="flex items-center justify-between p-4 border-b border-border/50">
@@ -186,8 +220,21 @@ export function ChatPage() {
           </button>
         </div>
 
+        {messagesLimit - messagesUsed <= 10 && messagesLimit - messagesUsed > 0 && (
+          <div className="mx-3 mb-2 px-3 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-600 dark:text-amber-400">
+            <span className="font-medium">Остават {messagesLimit - messagesUsed} съобщения</span>
+            <p className="text-amber-500/80 mt-0.5">Надгради за повече</p>
+          </div>
+        )}
+        {messagesUsed >= messagesLimit && (
+          <div className="mx-3 mb-2 px-3 py-2 rounded-xl bg-red-500/10 border border-red-500/20 text-xs text-red-600 dark:text-red-400">
+            <span className="font-medium">Лимитът е достигнат</span>
+            <p className="text-red-500/80 mt-0.5"><Link to="/billing" className="underline">Надгради сега</Link></p>
+          </div>
+        )}
+
         {/* История */}
-        <div className="flex-1 overflow-y-auto px-3">
+        <div className="flex-1 overflow-y-auto px-3 min-h-0">
           <p className="text-xs text-muted-foreground px-2 py-2 font-medium uppercase tracking-wider">
             Последни
           </p>
@@ -195,20 +242,41 @@ export function ChatPage() {
         </div>
 
         {/* User */}
-        <div className="p-3 border-t border-border/50">
-          <div className="flex items-center gap-3 px-2 py-2 rounded-lg
-            hover:bg-secondary transition-colors cursor-pointer">
-            <div className="w-8 h-8 rounded-full bg-violet-500/20
-              flex items-center justify-center shrink-0">
+        <div ref={profilePopupRef} className="p-3 border-t border-border/50 relative">
+          <div
+            className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-secondary transition-colors cursor-pointer"
+            onClick={() => setProfileOpen((o) => !o)}
+          >
+            <div className="w-8 h-8 rounded-full bg-violet-500/20 flex items-center justify-center shrink-0">
               <User className="w-4 h-4 text-violet-400" />
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-xs text-muted-foreground truncate">Профил</p>
             </div>
-            <Link to="/billing">
-              <Settings className="w-4 h-4 text-muted-foreground hover:text-foreground" />
-            </Link>
           </div>
+
+          {profileOpen && (
+            <div className="absolute bottom-16 left-4 right-4 z-50 rounded-xl border border-border/50 bg-card shadow-lg p-3 space-y-2">
+              {userEmail && <p className="text-xs text-muted-foreground truncate px-2">{userEmail}</p>}
+              <Link to="/profile" className="block text-sm px-2 py-1.5 rounded-lg hover:bg-secondary" onClick={() => setProfileOpen(false)}>
+                Настройки на профила
+              </Link>
+              <Link to="/billing" className="block text-sm px-2 py-1.5 rounded-lg hover:bg-secondary" onClick={() => setProfileOpen(false)}>
+                Твоят план
+              </Link>
+              <div className="h-px bg-border my-1" />
+              <button
+                className="w-full flex items-center gap-2 text-sm px-2 py-1.5 rounded-lg hover:bg-destructive/10 text-destructive"
+                onClick={async () => {
+                  await supabase.auth.signOut();
+                  navigate("/");
+                }}
+              >
+                <LogOut className="w-4 h-4" />
+                Изход
+              </button>
+            </div>
+          )}
         </div>
       </aside>
 
@@ -224,13 +292,25 @@ export function ChatPage() {
         {/* TOPBAR */}
         <header className="flex items-center justify-between px-4 h-14
           border-b border-border/50 bg-background/80 backdrop-blur-sm shrink-0">
-          <button onClick={() => setSidebarOpen(true)} className="md:hidden">
-            <Menu className="w-5 h-5 text-muted-foreground" />
-          </button>
+          <div className="flex items-center gap-2">
+            <button onClick={() => setSidebarOpen(true)} className="md:hidden">
+              <Menu className="w-5 h-5 text-muted-foreground" />
+            </button>
+            <button
+              onClick={() => setSidebarCollapsed((c) => !c)}
+              className="hidden md:flex p-1.5 rounded-lg hover:bg-secondary text-muted-foreground"
+              aria-label="Toggle sidebar"
+            >
+              {sidebarCollapsed ? <PanelLeftOpen className="w-5 h-5" /> : <PanelLeftClose className="w-5 h-5" />}
+            </button>
+          </div>
           <div className="flex-1" />
-          <span className="text-xs text-muted-foreground">
-            {messagesUsed} / {messagesLimit}
-          </span>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-muted-foreground">
+              {messagesUsed} / {messagesLimit}
+            </span>
+            <ThemeToggle />
+          </div>
         </header>
 
         {/* CHAT AREA */}
@@ -279,6 +359,29 @@ export function ChatPage() {
                 </div>
               ))}
 
+              {/* Streaming bubble */}
+              {isStreaming && streamingMessage && (
+                <div className="flex gap-3 mb-6">
+                  <div className="w-8 h-8 rounded-full bg-secondary border border-border/50 flex items-center justify-center shrink-0">
+                    <svg width="16" height="16" viewBox="0 0 28 28" fill="none">
+                      <circle cx="14" cy="14" r="12" stroke="url(#ta)" strokeWidth="1.5" fill="none" opacity="0.25"/>
+                      <circle cx="14" cy="14" r="7" stroke="url(#ta)" strokeWidth="1.5" fill="none" opacity="0.5"/>
+                      <circle cx="14" cy="14" r="2.5" fill="url(#ta)"/>
+                      <ellipse cx="14" cy="14" rx="12" ry="4.5" stroke="url(#ta)" strokeWidth="1" fill="none" opacity="0.35" transform="rotate(-30 14 14)"/>
+                      <defs>
+                        <linearGradient id="ta" x1="2" y1="2" x2="26" y2="26" gradientUnits="userSpaceOnUse">
+                          <stop offset="0%" stopColor="#a78bfa"/>
+                          <stop offset="100%" stopColor="#22d3ee"/>
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                  </div>
+                  <div className="max-w-[75%] px-4 py-3 rounded-2xl rounded-tl-sm bg-secondary text-foreground text-sm leading-relaxed whitespace-pre-wrap">
+                    {streamingMessage}
+                  </div>
+                </div>
+              )}
+
               {/* Typing indicator */}
               {isLoading && (
                 <div className="flex gap-3 mb-6">
@@ -324,14 +427,14 @@ export function ChatPage() {
                 onKeyDown={handleKeyDown}
                 placeholder="Напиши нещо..."
                 rows={1}
-                disabled={isLoading}
+                disabled={isLoading || isStreaming}
                 className="flex-1 bg-transparent resize-none outline-none text-sm
                   text-foreground placeholder:text-muted-foreground
                   max-h-32 overflow-y-auto disabled:cursor-not-allowed"
               />
               <button
                 onClick={handleSend}
-                disabled={!input.trim() || isLoading}
+                disabled={!input.trim() || isLoading || isStreaming}
                 className="w-8 h-8 rounded-xl bg-violet-600 hover:bg-violet-500
                   disabled:opacity-30 disabled:cursor-not-allowed
                   flex items-center justify-center shrink-0
@@ -346,6 +449,9 @@ export function ChatPage() {
         </div>
 
       </div>
+
+      <DisplayNamePrompt />
+      <DisclaimerModal />
     </div>
   );
 }

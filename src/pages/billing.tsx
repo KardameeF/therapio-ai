@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
+import { Check } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 import { useAuth } from "../providers/AuthProvider";
 
@@ -60,12 +61,18 @@ export function BillingPage() {
 
     setLoading(true);
     try {
+      const planTypeMap: Record<string, string> = {
+        "price_1S8qnIDVd6WnP7HIrd5qxgrt": "personal_growth",
+        "price_1S8qoxDVd6WnP7HI4Vjfan7y": "expanded_horizons",
+      };
+      const plan_type = planTypeMap[priceId] || "first_step";
+
       const session = await supabase.auth.getSession();
       const token = session.data.session?.access_token;
       const response = await fetch("/.netlify/functions/create-checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ priceId, user_id: user.id }),
+        body: JSON.stringify({ priceId, user_id: user.id, plan_type }),
       });
       const data = await response.json();
       if (data.url) window.location.href = data.url;
@@ -80,6 +87,14 @@ export function BillingPage() {
 
   return (
     <div className="grid gap-6 md:grid-cols-3">
+      {currentPlan !== "first_step" && (
+        <div className="md:col-span-3 flex justify-end mb-2">
+          <Button variant="outline" onClick={handleManageBilling} disabled={loading}>
+            {loading ? "Зареждане..." : "Управление на абонамента"}
+          </Button>
+        </div>
+      )}
+
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
@@ -92,10 +107,10 @@ export function BillingPage() {
           </CardTitle>
           <CardDescription>{formatPrice(0)}/месец</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-2 text-sm">
-          <div>30 съобщения</div>
-          <div>gpt-4o-mini</div>
-          <div>30 дни история</div>
+        <CardContent className="space-y-3 text-sm text-muted-foreground">
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>30 съобщения на месец</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>Основен асистент</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>30 дни история на разговорите</span></div>
         </CardContent>
       </Card>
 
@@ -111,13 +126,13 @@ export function BillingPage() {
           </CardTitle>
           <CardDescription>{formatPrice(19.99)}/месец</CardDescription>
         </CardHeader>
-        <CardContent>
-          <Button
-            onClick={() => handleUpgrade("price_1S8qnIDVd6WnP7HIrd5qxgrt")}
-            disabled={loading}
-            className="w-full"
-          >
-            {loading ? "Зареждане..." : "Избери план"}
+        <CardContent className="space-y-3 text-sm text-muted-foreground">
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>500 съобщения на месец</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>Разширен асистент с по-дълбоко разбиране</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>Неограничена история на разговорите</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>Приоритетна поддръжка</span></div>
+          <Button onClick={() => handleUpgrade("price_1S8qnIDVd6WnP7HIrd5qxgrt")} disabled={loading || currentPlan === "personal_growth"} className="w-full mt-4">
+            {loading ? "Зареждане..." : currentPlan === "personal_growth" ? "Текущ план" : "Избери план"}
           </Button>
         </CardContent>
       </Card>
@@ -134,13 +149,13 @@ export function BillingPage() {
           </CardTitle>
           <CardDescription>{formatPrice(39.99)}/месец</CardDescription>
         </CardHeader>
-        <CardContent>
-          <Button
-            onClick={() => handleUpgrade("price_1S8qoxDVd6WnP7HI4Vjfan7y")}
-            disabled={loading}
-            className="w-full"
-          >
-            {loading ? "Зареждане..." : "Избери план"}
+        <CardContent className="space-y-3 text-sm text-muted-foreground">
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>1500 съобщения на месец</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>Най-мощният асистент за интензивна подкрепа</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>Неограничена история на разговорите</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>Приоритетна поддръжка 24/7</span></div>
+          <Button onClick={() => handleUpgrade("price_1S8qoxDVd6WnP7HI4Vjfan7y")} disabled={loading || currentPlan === "expanded_horizons"} className="w-full mt-4">
+            {loading ? "Зареждане..." : currentPlan === "expanded_horizons" ? "Текущ план" : "Избери план"}
           </Button>
         </CardContent>
       </Card>

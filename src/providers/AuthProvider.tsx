@@ -30,13 +30,44 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Listen for auth changes
     const {
       data: { subscription }
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+      if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
+        localStorage.setItem("eterapp_last_active", String(Date.now()));
+      }
     });
 
     return () => subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const checkSessionTimeout = () => {
+      const lastActive = localStorage.getItem("eterapp_last_active");
+      if (!lastActive) return;
+      const elapsed = Date.now() - Number(lastActive);
+      const eightHours = 8 * 60 * 60 * 1000;
+      if (elapsed > eightHours) {
+        supabase.auth.signOut();
+        localStorage.removeItem("eterapp_last_active");
+      }
+    };
+
+    const interval = setInterval(checkSessionTimeout, 60000);
+    checkSessionTimeout();
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        localStorage.setItem("eterapp_last_active", String(Date.now()));
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, []);
 
   const signUp = async (email: string, password: string) => {
