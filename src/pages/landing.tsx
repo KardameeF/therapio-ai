@@ -95,7 +95,7 @@ export function LandingPage() {
       <section className="px-4 py-16 md:py-28">
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
           <div className="space-y-7">
-            <h1 className="text-6xl md:text-7xl font-light tracking-tight leading-[1.05]">
+            <h1 className="font-display text-6xl md:text-7xl font-normal tracking-tight leading-[1.05]">
               {t("landing.hero.tagline")}
             </h1>
 

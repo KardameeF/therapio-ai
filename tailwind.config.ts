@@ -6,8 +6,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Inter", "Poppins", "system-ui", "sans-serif"],
-        heading: ["Poppins", "Inter", "system-ui", "sans-serif"]
+        sans: ["DM Sans", "system-ui", "sans-serif"],
+        display: ["Lora", "Georgia", "serif"],
       },
       colors: {
         background: "hsl(var(--background) / <alpha-value>)",
