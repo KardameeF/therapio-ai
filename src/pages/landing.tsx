@@ -169,7 +169,7 @@ export function LandingPage() {
       <section id="features" className="py-20 px-4">
         <div className="max-w-5xl mx-auto">
           <div className="mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-3">
+            <h2 className="font-display font-normal text-3xl md:text-4xl mb-3">
               {t("landing.features.title")}
             </h2>
             <p className="text-lg text-muted-foreground max-w-lg">
@@ -196,7 +196,7 @@ export function LandingPage() {
       <section className="py-20 px-4">
         <div className="max-w-5xl mx-auto">
           <div className="mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-3">{t("landing.pricing.title")}</h2>
+            <h2 className="font-display font-normal text-3xl md:text-4xl mb-3">{t("landing.pricing.title")}</h2>
             <p className="text-lg text-muted-foreground">{t("landing.pricing.subtitle")}</p>
           </div>
 
