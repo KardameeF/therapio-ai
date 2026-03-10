@@ -219,6 +219,11 @@ const resources = {
       admin: {
         title: "Admin Dashboard",
         subtitle: "Manage users, subscriptions, and usage analytics",
+        resetMessages: "Reset messages",
+        syncPlan: "Sync plan",
+        sendEmail: "Send email",
+        resetSuccess: "Messages reset to 0",
+        syncSuccess: "Plan synced",
         tabs: {
           users: "Users",
           subscriptions: "Subscriptions",
@@ -493,6 +498,11 @@ const resources = {
       admin: {
         title: "Администраторски панел",
         subtitle: "Управление на потребители, абонаменти и анализи на използване",
+        resetMessages: "Нулирай съобщения",
+        syncPlan: "Синхронизирай план",
+        sendEmail: "Изпрати имейл",
+        resetSuccess: "Съобщенията са нулирани",
+        syncSuccess: "Планът е синхронизиран",
         tabs: {
           users: "Потребители",
           subscriptions: "Абонаменти",

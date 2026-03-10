@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
-import { Search, Users, TrendingUp, UserCheck, Ban } from "lucide-react";
+import { Search, Users, TrendingUp, UserCheck, Ban, MoreHorizontal, RotateCcw, RefreshCw, Mail, UserX } from "lucide-react";
+import {
+  DropdownMenu, DropdownMenuContent,
+  DropdownMenuItem, DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from "../components/ui/dropdown-menu";
 
 interface UserRow {
   id: string;
@@ -26,6 +31,7 @@ export function AdminPage() {
   const [users, setUsers] = useState<UserRow[]>([]);
   const [search, setSearch] = useState("");
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
 
   const totalUsers = users.length;
   const paidUsers = users.filter(u => u.subscription_plan !== "first_step").length;
@@ -69,6 +75,34 @@ export function AdminPage() {
     await supabase.from("profiles").update({ is_blocked: !currentlyBlocked }).eq("id", userId);
     await loadUsers();
     setActionLoading(null);
+  };
+
+  const showToast = (msg: string) => {
+    setToast(msg);
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  const handleResetMessages = async (userId: string) => {
+    await supabase.from("profiles").update({ messages_used: 0 }).eq("id", userId);
+    await loadUsers();
+    showToast("Съобщенията са нулирани");
+  };
+
+  const handleSyncPlan = async (userId: string) => {
+    const { data: sub } = await supabase
+      .from("subscriptions")
+      .select("plan_type, status")
+      .eq("user_id", userId)
+      .eq("status", "active")
+      .single();
+    const plan = sub ? sub.plan_type : "first_step";
+    await supabase.from("profiles").update({ subscription_plan: plan }).eq("id", userId);
+    await loadUsers();
+    showToast(`Планът е синхронизиран: ${plan}`);
+  };
+
+  const handleSendEmail = (email: string) => {
+    window.open(`mailto:${email}?subject=Eterapp Support`, "_blank");
   };
 
   const filtered = search.trim()
@@ -153,17 +187,37 @@ export function AdminPage() {
                   {new Date(user.created_at).toLocaleDateString("bg-BG")}
                 </td>
                 <td className="px-4 py-3">
-                  <button
-                    onClick={() => handleToggleBlock(user.id, user.is_blocked)}
-                    disabled={actionLoading === user.id + "_block" || user.role === "admin"}
-                    className={`text-xs px-3 py-1 rounded-lg font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed ${
-                      user.is_blocked
-                        ? "bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-400"
-                        : "bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-400"
-                    }`}
-                  >
-                    {user.is_blocked ? "Деблокирай" : "Блокирай"}
-                  </button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button className="p-1.5 rounded-lg hover:bg-secondary transition-colors">
+                        <MoreHorizontal className="w-4 h-4 text-muted-foreground" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => handleResetMessages(user.id)}>
+                        <RotateCcw className="w-4 h-4 mr-2" />
+                        Нулирай съобщения
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleSyncPlan(user.id)}>
+                        <RefreshCw className="w-4 h-4 mr-2" />
+                        Синхронизирай план
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleSendEmail(user.email)}>
+                        <Mail className="w-4 h-4 mr-2" />
+                        Изпрати имейл
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        onClick={() => handleToggleBlock(user.id, user.is_blocked)}
+                        disabled={user.role === "admin"}
+                        className={user.is_blocked ? "text-green-600 focus:text-green-600" : "text-destructive focus:text-destructive"}
+                      >
+                        {user.is_blocked
+                          ? <><UserCheck className="w-4 h-4 mr-2" />Деблокирай</>
+                          : <><UserX className="w-4 h-4 mr-2" />Блокирай</>}
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </td>
               </tr>
             ))}
@@ -173,6 +227,13 @@ export function AdminPage() {
           <p className="text-center text-muted-foreground text-sm py-8">Няма резултати</p>
         )}
       </div>
+
+      {/* Toast */}
+      {toast && (
+        <div className="fixed bottom-6 right-6 z-50 rounded-xl border border-border bg-card px-4 py-3 text-sm text-foreground animate-in fade-in slide-in-from-bottom-4">
+          {toast}
+        </div>
+      )}
     </div>
   );
 }
