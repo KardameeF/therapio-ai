@@ -66,7 +66,7 @@ export function ChatPage() {
       const type = () => {
         if (typewriterRef.current.cancelled) return;
         if (i < fullText.length) {
-          const delay = Math.random() * 18 + 15;
+          const delay = Math.random() * 30 + 25;
           onUpdate(fullText.slice(0, i + 1));
           i++;
           scrollCounter++;
