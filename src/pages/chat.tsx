@@ -15,7 +15,7 @@ interface Message {
 }
 
 interface ChatSession {
-  id: string;
+  id: string | number;
   title: string;
   updated_at: string;
 }
@@ -43,7 +43,7 @@ export function ChatPage() {
   const [messagesUsed, setMessagesUsed] = useState(0);
   const [messagesLimit, setMessagesLimit] = useState(30);
   const [currentPlan, setCurrentPlan] = useState("first_step");
-  const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
+  const [currentSessionId, setCurrentSessionId] = useState<string | number | null>(null);
   const [chatHistory, setChatHistory] = useState<ChatSession[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
@@ -257,7 +257,7 @@ export function ChatPage() {
     setCurrentSessionId(null);
   };
 
-  const generateChatTitle = useCallback(async (userMsg: string, botMsg: string, sessionId: string) => {
+  const generateChatTitle = useCallback(async (userMsg: string, botMsg: string, sessionId: string | number) => {
     try {
       const lang = (localStorage.getItem("etherapp_language") || "bg").startsWith("en") ? "en" : "bg";
 
@@ -274,13 +274,18 @@ export function ChatPage() {
       if (!res.ok) return;
       const { title } = await res.json();
 
+      // chat_sessions.id може да е bigint (1,2,3) — подаваме raw стойност
+      const idForEq = typeof sessionId === "string" && /^\d+$/.test(sessionId)
+        ? parseInt(sessionId, 10)
+        : sessionId;
+
       await supabase
         .from("chat_sessions")
         .update({ title, updated_at: new Date().toISOString() })
-        .eq("id", sessionId);
+        .eq("id", idForEq);
 
       setChatHistory((prev) =>
-        prev.map((s) => (s.id === sessionId ? { ...s, title } : s))
+        prev.map((s) => (String(s.id) === String(sessionId) ? { ...s, title } : s))
       );
     } catch {
       // Silent — sidebar stays with "Нов чат"
@@ -417,7 +422,7 @@ export function ChatPage() {
                     setSidebarOpen(false);
                   }}
                   className={`w-full text-left px-2 py-2 rounded-lg transition-colors group ${
-                    currentSessionId === session.id ? "bg-secondary" : "hover:bg-secondary/60"
+                    String(currentSessionId) === String(session.id) ? "bg-secondary" : "hover:bg-secondary/60"
                   }`}
                 >
                   <p className="text-sm font-medium text-foreground truncate group-hover:text-primary transition-colors">
