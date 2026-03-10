@@ -98,7 +98,7 @@ export function AdminPage() {
           { label: "Безплатни", value: freeUsers, icon: UserCheck, color: "text-muted-foreground" },
           { label: "Блокирани", value: blockedUsers, icon: Ban, color: "text-destructive" },
         ].map(stat => (
-          <div key={stat.label} className="rounded-xl border border-border/50 bg-card p-4 flex items-center gap-3">
+          <div key={stat.label} className="rounded-2xl border border-border bg-card p-4 flex items-center gap-3">
             <stat.icon className={`w-8 h-8 ${stat.color} opacity-70`} />
             <div>
               <p className="text-xs text-muted-foreground">{stat.label}</p>
@@ -121,7 +121,7 @@ export function AdminPage() {
       </div>
 
       {/* Table */}
-      <div className="rounded-xl border border-border/50 overflow-x-auto">
+      <div className="rounded-2xl border border-border bg-card overflow-hidden overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-muted/50 border-b border-border/30">
             <tr>

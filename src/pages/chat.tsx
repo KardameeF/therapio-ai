@@ -546,8 +546,8 @@ export function ChatPage() {
         {/* INPUT BAR */}
         <div className="shrink-0 px-4 py-4 border-t border-border">
           <div className="max-w-2xl mx-auto w-full">
-            <div className="flex items-end gap-2 px-4 py-3 rounded-xl
-              border border-border bg-background
+            <div className="flex items-end gap-2 px-4 py-3 rounded-2xl
+              border border-border bg-card
               focus-within:border-primary/50
               transition-colors">
               <div className="relative flex-1">

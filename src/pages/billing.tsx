@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Button } from "../components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import { Check } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 import { useAuth } from "../providers/AuthProvider";
@@ -95,39 +94,39 @@ export function BillingPage() {
         </div>
       )}
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
+      <div className="rounded-2xl border border-border bg-card p-6">
+        <div className="mb-4">
+          <h3 className="text-base font-semibold flex items-center justify-between">
             <span>Първа Стъпка</span>
             {currentPlan === "first_step" && (
               <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
                 Текущ план
               </span>
             )}
-          </CardTitle>
-          <CardDescription>{formatPrice(0)}/месец</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3 text-sm text-muted-foreground">
+          </h3>
+          <p className="text-sm text-muted-foreground mt-1">{formatPrice(0)}/месец</p>
+        </div>
+        <div className="space-y-3 text-sm text-muted-foreground">
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>30 AI съобщения на месец</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>Основен AI асистент</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>30 дни история на разговорите</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>BG/EN поддръжка</span></div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
+      <div className="rounded-2xl border-2 border-primary bg-card p-6">
+        <div className="mb-4">
+          <h3 className="text-base font-semibold flex items-center justify-between">
             <span>Личен Растеж</span>
             {currentPlan === "personal_growth" && (
               <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
                 Текущ план
               </span>
             )}
-          </CardTitle>
-          <CardDescription>{formatPrice(19.99)}/месец</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3 text-sm text-muted-foreground">
+          </h3>
+          <p className="text-sm text-muted-foreground mt-1">{formatPrice(19.99)}/месец</p>
+        </div>
+        <div className="space-y-3 text-sm text-muted-foreground">
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>500 AI съобщения на месец</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>По-мощен AI асистент</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>90 дни история на разговорите</span></div>
@@ -135,22 +134,22 @@ export function BillingPage() {
           <Button onClick={() => handleUpgrade("price_1S8qnIDVd6WnP7HIrd5qxgrt")} disabled={loading || currentPlan === "personal_growth"} className="w-full mt-4">
             {loading ? "Зареждане..." : currentPlan === "personal_growth" ? "Текущ план" : "Избери план"}
           </Button>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
+      <div className="rounded-2xl border border-border bg-card p-6">
+        <div className="mb-4">
+          <h3 className="text-base font-semibold flex items-center justify-between">
             <span>Разширени Хоризонти</span>
             {currentPlan === "expanded_horizons" && (
               <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
                 Текущ план
               </span>
             )}
-          </CardTitle>
-          <CardDescription>{formatPrice(39.99)}/месец</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3 text-sm text-muted-foreground">
+          </h3>
+          <p className="text-sm text-muted-foreground mt-1">{formatPrice(39.99)}/месец</p>
+        </div>
+        <div className="space-y-3 text-sm text-muted-foreground">
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>1500 AI съобщения на месец</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>Най-мощният AI асистент</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>180 дни история на разговорите</span></div>
@@ -158,8 +157,8 @@ export function BillingPage() {
           <Button onClick={() => handleUpgrade("price_1S8qoxDVd6WnP7HI4Vjfan7y")} disabled={loading || currentPlan === "expanded_horizons"} className="w-full mt-4">
             {loading ? "Зареждане..." : currentPlan === "expanded_horizons" ? "Текущ план" : "Избери план"}
           </Button>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

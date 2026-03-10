@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import { useAuth } from "../providers/AuthProvider";
 import { supabase } from "../lib/supabaseClient";
 import { User, Mail } from "lucide-react";
@@ -80,12 +79,12 @@ export function ProfilePage() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Информация за акаунта</CardTitle>
-            <CardDescription>Основни данни</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+        <div className="rounded-2xl border border-border bg-card p-6">
+          <div className="mb-4">
+            <h3 className="text-base font-semibold">Информация за акаунта</h3>
+            <p className="text-sm text-muted-foreground mt-1">Основни данни</p>
+          </div>
+          <div className="space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
                 <User className="h-6 w-6 text-primary" />
@@ -105,70 +104,65 @@ export function ProfilePage() {
               </Label>
               <Input value={user?.email || ''} disabled />
             </div>
+          </div>
+        </div>
 
-          </CardContent>
-        </Card>
+        <div className="rounded-2xl border border-border bg-card p-6">
+          <div className="mb-4">
+            <h3 className="text-base font-semibold">Настройки на профила</h3>
+            <p className="text-sm text-muted-foreground mt-1">Обнови профилната информация</p>
+          </div>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="displayName">Показвано име</Label>
+              <Input
+                id="displayName"
+                {...register("displayName")}
+                placeholder="Въведи показвано име"
+              />
+            </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Настройки на профила</CardTitle>
-            <CardDescription>Обнови профилната информация</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="displayName">Показвано име</Label>
-                <Input
-                  id="displayName"
-                  {...register("displayName")}
-                  placeholder="Въведи показвано име"
-                />
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="bio">Кратко описание</Label>
+              <Input
+                id="bio"
+                {...register("bio")}
+                placeholder="Напиши нещо за себе си"
+              />
+            </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="bio">Кратко описание</Label>
-                <Input
-                  id="bio"
-                  {...register("bio")}
-                  placeholder="Напиши нещо за себе си"
-                />
-              </div>
+            {error && (
+              <p className="text-sm text-destructive">{error}</p>
+            )}
 
-              {error && (
-                <p className="text-sm text-destructive">{error}</p>
-              )}
+            {success && (
+              <p className="text-sm text-green-600">{success}</p>
+            )}
 
-              {success && (
-                <p className="text-sm text-green-600">{success}</p>
-              )}
-
-              <Button type="submit" disabled={loading} className="w-full">
-                {loading ? "Запазване..." : "Запази промените"}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+            <Button type="submit" disabled={loading} className="w-full">
+              {loading ? "Запазване..." : "Запази промените"}
+            </Button>
+          </form>
+        </div>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Опасна зона</CardTitle>
-          <CardDescription>Необратими действия</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="font-medium">Изход</div>
-              <div className="text-sm text-muted-foreground">
-                Излез от акаунта на това устройство
-              </div>
+      <div className="rounded-2xl border border-destructive/20 bg-card p-6">
+        <div className="mb-4">
+          <h3 className="text-base font-semibold">Опасна зона</h3>
+          <p className="text-sm text-muted-foreground mt-1">Необратими действия</p>
+        </div>
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="font-medium">Изход</div>
+            <div className="text-sm text-muted-foreground">
+              Излез от акаунта на това устройство
             </div>
-            <Button variant="outline" onClick={handleSignOut}>
-              Изход
-            </Button>
           </div>
-        </CardContent>
-      </Card>
+          <Button variant="outline" onClick={handleSignOut}>
+            Изход
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
