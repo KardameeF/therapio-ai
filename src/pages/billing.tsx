@@ -109,7 +109,7 @@ export function BillingPage() {
         </CardHeader>
         <CardContent className="space-y-3 text-sm text-muted-foreground">
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>30 AI съобщения на месец</span></div>
-          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>Основен AI асистент (gpt-4o-mini)</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>Основен AI асистент</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>30 дни история на разговорите</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>BG/EN поддръжка</span></div>
         </CardContent>
@@ -129,7 +129,7 @@ export function BillingPage() {
         </CardHeader>
         <CardContent className="space-y-3 text-sm text-muted-foreground">
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>500 AI съобщения на месец</span></div>
-          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>По-мощен AI асистент (gpt-4o)</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>По-мощен AI асистент</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>90 дни история на разговорите</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>Приоритетна поддръжка</span></div>
           <Button onClick={() => handleUpgrade("price_1S8qnIDVd6WnP7HIrd5qxgrt")} disabled={loading || currentPlan === "personal_growth"} className="w-full mt-4">
@@ -152,7 +152,7 @@ export function BillingPage() {
         </CardHeader>
         <CardContent className="space-y-3 text-sm text-muted-foreground">
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>1500 AI съобщения на месец</span></div>
-          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>Най-мощният AI асистент (gpt-4o)</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>Най-мощният AI асистент</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>180 дни история на разговорите</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>Приоритетна поддръжка 24/7</span></div>
           <Button onClick={() => handleUpgrade("price_1S8qoxDVd6WnP7HI4Vjfan7y")} disabled={loading || currentPlan === "expanded_horizons"} className="w-full mt-4">

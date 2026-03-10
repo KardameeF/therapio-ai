@@ -150,7 +150,7 @@ const resources = {
             description: "The ideal start, no commitment",
             features: [
               "30 AI messages/month",
-              "Basic AI assistant (gpt-4o-mini)",
+              "Basic AI assistant",
               "30 days conversation history",
               "BG/EN support"
             ],
@@ -163,7 +163,7 @@ const resources = {
             description: "For deeper emotional work",
             features: [
               "500 AI messages/month",
-              "More powerful AI assistant (gpt-4o)",
+              "More powerful AI assistant",
               "90 days conversation history",
               "Priority support"
             ],
@@ -176,7 +176,7 @@ const resources = {
             description: "Full transformation with all features",
             features: [
               "1500 AI messages/month",
-              "Most powerful AI assistant (gpt-4o)",
+              "Most powerful AI assistant",
               "180 days conversation history",
               "Priority support 24/7"
             ],
@@ -410,7 +410,7 @@ const resources = {
             description: "Идеален старт без ангажимент",
             features: [
               "30 AI съобщения на месец",
-              "Основен AI асистент (gpt-4o-mini)",
+              "Основен AI асистент",
               "30 дни история на разговорите",
               "BG/EN поддръжка"
             ],
@@ -423,7 +423,7 @@ const resources = {
             description: "За задълбочена емоционална работа",
             features: [
               "500 AI съобщения на месец",
-              "По-мощен AI асистент (gpt-4o)",
+              "По-мощен AI асистент",
               "90 дни история на разговорите",
               "Приоритетна поддръжка"
             ],
@@ -436,7 +436,7 @@ const resources = {
             description: "Пълна трансформация с всички функции",
             features: [
               "1500 AI съобщения на месец",
-              "Най-мощният AI асистент (gpt-4o)",
+              "Най-мощният AI асистент",
               "180 дни история на разговорите",
               "Приоритетна поддръжка 24/7"
             ],
