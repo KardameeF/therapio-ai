@@ -75,15 +75,15 @@ export function ProfilePage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Profile</h1>
-        <p className="text-muted-foreground">Manage your account settings</p>
+        <h1 className="text-3xl font-bold">Профил</h1>
+        <p className="text-muted-foreground">Настройки на акаунта</p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Account Information</CardTitle>
-            <CardDescription>Your basic account details</CardDescription>
+            <CardTitle>Информация за акаунта</CardTitle>
+            <CardDescription>Основни данни</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center gap-3">
@@ -91,9 +91,9 @@ export function ProfilePage() {
                 <User className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <div className="font-medium">User Profile</div>
+                <div className="font-medium">Потребителски профил</div>
                 <div className="text-sm text-muted-foreground">
-                  Member since {user?.created_at ? new Date(user.created_at).toLocaleDateString() : 'Unknown'}
+                  Член от {user?.created_at ? new Date(user.created_at).toLocaleDateString() : 'Неизвестно'}
                 </div>
               </div>
             </div>
@@ -101,7 +101,7 @@ export function ProfilePage() {
             <div className="space-y-2">
               <Label className="flex items-center gap-2">
                 <Mail className="h-4 w-4" />
-                Email
+                Имейл
               </Label>
               <Input value={user?.email || ''} disabled />
             </div>
@@ -111,26 +111,26 @@ export function ProfilePage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Profile Settings</CardTitle>
-            <CardDescription>Update your profile information</CardDescription>
+            <CardTitle>Настройки на профила</CardTitle>
+            <CardDescription>Обнови профилната информация</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="displayName">Display Name</Label>
+                <Label htmlFor="displayName">Показвано име</Label>
                 <Input
                   id="displayName"
                   {...register("displayName")}
-                  placeholder="Enter your display name"
+                  placeholder="Въведи показвано име"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="bio">Bio</Label>
+                <Label htmlFor="bio">Кратко описание</Label>
                 <Input
                   id="bio"
                   {...register("bio")}
-                  placeholder="Tell us about yourself"
+                  placeholder="Напиши нещо за себе си"
                 />
               </div>
 
@@ -143,7 +143,7 @@ export function ProfilePage() {
               )}
 
               <Button type="submit" disabled={loading} className="w-full">
-                {loading ? "Updating..." : "Update Profile"}
+                {loading ? "Запазване..." : "Запази промените"}
               </Button>
             </form>
           </CardContent>
@@ -152,19 +152,19 @@ export function ProfilePage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Danger Zone</CardTitle>
-          <CardDescription>Irreversible actions</CardDescription>
+          <CardTitle>Опасна зона</CardTitle>
+          <CardDescription>Необратими действия</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-between">
             <div>
-              <div className="font-medium">Sign Out</div>
+              <div className="font-medium">Изход</div>
               <div className="text-sm text-muted-foreground">
-                Sign out of your account on this device
+                Излез от акаунта на това устройство
               </div>
             </div>
             <Button variant="outline" onClick={handleSignOut}>
-              Sign Out
+              Изход
             </Button>
           </div>
         </CardContent>

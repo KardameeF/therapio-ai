@@ -321,7 +321,7 @@ export function LoginForm({ onSuccess, defaultTab = "login" }: { onSuccess?: () 
           </div>
           <CardTitle className="text-2xl font-heading">{t("app.title")}</CardTitle>
           <CardDescription className="text-base">
-            Enter your credentials to continue
+            Въведи данните си за вход
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -339,7 +339,7 @@ export function LoginForm({ onSuccess, defaultTab = "login" }: { onSuccess?: () 
                   <Input
                     id="loginEmail"
                     type="email"
-                    placeholder="Enter your email"
+                    placeholder="Въведи имейл"
                     {...loginForm.register("email", { 
                       required: t("validation.required"),
                       pattern: {
@@ -359,7 +359,7 @@ export function LoginForm({ onSuccess, defaultTab = "login" }: { onSuccess?: () 
                     <Input
                       id="loginPassword"
                       type={showLoginPassword ? "text" : "password"}
-                      placeholder="Enter your password"
+                      placeholder="Въведи парола"
                       {...loginForm.register("password", { 
                         required: t("validation.required")
                       })}
@@ -391,7 +391,7 @@ export function LoginForm({ onSuccess, defaultTab = "login" }: { onSuccess?: () 
                       className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
                     />
                     <Label htmlFor="rememberMe" className="text-sm font-medium">
-                      Remember me
+                      Запомни ме
                     </Label>
                   </div>
                   <button
@@ -400,7 +400,7 @@ export function LoginForm({ onSuccess, defaultTab = "login" }: { onSuccess?: () 
                     disabled={isResetting}
                     className="text-sm text-primary hover:underline font-medium"
                   >
-                    {isResetting ? "Sending..." : t("auth.forgotPassword")}
+                    {isResetting ? "Изпраща..." : t("auth.forgotPassword")}
                   </button>
                 </div>
 
@@ -417,7 +417,7 @@ export function LoginForm({ onSuccess, defaultTab = "login" }: { onSuccess?: () 
                   className="w-full" 
                   disabled={loading || !isLoginFormValid()}
                 >
-                  {loading ? "Loading..." : t("auth.login")}
+                  {loading ? "Зарежда..." : t("auth.login")}
                 </Button>
               </form>
             </TabsContent>
@@ -430,7 +430,7 @@ export function LoginForm({ onSuccess, defaultTab = "login" }: { onSuccess?: () 
                   <Input
                     id="signupEmail"
                     type="email"
-                    placeholder="Enter your email"
+                    placeholder="Въведи имейл"
                     {...signupForm.register("email", { 
                       required: t("validation.required"),
                       pattern: {
@@ -450,7 +450,7 @@ export function LoginForm({ onSuccess, defaultTab = "login" }: { onSuccess?: () 
                     <Input
                       id="signupPassword"
                       type={showSignupPassword ? "text" : "password"}
-                      placeholder="Enter your password"
+                      placeholder="Въведи парола"
                       {...signupForm.register("password", { 
                         required: t("validation.required"),
                         validate: validatePassword
@@ -514,7 +514,7 @@ export function LoginForm({ onSuccess, defaultTab = "login" }: { onSuccess?: () 
                     <Input
                       id="confirmPassword"
                       type={showConfirmPassword ? "text" : "password"}
-                      placeholder="Confirm your password"
+                      placeholder="Потвърди паролата"
                       {...signupForm.register("confirmPassword", { 
                         required: t("validation.required"),
                         validate: (value) => 
@@ -552,7 +552,7 @@ export function LoginForm({ onSuccess, defaultTab = "login" }: { onSuccess?: () 
                   className="w-full" 
                   disabled={loading || !isSignupFormValid()}
                 >
-                  {loading ? "Loading..." : t("auth.signup")}
+                  {loading ? "Зарежда..." : t("auth.signup")}
                 </Button>
               </form>
             </TabsContent>
@@ -563,7 +563,7 @@ export function LoginForm({ onSuccess, defaultTab = "login" }: { onSuccess?: () 
               <span className="w-full border-t border-border" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-foreground-muted">Or continue with</span>
+              <span className="bg-background px-2 text-foreground-muted">Или продължи с</span>
             </div>
           </div>
 
@@ -580,13 +580,13 @@ export function LoginForm({ onSuccess, defaultTab = "login" }: { onSuccess?: () 
                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
               </svg>
-              Continue with Google
+              Продължи с Google
             </Button>
           </div>
 
           <div className="text-center">
             <Link to="/" className="text-sm text-foreground-muted hover:text-primary hover:underline transition-colors">
-              Back to home
+              Обратно към началото
             </Link>
           </div>
         </CardContent>

@@ -26,9 +26,16 @@ export const handler: Handler = async (event) => {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("messages_used, subscription_plan")
+    .select("messages_used, subscription_plan, is_blocked")
     .eq("id", user.id)
     .single();
+
+  if (profile?.is_blocked) {
+    return {
+      statusCode: 403,
+      body: JSON.stringify({ error: "Акаунтът е блокиран. Свържи се с поддръжката." }),
+    };
+  }
 
   const limits: Record<string, number> = {
     first_step: 30,

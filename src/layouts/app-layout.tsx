@@ -2,15 +2,11 @@ import { Link, NavLink, Outlet } from "react-router-dom";
 import { Header } from "../components/header";
 import { useTranslation } from "react-i18next";
 import { cn } from "../lib/utils";
-import { BarChart3, Heart, Moon, Target, CreditCard, User, FileText } from "lucide-react";
+import { CreditCard, User, FileText } from "lucide-react";
 
 const appNav = [
-  { to: "/app", label: "nav.app", icon: BarChart3 },
-  { to: "/mood", label: "nav.mood", icon: Heart },
-  { to: "/sleep-stress", label: "nav.sleepStress", icon: Moon },
-  { to: "/goals", label: "nav.goals", icon: Target },
   { to: "/billing", label: "nav.billing", icon: CreditCard },
-  { to: "/profile", label: "nav.profile", icon: User }
+  { to: "/profile", label: "nav.profile", icon: User },
 ] as const;
 
 export function AppLayout() {

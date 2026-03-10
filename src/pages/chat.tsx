@@ -359,6 +359,29 @@ export function ChatPage() {
               <Link to="/billing" className="block text-sm px-2 py-1.5 rounded-lg hover:bg-secondary" onClick={() => setProfileOpen(false)}>
                 Твоят план
               </Link>
+              <div className="h-px bg-border/50 my-1" />
+              <p className="text-[10px] text-muted-foreground px-2 pt-1 uppercase tracking-wider">Правни</p>
+              <Link
+                to="/legal/privacy"
+                className="block text-xs px-2 py-1 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground"
+                onClick={() => setProfileOpen(false)}
+              >
+                Поверителност
+              </Link>
+              <Link
+                to="/legal/cookies"
+                className="block text-xs px-2 py-1 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground"
+                onClick={() => setProfileOpen(false)}
+              >
+                Бисквитки
+              </Link>
+              <Link
+                to="/legal/terms"
+                className="block text-xs px-2 py-1 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground"
+                onClick={() => setProfileOpen(false)}
+              >
+                Условия
+              </Link>
               <div className="h-px bg-border my-1" />
               <button
                 className="w-full flex items-center gap-2 text-sm px-2 py-1.5 rounded-lg hover:bg-destructive/10 text-destructive"

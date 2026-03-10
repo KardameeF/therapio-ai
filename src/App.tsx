@@ -12,10 +12,6 @@ import { LandingPage } from "./pages/landing";
 import { LoginPage } from "./pages/login";
 import { AuthCallbackPage } from "./pages/auth-callback";
 import { ChatPage } from "./pages/chat";
-import { DashboardPage } from "./pages/dashboard";
-import { MoodPage } from "./pages/mood";
-import { SleepStressPage } from "./pages/sleep-stress";
-import { GoalsPage } from "./pages/goals";
 import { BillingPage } from "./pages/billing";
 import { ProfilePage } from "./pages/profile";
 import { AdminPage } from "./pages/admin";
@@ -96,10 +92,6 @@ export default function App() {
               <Route path="/app" element={<ChatPage />} />
 
               <Route element={<AppLayout />}>
-                <Route path="/dashboard" element={<DashboardPage />} />
-                <Route path="/mood" element={<MoodPage />} />
-                <Route path="/sleep-stress" element={<SleepStressPage />} />
-                <Route path="/goals" element={<GoalsPage />} />
                 <Route path="/billing" element={<BillingPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/admin" element={<AdminPage />} />
