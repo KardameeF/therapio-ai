@@ -202,6 +202,20 @@ const resources = {
         },
         confirmPassword: "Passwords do not match"
       },
+      security: {
+        title: "Security",
+        subtitle: "Change password",
+        currentPassword: "Current password",
+        newPassword: "New password",
+        confirmNewPassword: "Confirm new password",
+        changePassword: "Change password",
+        changing: "Changing...",
+        success: "Password changed successfully",
+        errorWrongPassword: "Incorrect current password",
+        errorPasswordsNoMatch: "Passwords don't match",
+        errorMinLength: "Password must be at least 8 characters",
+        errorNoNumber: "Password must contain at least one number"
+      },
       admin: {
         title: "Admin Dashboard",
         subtitle: "Manage users, subscriptions, and usage analytics",
@@ -461,6 +475,20 @@ const resources = {
           special: "Паролата трябва да съдържа поне един специален символ"
         },
         confirmPassword: "Паролите не съвпадат"
+      },
+      security: {
+        title: "Сигурност",
+        subtitle: "Смяна на парола",
+        currentPassword: "Текуща парола",
+        newPassword: "Нова парола",
+        confirmNewPassword: "Потвърди новата парола",
+        changePassword: "Смени паролата",
+        changing: "Смяна...",
+        success: "Паролата е сменена успешно",
+        errorWrongPassword: "Грешна текуща парола",
+        errorPasswordsNoMatch: "Паролите не съвпадат",
+        errorMinLength: "Паролата трябва да е поне 8 символа",
+        errorNoNumber: "Паролата трябва да съдържа поне 1 цифра"
       },
       admin: {
         title: "Администраторски панел",
