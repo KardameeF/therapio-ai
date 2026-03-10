@@ -441,13 +441,13 @@ export function ChatPage() {
               {messages.map((msg) => (
                 msg.role === "user" ? (
                   <div key={msg.id} className="mb-6 flex justify-end">
-                    <p className="ml-auto max-w-[75%] text-right text-foreground font-medium text-base leading-relaxed whitespace-pre-wrap">
+                    <div className="bg-primary/10 text-foreground rounded-2xl px-4 py-2.5 ml-auto max-w-[75%] text-base leading-relaxed whitespace-pre-wrap">
                       {msg.content}
-                    </p>
+                    </div>
                   </div>
                 ) : (
                   <div key={msg.id} className="flex gap-3 mb-6">
-                    <div className="w-8 h-8 rounded-full shrink-0 flex items-center justify-center bg-secondary border border-border">
+                    <div className="w-8 h-8 rounded-full shrink-0 flex items-center justify-center bg-muted">
                       <svg width="16" height="16" viewBox="0 0 28 28" fill="none" className="text-primary">
                         <circle cx="14" cy="14" r="12" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.25"/>
                         <circle cx="14" cy="14" r="7" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.5"/>
@@ -455,7 +455,7 @@ export function ChatPage() {
                         <ellipse cx="14" cy="14" rx="12" ry="4.5" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.35" transform="rotate(-30 14 14)"/>
                       </svg>
                     </div>
-                    <div className="max-w-[75%] px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap bg-secondary text-foreground rounded-tl-sm border border-border">
+                    <div className="max-w-[75%] px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap bg-muted text-foreground rounded-tl-sm">
                       {msg.content}
                     </div>
                   </div>
@@ -465,7 +465,7 @@ export function ChatPage() {
               {/* Streaming bubble */}
               {isStreaming && streamingMessage && (
                 <div className="flex gap-3 mb-6">
-                  <div className="w-8 h-8 rounded-full bg-secondary border border-border flex items-center justify-center shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center shrink-0">
                     <svg width="16" height="16" viewBox="0 0 28 28" fill="none" className="text-primary">
                       <circle cx="14" cy="14" r="12" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.25"/>
                       <circle cx="14" cy="14" r="7" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.5"/>
@@ -473,7 +473,7 @@ export function ChatPage() {
                       <ellipse cx="14" cy="14" rx="12" ry="4.5" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.35" transform="rotate(-30 14 14)"/>
                     </svg>
                   </div>
-                  <div className="max-w-[75%] px-4 py-3 rounded-2xl rounded-tl-sm bg-secondary text-foreground text-sm leading-relaxed whitespace-pre-wrap border border-border">
+                  <div className="max-w-[75%] px-4 py-3 rounded-2xl rounded-tl-sm bg-muted text-foreground text-sm leading-relaxed whitespace-pre-wrap">
                     {streamingMessage}
                   </div>
                 </div>
@@ -482,7 +482,7 @@ export function ChatPage() {
               {/* Typing indicator */}
               {isLoading && (
                 <div className="flex gap-3 mb-6">
-                  <div className="w-8 h-8 rounded-full bg-secondary border border-border flex items-center justify-center shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center shrink-0">
                     <svg width="16" height="16" viewBox="0 0 28 28" fill="none" className="text-primary">
                       <circle cx="14" cy="14" r="12" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.25"/>
                       <circle cx="14" cy="14" r="7" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.5"/>
@@ -490,7 +490,7 @@ export function ChatPage() {
                       <ellipse cx="14" cy="14" rx="12" ry="4.5" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.35" transform="rotate(-30 14 14)"/>
                     </svg>
                   </div>
-                  <div className="px-4 py-3 rounded-2xl rounded-tl-sm bg-secondary border border-border">
+                  <div className="px-4 py-3 rounded-2xl rounded-tl-sm bg-muted">
                     <div className="flex gap-1 items-center h-4">
                       <span className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
                       <span className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
