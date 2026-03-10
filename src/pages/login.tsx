@@ -26,7 +26,7 @@ interface SignupFormData {
 }
 
 // Inner component that uses the reCAPTCHA hook
-function LoginForm() {
+export function LoginForm({ onSuccess, defaultTab = "login" }: { onSuccess?: () => void; defaultTab?: "login" | "signup" } = {}) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showLoginPassword, setShowLoginPassword] = useState(false);
@@ -155,6 +155,7 @@ function LoginForm() {
           title: t("auth.welcomeBack"),
           description: t("auth.loginSuccess"),
         });
+        onSuccess?.();
         navigate(from, { replace: true });
       } else {
         // Login error
@@ -215,6 +216,7 @@ function LoginForm() {
           title: t("auth.signupSuccess"),
           description: t("auth.checkEmail"),
         });
+        onSuccess?.();
         navigate(from, { replace: true });
       } else {
         // Signup error
@@ -323,7 +325,7 @@ function LoginForm() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <Tabs defaultValue="login" className="w-full">
+          <Tabs defaultValue={defaultTab} className="w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="login">{t("auth.login")}</TabsTrigger>
               <TabsTrigger value="signup">{t("auth.signup")}</TabsTrigger>

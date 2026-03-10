@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import { useAuth } from "../providers/AuthProvider";
-import { useTranslation } from "react-i18next";
-import { User, Mail, Calendar } from "lucide-react";
+import { supabase } from "../lib/supabaseClient";
+import { User, Mail } from "lucide-react";
 
 interface ProfileFormData {
   displayName?: string;
@@ -23,26 +23,45 @@ export function ProfilePage() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors }
   } = useForm<ProfileFormData>();
+
+  useEffect(() => {
+    const load = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+      const { data } = await supabase
+        .from("profiles")
+        .select("display_name, bio")
+        .eq("id", session.user.id)
+        .single();
+      if (data) {
+        setValue("displayName", data.display_name ?? "");
+        setValue("bio", data.bio ?? "");
+      }
+    };
+    load();
+  }, []);
 
   const onSubmit = async (data: ProfileFormData) => {
     setLoading(true);
     setError(null);
     setSuccess(null);
-
     try {
-      // In a real app, you'd update the user profile in Supabase
-      // const { error } = await supabase.auth.updateUser({
-      //   data: { display_name: data.displayName, bio: data.bio }
-      // });
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      setSuccess("Profile updated successfully!");
-    } catch (err) {
-      setError("Failed to update profile. Please try again.");
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error("Not authenticated");
+      const { error } = await supabase
+        .from("profiles")
+        .update({
+          display_name: data.displayName || null,
+          bio: data.bio || null,
+        })
+        .eq("id", session.user.id);
+      if (error) throw error;
+      setSuccess("Профилът е обновен успешно!");
+    } catch {
+      setError("Грешка при обновяване. Опитай отново.");
     } finally {
       setLoading(false);
     }
@@ -86,13 +105,6 @@ export function ProfilePage() {
               <Input value={user?.email || ''} disabled />
             </div>
 
-            <div className="space-y-2">
-              <Label className="flex items-center gap-2">
-                <Calendar className="h-4 w-4" />
-                User ID
-              </Label>
-              <Input value={user?.id || ''} disabled className="font-mono text-xs" />
-            </div>
           </CardContent>
         </Card>
 

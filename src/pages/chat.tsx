@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Plus, Send, User, Menu, X, PanelLeftOpen, PanelLeftClose, LogOut } from "lucide-react";
+import { Plus, Send, User, Menu, X, PanelLeftOpen, PanelLeftClose, LogOut, Search } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 import { ThemeToggle } from "../components/theme-toggle";
 import { DisplayNamePrompt } from "../components/display-name-prompt";
@@ -10,6 +10,12 @@ interface Message {
   id: string;
   role: "user" | "assistant";
   content: string;
+}
+
+interface ChatSession {
+  date: string;
+  preview: string;
+  messageCount: number;
 }
 
 export function ChatPage() {
@@ -25,6 +31,8 @@ export function ChatPage() {
   const [streamingMessage, setStreamingMessage] = useState("");
   const [messagesUsed, setMessagesUsed] = useState(0);
   const [messagesLimit, setMessagesLimit] = useState(30);
+  const [chatHistory, setChatHistory] = useState<ChatSession[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const profilePopupRef = useRef<HTMLDivElement>(null);
 
@@ -72,6 +80,36 @@ export function ChatPage() {
 
       if (history && history.length > 0) {
         setMessages(history as Message[]);
+      }
+
+      const { data: allMessages } = await supabase
+        .from("chat_messages")
+        .select("role, content, created_at")
+        .eq("user_id", session.user.id)
+        .order("created_at", { ascending: false })
+        .limit(200);
+
+      if (allMessages) {
+        const byDate = new Map<string, { preview: string; count: number }>();
+        for (const msg of allMessages) {
+          const date = msg.created_at.slice(0, 10);
+          if (!byDate.has(date)) {
+            const firstUser = allMessages
+              .filter((m) => m.created_at.slice(0, 10) === date && m.role === "user")
+              .pop();
+            byDate.set(date, {
+              preview: firstUser?.content?.slice(0, 40) || "Разговор",
+              count: 0,
+            });
+          }
+          byDate.get(date)!.count++;
+        }
+        const sessions: ChatSession[] = Array.from(byDate.entries()).map(([date, val]) => ({
+          date,
+          preview: val.preview,
+          messageCount: val.count,
+        }));
+        setChatHistory(sessions);
       }
 
       setUserEmail(session.user.email ?? "");
@@ -171,13 +209,19 @@ export function ChatPage() {
     setInput("");
   };
 
+  const filteredHistory = searchQuery.trim()
+    ? chatHistory.filter((s) =>
+        s.preview.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : chatHistory;
+
   return (
     <div className="flex h-screen bg-background overflow-hidden">
 
       {/* SIDEBAR */}
       <aside className={`
         fixed inset-y-0 left-0 z-50 flex flex-col
-        bg-secondary/50 border-r border-border/50
+        bg-muted/80 border-r border-border/50
         transform transition-all duration-200
         md:relative
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
@@ -234,11 +278,62 @@ export function ChatPage() {
         )}
 
         {/* История */}
-        <div className="flex-1 overflow-y-auto px-3 min-h-0">
-          <p className="text-xs text-muted-foreground px-2 py-2 font-medium uppercase tracking-wider">
+        <div className="flex-1 flex flex-col overflow-hidden min-h-0 px-3">
+          <div className="relative mb-2">
+            <Search className="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
+            <input
+              type="text"
+              placeholder="Търси в чатовете..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-8 pr-3 py-2 text-xs bg-background/60 border border-border/40 rounded-lg outline-none focus:border-violet-400/50 text-foreground placeholder:text-muted-foreground"
+            />
+          </div>
+
+          <p className="text-xs text-muted-foreground px-1 py-1 font-medium uppercase tracking-wider">
             Последни
           </p>
-          <p className="text-xs text-muted-foreground px-2 py-1">Няма чатове още</p>
+
+          <div className="flex-1 overflow-y-auto space-y-0.5 min-h-0">
+            {filteredHistory.length === 0 ? (
+              <p className="text-xs text-muted-foreground px-2 py-1">
+                {searchQuery ? "Няма резултати" : "Няма чатове още"}
+              </p>
+            ) : (
+              filteredHistory.map((session) => (
+                <button
+                  key={session.date}
+                  onClick={() => {
+                    const loadSession = async () => {
+                      const { data: { session: authSession } } = await supabase.auth.getSession();
+                      if (!authSession) return;
+                      const dayStart = session.date + "T00:00:00.000Z";
+                      const dayEnd = session.date + "T23:59:59.999Z";
+                      const { data } = await supabase
+                        .from("chat_messages")
+                        .select("id, role, content")
+                        .eq("user_id", authSession.user.id)
+                        .gte("created_at", dayStart)
+                        .lte("created_at", dayEnd)
+                        .order("created_at", { ascending: true });
+                      if (data) setMessages(data as Message[]);
+                      setSidebarOpen(false);
+                    };
+                    loadSession();
+                  }}
+                  className="w-full text-left px-2 py-2 rounded-lg hover:bg-secondary/60 transition-colors group"
+                >
+                  <p className="text-xs font-medium text-foreground truncate group-hover:text-violet-400 transition-colors">
+                    {session.preview}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5">
+                    {new Date(session.date).toLocaleDateString("bg-BG", { day: "numeric", month: "short" })}
+                    {" · "}{session.messageCount} съобщ.
+                  </p>
+                </button>
+              ))
+            )}
+          </div>
         </div>
 
         {/* User */}
@@ -256,7 +351,7 @@ export function ChatPage() {
           </div>
 
           {profileOpen && (
-            <div className="absolute bottom-16 left-4 right-4 z-50 rounded-xl border border-border/50 bg-card shadow-lg p-3 space-y-2">
+            <div className="absolute bottom-16 left-4 right-4 z-50 rounded-xl border border-border/50 bg-card shadow-xl p-3 space-y-2">
               {userEmail && <p className="text-xs text-muted-foreground truncate px-2">{userEmail}</p>}
               <Link to="/profile" className="block text-sm px-2 py-1.5 rounded-lg hover:bg-secondary" onClick={() => setProfileOpen(false)}>
                 Настройки на профила
@@ -332,7 +427,7 @@ export function ChatPage() {
                   className={`flex gap-3 mb-6 ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}
                 >
                   <div className={`w-8 h-8 rounded-full shrink-0 flex items-center justify-center
-                    ${msg.role === "user" ? "bg-violet-500/20" : "bg-secondary border border-border/50"}`}>
+                    ${msg.role === "user" ? "bg-violet-500/20" : "bg-card border border-border/50"}`}>
                     {msg.role === "user" ? (
                       <User className="w-4 h-4 text-violet-400" />
                     ) : (
@@ -353,7 +448,7 @@ export function ChatPage() {
                   <div className={`max-w-[75%] px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap
                     ${msg.role === "user"
                       ? "bg-violet-600 text-white rounded-tr-sm"
-                      : "bg-secondary text-foreground rounded-tl-sm"}`}>
+                      : "bg-card text-foreground rounded-tl-sm border border-border/40"}`}>
                     {msg.content}
                   </div>
                 </div>
@@ -362,7 +457,7 @@ export function ChatPage() {
               {/* Streaming bubble */}
               {isStreaming && streamingMessage && (
                 <div className="flex gap-3 mb-6">
-                  <div className="w-8 h-8 rounded-full bg-secondary border border-border/50 flex items-center justify-center shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-card border border-border/50 flex items-center justify-center shrink-0">
                     <svg width="16" height="16" viewBox="0 0 28 28" fill="none">
                       <circle cx="14" cy="14" r="12" stroke="url(#ta)" strokeWidth="1.5" fill="none" opacity="0.25"/>
                       <circle cx="14" cy="14" r="7" stroke="url(#ta)" strokeWidth="1.5" fill="none" opacity="0.5"/>
@@ -376,7 +471,7 @@ export function ChatPage() {
                       </defs>
                     </svg>
                   </div>
-                  <div className="max-w-[75%] px-4 py-3 rounded-2xl rounded-tl-sm bg-secondary text-foreground text-sm leading-relaxed whitespace-pre-wrap">
+                  <div className="max-w-[75%] px-4 py-3 rounded-2xl rounded-tl-sm bg-card text-foreground text-sm leading-relaxed whitespace-pre-wrap border border-border/40">
                     {streamingMessage}
                   </div>
                 </div>
@@ -385,7 +480,7 @@ export function ChatPage() {
               {/* Typing indicator */}
               {isLoading && (
                 <div className="flex gap-3 mb-6">
-                  <div className="w-8 h-8 rounded-full bg-secondary border border-border/50 flex items-center justify-center shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-card border border-border/50 flex items-center justify-center shrink-0">
                     <svg width="16" height="16" viewBox="0 0 28 28" fill="none">
                       <circle cx="14" cy="14" r="12" stroke="url(#ta)" strokeWidth="1.5" fill="none" opacity="0.25"/>
                       <circle cx="14" cy="14" r="7" stroke="url(#ta)" strokeWidth="1.5" fill="none" opacity="0.5"/>
@@ -399,7 +494,7 @@ export function ChatPage() {
                       </defs>
                     </svg>
                   </div>
-                  <div className="px-4 py-3 rounded-2xl rounded-tl-sm bg-secondary">
+                  <div className="px-4 py-3 rounded-2xl rounded-tl-sm bg-card border border-border/40">
                     <div className="flex gap-1 items-center h-4">
                       <span className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
                       <span className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
@@ -418,8 +513,8 @@ export function ChatPage() {
         <div className="shrink-0 px-4 py-4 border-t border-border/50">
           <div className="max-w-3xl mx-auto">
             <div className="flex items-end gap-2 px-4 py-3 rounded-2xl
-              border border-border/60 bg-secondary/50
-              focus-within:border-violet-400/60 focus-within:bg-background
+              border border-border/60 bg-background
+              focus-within:border-violet-400/60
               transition-all duration-200">
               <textarea
                 value={input}

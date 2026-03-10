@@ -1,6 +1,9 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../providers/theme-provider";
+import { useAuth } from "../providers/AuthProvider";
+import { AuthModal } from "../components/auth-modal";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../components/ui/card";
 import { useSEO } from "../hooks/use-seo";
@@ -22,6 +25,9 @@ const STRIPE_PRICE_IDS = {
 };
 
 export function LandingPage() {
+  const [authOpen, setAuthOpen] = useState(false);
+  const [authTab, setAuthTab] = useState<"login" | "signup">("signup");
+  const { user } = useAuth();
   const { t } = useTranslation();
   const { theme } = useTheme();
   const resolvedTheme =
@@ -114,16 +120,31 @@ export function LandingPage() {
 
           {/* CTA buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-2">
-            <Link to="/login">
-              <Button size="lg" className="w-full sm:w-auto text-base px-8 py-5">
-                {t("landing.hero.cta")}
-              </Button>
-            </Link>
-            <a href="#features">
-              <Button size="lg" variant="outline" className="w-full sm:w-auto text-base px-8 py-5">
-                {t("landing.hero.signIn")}
-              </Button>
-            </a>
+            {user ? (
+              <Link to="/app">
+                <Button size="lg" className="w-full sm:w-auto text-base px-8 py-5">
+                  Към чата
+                </Button>
+              </Link>
+            ) : (
+              <>
+                <Button
+                  size="lg"
+                  className="w-full sm:w-auto text-base px-8 py-5"
+                  onClick={() => { setAuthTab("signup"); setAuthOpen(true); }}
+                >
+                  {t("landing.hero.cta")}
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="w-full sm:w-auto text-base px-8 py-5"
+                  onClick={() => { setAuthTab("login"); setAuthOpen(true); }}
+                >
+                  {t("landing.hero.signIn")}
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Trust badges */}
@@ -231,17 +252,21 @@ export function LandingPage() {
                       ))}
                     </ul>
                     {plan.priceId ? (
-                      <Link to={`/login?plan=${plan.key}`}>
-                        <Button variant={plan.ctaVariant} className="w-full">
-                          {t(plan.ctaKey)}
-                        </Button>
-                      </Link>
+                      <Button
+                        variant={plan.ctaVariant}
+                        className="w-full"
+                        onClick={() => { setAuthTab("signup"); setAuthOpen(true); }}
+                      >
+                        {t(plan.ctaKey)}
+                      </Button>
                     ) : (
-                      <Link to="/login">
-                        <Button variant={plan.ctaVariant} className="w-full">
-                          {t(plan.ctaKey)}
-                        </Button>
-                      </Link>
+                      <Button
+                        variant={plan.ctaVariant}
+                        className="w-full"
+                        onClick={() => { setAuthTab("signup"); setAuthOpen(true); }}
+                      >
+                        {t(plan.ctaKey)}
+                      </Button>
                     )}
                   </CardContent>
                 </Card>
@@ -260,11 +285,13 @@ export function LandingPage() {
               <p className="text-xl text-muted-foreground max-w-xl mx-auto">
                 {t("landing.cta.description")}
               </p>
-              <Link to="/login">
-                <Button size="lg" className="text-base px-10 py-5 mt-2">
-                  {t("landing.cta.button")}
-                </Button>
-              </Link>
+              <Button
+                size="lg"
+                className="text-base px-10 py-5 mt-2"
+                onClick={() => { setAuthTab("signup"); setAuthOpen(true); }}
+              >
+                {t("landing.cta.button")}
+              </Button>
             </CardContent>
           </Card>
         </div>
@@ -310,6 +337,12 @@ export function LandingPage() {
           </a>
         </div>
       </footer>
+
+      <AuthModal
+        open={authOpen}
+        onClose={() => setAuthOpen(false)}
+        defaultTab={authTab}
+      />
     </div>
   );
 }

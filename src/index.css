@@ -30,13 +30,13 @@
   --background: hsl(240 25% 7%);
   --foreground: hsl(240 20% 92%);
   --foreground-muted: hsl(240 10% 55%);
-  --card: hsl(240 20% 11%);
+  --card: hsl(240 22% 13%);
   --card-foreground: hsl(240 20% 92%);
   --border: hsl(240 20% 18%);
   --input: hsl(240 20% 11%);
   --primary: hsl(258 85% 68%);
   --primary-foreground: hsl(0 0% 100%);
-  --secondary: hsl(240 20% 15%);
+  --secondary: hsl(240 18% 13%);
   --secondary-foreground: hsl(240 15% 75%);
   --muted: hsl(240 20% 14%);
   --muted-foreground: hsl(240 10% 55%);
