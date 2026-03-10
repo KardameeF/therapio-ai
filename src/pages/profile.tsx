@@ -81,9 +81,9 @@ export function ProfilePage() {
         })
         .eq("id", session.user.id);
       if (error) throw error;
-      setSuccess("Профилът е обновен успешно!");
+      setSuccess(t("profile.settings.successMsg"));
     } catch {
-      setError("Грешка при обновяване. Опитай отново.");
+      setError(t("profile.settings.errorMsg"));
     } finally {
       setLoading(false);
     }
@@ -121,15 +121,15 @@ export function ProfilePage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Профил</h1>
-        <p className="text-muted-foreground">Настройки на акаунта</p>
+        <h1 className="text-3xl font-bold">{t("profile.title")}</h1>
+        <p className="text-muted-foreground">{t("profile.subtitle")}</p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
         <div className="rounded-2xl border border-border bg-card p-6">
           <div className="mb-4">
-            <h3 className="text-base font-semibold">Информация за акаунта</h3>
-            <p className="text-sm text-muted-foreground mt-1">Основни данни</p>
+            <h3 className="text-base font-semibold">{t("profile.accountInfo.title")}</h3>
+            <p className="text-sm text-muted-foreground mt-1">{t("profile.accountInfo.subtitle")}</p>
           </div>
           <div className="space-y-4">
             <div className="flex items-center gap-3">
@@ -137,9 +137,9 @@ export function ProfilePage() {
                 <User className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <div className="font-medium">Потребителски профил</div>
+                <div className="font-medium">{t("profile.accountInfo.userProfile")}</div>
                 <div className="text-sm text-muted-foreground">
-                  Член от {user?.created_at ? new Date(user.created_at).toLocaleDateString() : 'Неизвестно'}
+                  {t("profile.accountInfo.memberSince")} {user?.created_at ? new Date(user.created_at).toLocaleDateString() : t("profile.accountInfo.unknown")}
                 </div>
               </div>
             </div>
@@ -147,7 +147,7 @@ export function ProfilePage() {
             <div className="space-y-2">
               <Label className="flex items-center gap-2">
                 <Mail className="h-4 w-4" />
-                Имейл
+                {t("profile.accountInfo.email")}
               </Label>
               <Input value={user?.email || ''} disabled />
             </div>
@@ -156,25 +156,25 @@ export function ProfilePage() {
 
         <div className="rounded-2xl border border-border bg-card p-6">
           <div className="mb-4">
-            <h3 className="text-base font-semibold">Настройки на профила</h3>
-            <p className="text-sm text-muted-foreground mt-1">Обнови профилната информация</p>
+            <h3 className="text-base font-semibold">{t("profile.settings.title")}</h3>
+            <p className="text-sm text-muted-foreground mt-1">{t("profile.settings.subtitle")}</p>
           </div>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="displayName">Показвано име</Label>
+              <Label htmlFor="displayName">{t("profile.settings.displayName")}</Label>
               <Input
                 id="displayName"
                 {...register("displayName")}
-                placeholder="Въведи показвано име"
+                placeholder={t("profile.settings.displayNamePlaceholder")}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="bio">Кратко описание</Label>
+              <Label htmlFor="bio">{t("profile.settings.bio")}</Label>
               <Input
                 id="bio"
                 {...register("bio")}
-                placeholder="Напиши нещо за себе си"
+                placeholder={t("profile.settings.bioPlaceholder")}
               />
             </div>
 
@@ -187,7 +187,7 @@ export function ProfilePage() {
             )}
 
             <Button type="submit" disabled={loading} className="w-full">
-              {loading ? "Запазване..." : "Запази промените"}
+              {loading ? t("profile.settings.saving") : t("profile.settings.save")}
             </Button>
           </form>
         </div>
@@ -288,18 +288,18 @@ export function ProfilePage() {
 
       <div className="rounded-2xl border border-destructive/20 bg-card p-6">
         <div className="mb-4">
-          <h3 className="text-base font-semibold">Опасна зона</h3>
-          <p className="text-sm text-muted-foreground mt-1">Необратими действия</p>
+          <h3 className="text-base font-semibold">{t("profile.dangerZone.title")}</h3>
+          <p className="text-sm text-muted-foreground mt-1">{t("profile.dangerZone.subtitle")}</p>
         </div>
         <div className="flex items-center justify-between">
           <div>
-            <div className="font-medium">Изход</div>
+            <div className="font-medium">{t("profile.dangerZone.signOut")}</div>
             <div className="text-sm text-muted-foreground">
-              Излез от акаунта на това устройство
+              {t("profile.dangerZone.signOutDesc")}
             </div>
           </div>
           <Button variant="outline" onClick={handleSignOut}>
-            Изход
+            {t("profile.dangerZone.signOut")}
           </Button>
         </div>
       </div>

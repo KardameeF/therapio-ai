@@ -216,14 +216,105 @@ const resources = {
         errorMinLength: "Password must be at least 8 characters",
         errorNoNumber: "Password must contain at least one number"
       },
+      profile: {
+        title: "Profile",
+        subtitle: "Account settings",
+        accountInfo: {
+          title: "Account information",
+          subtitle: "Basic data",
+          userProfile: "User profile",
+          memberSince: "Member since",
+          unknown: "Unknown",
+          email: "Email"
+        },
+        settings: {
+          title: "Profile settings",
+          subtitle: "Update profile information",
+          displayName: "Display name",
+          displayNamePlaceholder: "Enter display name",
+          bio: "Short bio",
+          bioPlaceholder: "Write something about yourself",
+          save: "Save changes",
+          saving: "Saving...",
+          successMsg: "Profile updated successfully!",
+          errorMsg: "Error updating. Please try again."
+        },
+        dangerZone: {
+          title: "Danger zone",
+          subtitle: "Irreversible actions",
+          signOut: "Sign out",
+          signOutDesc: "Sign out from this device"
+        }
+      },
+      billing: {
+        title: "Billing",
+        currentPlan: "Current plan",
+        choosePlan: "Choose plan",
+        startFree: "Start for free",
+        month: "month",
+        manageSub: "Manage subscription",
+        loading: "Loading...",
+        plans: {
+          first_step: {
+            name: "First Step",
+            subtitle: "Ideal start with no commitment"
+          },
+          personal_growth: {
+            name: "Personal Growth",
+            subtitle: "For deeper emotional work"
+          },
+          expanded_horizons: {
+            name: "Expanded Horizons",
+            subtitle: "Full transformation with all features"
+          }
+        },
+        features: {
+          aiMessages30: "30 AI messages/month",
+          aiMessages500: "500 AI messages/month",
+          aiMessages1500: "1500 AI messages/month",
+          history30: "30 days conversation history",
+          history90: "90 days conversation history",
+          history180: "180 days conversation history",
+          basicAI: "Basic AI assistant",
+          powerfulAI: "More powerful AI assistant",
+          mostPowerfulAI: "Most powerful AI assistant",
+          bgEn: "BG/EN support",
+          prioritySupport: "Priority support",
+          prioritySupport247: "Priority support 24/7"
+        }
+      },
       admin: {
         title: "Admin Dashboard",
         subtitle: "Manage users, subscriptions, and usage analytics",
+        panelTitle: "Admin Panel",
+        panelSubtitle: "Manage users and subscriptions",
         resetMessages: "Reset messages",
         syncPlan: "Sync plan",
         sendEmail: "Send email",
         resetSuccess: "Messages reset to 0",
         syncSuccess: "Plan synced",
+        block: "Block",
+        unblock: "Unblock",
+        noResults: "No results",
+        stats: {
+          totalUsers: "Total users",
+          paid: "Paid",
+          free: "Free",
+          blocked: "Blocked"
+        },
+        table: {
+          searchPlaceholder: "Search by email...",
+          email: "Email",
+          plan: "Plan",
+          messages: "Messages",
+          registration: "Registration",
+          actions: "Actions"
+        },
+        plans: {
+          first_step: "First Step",
+          personal_growth: "Personal Growth",
+          expanded_horizons: "Expanded Horizons"
+        },
         tabs: {
           users: "Users",
           subscriptions: "Subscriptions",
@@ -481,6 +572,73 @@ const resources = {
         },
         confirmPassword: "Паролите не съвпадат"
       },
+      profile: {
+        title: "Профил",
+        subtitle: "Настройки на акаунта",
+        accountInfo: {
+          title: "Информация за акаунта",
+          subtitle: "Основни данни",
+          userProfile: "Потребителски профил",
+          memberSince: "Член от",
+          unknown: "Неизвестно",
+          email: "Имейл"
+        },
+        settings: {
+          title: "Настройки на профила",
+          subtitle: "Обнови профилната информация",
+          displayName: "Показвано име",
+          displayNamePlaceholder: "Въведи показвано име",
+          bio: "Кратко описание",
+          bioPlaceholder: "Напиши нещо за себе си",
+          save: "Запази промените",
+          saving: "Запазване...",
+          successMsg: "Профилът е обновен успешно!",
+          errorMsg: "Грешка при обновяване. Опитай отново."
+        },
+        dangerZone: {
+          title: "Опасна зона",
+          subtitle: "Необратими действия",
+          signOut: "Изход",
+          signOutDesc: "Излез от акаунта на това устройство"
+        }
+      },
+      billing: {
+        title: "Плащания",
+        currentPlan: "Текущ план",
+        choosePlan: "Избери план",
+        startFree: "Започни безплатно",
+        month: "месец",
+        manageSub: "Управление на абонамента",
+        loading: "Зареждане...",
+        plans: {
+          first_step: {
+            name: "Първа Стъпка",
+            subtitle: "Идеален старт без ангажимент"
+          },
+          personal_growth: {
+            name: "Личен Растеж",
+            subtitle: "За задълбочена емоционална работа"
+          },
+          expanded_horizons: {
+            name: "Разширени Хоризонти",
+            subtitle: "Пълна трансформация с всички функции"
+          }
+        },
+        features: {
+          aiMessages30: "30 AI съобщения на месец",
+          aiMessages500: "500 AI съобщения на месец",
+          aiMessages1500: "1500 AI съобщения на месец",
+          history30: "30 дни история на разговорите",
+          history90: "90 дни история на разговорите",
+          history180: "180 дни история на разговорите",
+          basicAI: "Основен AI асистент",
+          powerfulAI: "По-мощен AI асистент",
+          mostPowerfulAI: "Най-мощният AI асистент",
+          bgEn: "BG/EN поддръжка",
+          prioritySupport: "Приоритетна поддръжка",
+          prioritySupport247: "Приоритетна поддръжка 24/7"
+        }
+      },
       security: {
         title: "Сигурност",
         subtitle: "Смяна на парола",
@@ -498,11 +656,35 @@ const resources = {
       admin: {
         title: "Администраторски панел",
         subtitle: "Управление на потребители, абонаменти и анализи на използване",
+        panelTitle: "Административен панел",
+        panelSubtitle: "Управление на потребители и абонаменти",
         resetMessages: "Нулирай съобщения",
         syncPlan: "Синхронизирай план",
         sendEmail: "Изпрати имейл",
         resetSuccess: "Съобщенията са нулирани",
         syncSuccess: "Планът е синхронизиран",
+        block: "Блокирай",
+        unblock: "Деблокирай",
+        noResults: "Няма резултати",
+        stats: {
+          totalUsers: "Общо потребители",
+          paid: "Платени",
+          free: "Безплатни",
+          blocked: "Блокирани"
+        },
+        table: {
+          searchPlaceholder: "Търси по имейл...",
+          email: "Имейл",
+          plan: "План",
+          messages: "Съобщения",
+          registration: "Регистрация",
+          actions: "Действия"
+        },
+        plans: {
+          first_step: "Първа Стъпка",
+          personal_growth: "Личен Растеж",
+          expanded_horizons: "Разширени Хоризонти"
+        },
         tabs: {
           users: "Потребители",
           subscriptions: "Абонаменти",

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
+import { useTranslation } from "react-i18next";
 import { Search, Users, TrendingUp, UserCheck, Ban, MoreHorizontal, RotateCcw, RefreshCw, Mail, UserX } from "lucide-react";
 import {
   DropdownMenu, DropdownMenuContent,
@@ -32,6 +33,7 @@ export function AdminPage() {
   const [search, setSearch] = useState("");
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
+  const { t } = useTranslation();
 
   const totalUsers = users.length;
   const paidUsers = users.filter(u => u.subscription_plan !== "first_step").length;
@@ -85,7 +87,7 @@ export function AdminPage() {
   const handleResetMessages = async (userId: string) => {
     await supabase.from("profiles").update({ messages_used: 0 }).eq("id", userId);
     await loadUsers();
-    showToast("Съобщенията са нулирани");
+    showToast(t("admin.resetSuccess"));
   };
 
   const handleSyncPlan = async (userId: string) => {
@@ -98,7 +100,7 @@ export function AdminPage() {
     const plan = sub ? sub.plan_type : "first_step";
     await supabase.from("profiles").update({ subscription_plan: plan }).eq("id", userId);
     await loadUsers();
-    showToast(`Планът е синхронизиран: ${plan}`);
+    showToast(`${t("admin.syncSuccess")}: ${plan}`);
   };
 
   const handleSendEmail = (email: string) => {
@@ -120,17 +122,17 @@ export function AdminPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Администраторски панел</h1>
-        <p className="text-sm text-muted-foreground">Управление на потребители и абонаменти</p>
+        <h1 className="text-2xl font-bold">{t("admin.panelTitle")}</h1>
+        <p className="text-sm text-muted-foreground">{t("admin.panelSubtitle")}</p>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { label: "Общо потребители", value: totalUsers, icon: Users, color: "text-foreground" },
-          { label: "Платени", value: paidUsers, icon: TrendingUp, color: "text-primary" },
-          { label: "Безплатни", value: freeUsers, icon: UserCheck, color: "text-muted-foreground" },
-          { label: "Блокирани", value: blockedUsers, icon: Ban, color: "text-destructive" },
+          { label: t("admin.stats.totalUsers"), value: totalUsers, icon: Users, color: "text-foreground" },
+          { label: t("admin.stats.paid"), value: paidUsers, icon: TrendingUp, color: "text-primary" },
+          { label: t("admin.stats.free"), value: freeUsers, icon: UserCheck, color: "text-muted-foreground" },
+          { label: t("admin.stats.blocked"), value: blockedUsers, icon: Ban, color: "text-destructive" },
         ].map(stat => (
           <div key={stat.label} className="rounded-2xl border border-border bg-card p-4 flex items-center gap-3">
             <stat.icon className={`w-8 h-8 ${stat.color} opacity-70`} />
@@ -147,7 +149,7 @@ export function AdminPage() {
         <Search className="absolute left-3 top-2.5 w-4 h-4 text-muted-foreground pointer-events-none" />
         <input
           type="text"
-          placeholder="Търси по имейл..."
+          placeholder={t("admin.table.searchPlaceholder")}
           value={search}
           onChange={e => setSearch(e.target.value)}
           className="w-full pl-9 pr-4 py-2 text-sm rounded-xl border border-border/50 bg-background outline-none focus:border-primary/60 transition-colors"
@@ -159,11 +161,11 @@ export function AdminPage() {
         <table className="w-full text-sm">
           <thead className="bg-muted/50 border-b border-border/30">
             <tr>
-              <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">Имейл</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">План</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">Съобщения</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">Регистрация</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">Действия</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">{t("admin.table.email")}</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">{t("admin.table.plan")}</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">{t("admin.table.messages")}</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">{t("admin.table.registration")}</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">{t("admin.table.actions")}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border/30">
@@ -177,9 +179,9 @@ export function AdminPage() {
                     onChange={e => handlePlanChange(user.id, e.target.value)}
                     className={`text-xs px-2 py-1 rounded-lg font-medium border-0 outline-none cursor-pointer ${PLAN_COLORS[user.subscription_plan]}`}
                   >
-                    <option value="first_step">Първа Стъпка</option>
-                    <option value="personal_growth">Личен Растеж</option>
-                    <option value="expanded_horizons">Разширени Хоризонти</option>
+                    <option value="first_step">{t("admin.plans.first_step")}</option>
+                    <option value="personal_growth">{t("admin.plans.personal_growth")}</option>
+                    <option value="expanded_horizons">{t("admin.plans.expanded_horizons")}</option>
                   </select>
                 </td>
                 <td className="px-4 py-3 text-muted-foreground tabular-nums">{user.messages_used}</td>
@@ -196,15 +198,15 @@ export function AdminPage() {
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem onClick={() => handleResetMessages(user.id)}>
                         <RotateCcw className="w-4 h-4 mr-2" />
-                        Нулирай съобщения
+                        {t("admin.resetMessages")}
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => handleSyncPlan(user.id)}>
                         <RefreshCw className="w-4 h-4 mr-2" />
-                        Синхронизирай план
+                        {t("admin.syncPlan")}
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => handleSendEmail(user.email)}>
                         <Mail className="w-4 h-4 mr-2" />
-                        Изпрати имейл
+                        {t("admin.sendEmail")}
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem
@@ -213,8 +215,8 @@ export function AdminPage() {
                         className={user.is_blocked ? "text-green-600 focus:text-green-600" : "text-destructive focus:text-destructive"}
                       >
                         {user.is_blocked
-                          ? <><UserCheck className="w-4 h-4 mr-2" />Деблокирай</>
-                          : <><UserX className="w-4 h-4 mr-2" />Блокирай</>}
+                          ? <><UserCheck className="w-4 h-4 mr-2" />{t("admin.unblock")}</>
+                          : <><UserX className="w-4 h-4 mr-2" />{t("admin.block")}</>}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -224,7 +226,7 @@ export function AdminPage() {
           </tbody>
         </table>
         {filtered.length === 0 && (
-          <p className="text-center text-muted-foreground text-sm py-8">Няма резултати</p>
+          <p className="text-center text-muted-foreground text-sm py-8">{t("admin.noResults")}</p>
         )}
       </div>
 

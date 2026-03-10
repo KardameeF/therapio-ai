@@ -3,11 +3,13 @@ import { Button } from "../components/ui/button";
 import { Check } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 import { useAuth } from "../providers/AuthProvider";
+import { useTranslation } from "react-i18next";
 
 export function BillingPage() {
   const [loading, setLoading] = useState(false);
   const [currentPlan, setCurrentPlan] = useState<string>("first_step");
   const { user } = useAuth();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!user) return;
@@ -89,7 +91,7 @@ export function BillingPage() {
       {currentPlan !== "first_step" && (
         <div className="md:col-span-3 flex justify-end mb-2">
           <Button variant="outline" onClick={handleManageBilling} disabled={loading}>
-            {loading ? "Зареждане..." : "Управление на абонамента"}
+            {loading ? t("billing.loading") : t("billing.manageSub")}
           </Button>
         </div>
       )}
@@ -97,42 +99,42 @@ export function BillingPage() {
       <div className="rounded-2xl border border-border bg-card p-6">
         <div className="mb-4">
           <h3 className="text-base font-semibold flex items-center justify-between">
-            <span>Първа Стъпка</span>
+            <span>{t("billing.plans.first_step.name")}</span>
             {currentPlan === "first_step" && (
               <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
-                Текущ план
+                {t("billing.currentPlan")}
               </span>
             )}
           </h3>
-          <p className="text-sm text-muted-foreground mt-1">{formatPrice(0)}/месец</p>
+          <p className="text-sm text-muted-foreground mt-1">{formatPrice(0)}/{t("billing.month")}</p>
         </div>
         <div className="space-y-3 text-sm text-muted-foreground">
-          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>30 AI съобщения на месец</span></div>
-          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>Основен AI асистент</span></div>
-          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>30 дни история на разговорите</span></div>
-          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>BG/EN поддръжка</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.aiMessages30")}</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.basicAI")}</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.history30")}</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.bgEn")}</span></div>
         </div>
       </div>
 
       <div className="rounded-2xl border-2 border-primary bg-card p-6">
         <div className="mb-4">
           <h3 className="text-base font-semibold flex items-center justify-between">
-            <span>Личен Растеж</span>
+            <span>{t("billing.plans.personal_growth.name")}</span>
             {currentPlan === "personal_growth" && (
               <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
-                Текущ план
+                {t("billing.currentPlan")}
               </span>
             )}
           </h3>
-          <p className="text-sm text-muted-foreground mt-1">{formatPrice(19.99)}/месец</p>
+          <p className="text-sm text-muted-foreground mt-1">{formatPrice(19.99)}/{t("billing.month")}</p>
         </div>
         <div className="space-y-3 text-sm text-muted-foreground">
-          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>500 AI съобщения на месец</span></div>
-          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>По-мощен AI асистент</span></div>
-          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>90 дни история на разговорите</span></div>
-          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>Приоритетна поддръжка</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.aiMessages500")}</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.powerfulAI")}</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.history90")}</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.prioritySupport")}</span></div>
           <Button onClick={() => handleUpgrade("price_1S8qnIDVd6WnP7HIrd5qxgrt")} disabled={loading || currentPlan === "personal_growth"} className="w-full mt-4">
-            {loading ? "Зареждане..." : currentPlan === "personal_growth" ? "Текущ план" : "Избери план"}
+            {loading ? t("billing.loading") : currentPlan === "personal_growth" ? t("billing.currentPlan") : t("billing.choosePlan")}
           </Button>
         </div>
       </div>
@@ -140,22 +142,22 @@ export function BillingPage() {
       <div className="rounded-2xl border border-border bg-card p-6">
         <div className="mb-4">
           <h3 className="text-base font-semibold flex items-center justify-between">
-            <span>Разширени Хоризонти</span>
+            <span>{t("billing.plans.expanded_horizons.name")}</span>
             {currentPlan === "expanded_horizons" && (
               <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
-                Текущ план
+                {t("billing.currentPlan")}
               </span>
             )}
           </h3>
-          <p className="text-sm text-muted-foreground mt-1">{formatPrice(39.99)}/месец</p>
+          <p className="text-sm text-muted-foreground mt-1">{formatPrice(39.99)}/{t("billing.month")}</p>
         </div>
         <div className="space-y-3 text-sm text-muted-foreground">
-          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>1500 AI съобщения на месец</span></div>
-          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>Най-мощният AI асистент</span></div>
-          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>180 дни история на разговорите</span></div>
-          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>Приоритетна поддръжка 24/7</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.aiMessages1500")}</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.mostPowerfulAI")}</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.history180")}</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.prioritySupport247")}</span></div>
           <Button onClick={() => handleUpgrade("price_1S8qoxDVd6WnP7HI4Vjfan7y")} disabled={loading || currentPlan === "expanded_horizons"} className="w-full mt-4">
-            {loading ? "Зареждане..." : currentPlan === "expanded_horizons" ? "Текущ план" : "Избери план"}
+            {loading ? t("billing.loading") : currentPlan === "expanded_horizons" ? t("billing.currentPlan") : t("billing.choosePlan")}
           </Button>
         </div>
       </div>
