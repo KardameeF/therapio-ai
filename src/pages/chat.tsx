@@ -376,10 +376,10 @@ export function ChatPage() {
                   }}
                   className="w-full text-left px-2 py-2 rounded-lg hover:bg-secondary/60 transition-colors group"
                 >
-                  <p className="text-xs font-medium text-foreground truncate group-hover:text-primary transition-colors">
+                  <p className="text-sm font-medium text-foreground truncate group-hover:text-primary transition-colors">
                     {session.preview}
                   </p>
-                  <p className="text-[10px] text-muted-foreground mt-0.5">
+                  <p className="text-xs text-muted-foreground mt-1">
                     {new Date(session.date).toLocaleDateString("bg-BG", { day: "numeric", month: "short" })}
                     {" · "}{session.messageCount} съобщ.
                   </p>
@@ -501,16 +501,17 @@ export function ChatPage() {
               </div>
             </div>
           ) : (
-            <div className="max-w-2xl mx-auto w-full space-y-0">
-              {messages.map((msg) => (
-                msg.role === "user" ? (
-                  <div key={msg.id} className="mb-6 flex justify-end">
+            <div className="max-w-2xl mx-auto w-full space-y-3">
+              {messages.map((msg, index) => {
+                const isNewSender = index === 0 || messages[index - 1].role !== msg.role;
+                return msg.role === "user" ? (
+                  <div key={msg.id} className={`flex justify-end ${isNewSender ? "mt-4" : "mt-1"}`}>
                     <div className="bg-primary/10 text-foreground rounded-2xl px-4 py-2.5 ml-auto max-w-[75%] text-base leading-relaxed whitespace-pre-wrap">
                       {msg.content}
                     </div>
                   </div>
                 ) : (
-                  <div key={msg.id} className="flex gap-3 mb-6">
+                  <div key={msg.id} className={`flex gap-3 ${isNewSender ? "mt-4" : "mt-1"}`}>
                     <div className="w-8 h-8 rounded-full shrink-0 flex items-center justify-center bg-muted">
                       <svg width="16" height="16" viewBox="0 0 28 28" fill="none" className="text-primary">
                         <circle cx="14" cy="14" r="12" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.25"/>
@@ -523,12 +524,12 @@ export function ChatPage() {
                       {msg.content}
                     </div>
                   </div>
-                )
-              ))}
+                );
+              })}
 
               {/* Streaming bubble */}
               {isStreaming && streamingMessage && (
-                <div className="flex gap-3 mb-6">
+                <div className="flex gap-3 mt-4">
                   <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center shrink-0">
                     <svg width="16" height="16" viewBox="0 0 28 28" fill="none" className="text-primary">
                       <circle cx="14" cy="14" r="12" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.25"/>
@@ -545,7 +546,7 @@ export function ChatPage() {
 
               {/* Typing indicator */}
               {isLoading && (
-                <div className="flex gap-3 mb-6">
+                <div className="flex gap-3 mt-4">
                   <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center shrink-0">
                     <svg width="16" height="16" viewBox="0 0 28 28" fill="none" className="text-primary">
                       <circle cx="14" cy="14" r="12" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.25"/>
