@@ -15,9 +15,9 @@ interface Message {
 }
 
 interface ChatSession {
-  date: string;
-  preview: string;
-  messageCount: number;
+  id: string;
+  title: string;
+  updated_at: string;
 }
 
 const PLACEHOLDER_PHRASES = [
@@ -43,6 +43,7 @@ export function ChatPage() {
   const [messagesUsed, setMessagesUsed] = useState(0);
   const [messagesLimit, setMessagesLimit] = useState(30);
   const [currentPlan, setCurrentPlan] = useState("first_step");
+  const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const [chatHistory, setChatHistory] = useState<ChatSession[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
@@ -102,45 +103,27 @@ export function ChatPage() {
         setMessagesLimit(limits[plan] ?? 30);
       }
 
-      const { data: history } = await supabase
-        .from("chat_messages")
-        .select("id, role, content")
+      // Load chat sessions for sidebar
+      const { data: sessions } = await supabase
+        .from("chat_sessions")
+        .select("id, title, updated_at")
         .eq("user_id", session.user.id)
-        .order("created_at", { ascending: true })
-        .limit(50);
+        .order("updated_at", { ascending: false })
+        .limit(30);
 
-      if (history && history.length > 0) {
-        setMessages(history as Message[]);
-      }
-
-      const { data: allMessages } = await supabase
-        .from("chat_messages")
-        .select("role, content, created_at")
-        .eq("user_id", session.user.id)
-        .order("created_at", { ascending: false })
-        .limit(200);
-
-      if (allMessages) {
-        const byDate = new Map<string, { preview: string; count: number }>();
-        for (const msg of allMessages) {
-          const date = msg.created_at.slice(0, 10);
-          if (!byDate.has(date)) {
-            const firstUser = allMessages
-              .filter((m) => m.created_at.slice(0, 10) === date && m.role === "user")
-              .pop();
-            byDate.set(date, {
-              preview: firstUser?.content?.slice(0, 40) || "Разговор",
-              count: 0,
-            });
-          }
-          byDate.get(date)!.count++;
-        }
-        const sessions: ChatSession[] = Array.from(byDate.entries()).map(([date, val]) => ({
-          date,
-          preview: val.preview,
-          messageCount: val.count,
-        }));
+      if (sessions && sessions.length > 0) {
         setChatHistory(sessions);
+        // Load the most recent session's messages
+        const latestId = sessions[0].id;
+        setCurrentSessionId(latestId);
+        const { data: msgs } = await supabase
+          .from("chat_messages")
+          .select("id, role, content")
+          .eq("session_id", latestId)
+          .order("created_at", { ascending: true });
+        if (msgs && msgs.length > 0) {
+          setMessages(msgs as Message[]);
+        }
       }
 
       setUserEmail(session.user.email ?? "");
@@ -210,14 +193,42 @@ export function ChatPage() {
 
       const { data: { session: currentSession } } = await supabase.auth.getSession();
       if (currentSession) {
-        await supabase.from("chat_messages").insert([
-          { user_id: currentSession.user.id, role: "user", content: text },
-          { user_id: currentSession.user.id, role: "assistant", content: data.reply },
-        ]);
-      }
+        let sessionId = currentSessionId;
 
-      if (isFirstMessage && data.reply) {
-        generateChatTitle(text, data.reply);
+        // Create a new chat_session if this is a fresh chat
+        if (!sessionId) {
+          const { data: newSession } = await supabase
+            .from("chat_sessions")
+            .insert({ user_id: currentSession.user.id, title: "Нов чат" })
+            .select("id")
+            .single();
+          if (newSession) {
+            sessionId = newSession.id;
+            setCurrentSessionId(sessionId);
+            setChatHistory((prev) => [
+              { id: sessionId!, title: "Нов чат", updated_at: new Date().toISOString() },
+              ...prev,
+            ]);
+          }
+        }
+
+        await supabase.from("chat_messages").insert([
+          { user_id: currentSession.user.id, session_id: sessionId, role: "user", content: text },
+          { user_id: currentSession.user.id, session_id: sessionId, role: "assistant", content: data.reply },
+        ]);
+
+        // Update session timestamp
+        if (sessionId) {
+          await supabase
+            .from("chat_sessions")
+            .update({ updated_at: new Date().toISOString() })
+            .eq("id", sessionId);
+        }
+
+        // Generate GPT title after first exchange
+        if (isFirstMessage && data.reply && sessionId) {
+          generateChatTitle(text, data.reply, sessionId);
+        }
       }
     } catch {
       setMessages((prev) => [
@@ -243,12 +254,12 @@ export function ChatPage() {
   const handleNewChat = () => {
     setMessages([]);
     setInput("");
+    setCurrentSessionId(null);
   };
 
-  const generateChatTitle = useCallback(async (userMsg: string, botMsg: string) => {
+  const generateChatTitle = useCallback(async (userMsg: string, botMsg: string, sessionId: string) => {
     try {
-      const currentLang = t("app.title") ? (document.documentElement.lang || "bg") : "bg";
-      const lang = currentLang.startsWith("en") ? "en" : "bg";
+      const lang = (localStorage.getItem("etherapp_language") || "bg").startsWith("en") ? "en" : "bg";
 
       const res = await fetch("/.netlify/functions/generate-title", {
         method: "POST",
@@ -263,20 +274,18 @@ export function ChatPage() {
       if (!res.ok) return;
       const { title } = await res.json();
 
-      setChatHistory((prev) => {
-        const today = new Date().toISOString().slice(0, 10);
-        const existing = prev.find((s) => s.date === today);
-        if (existing) {
-          return prev.map((s) =>
-            s.date === today ? { ...s, preview: title } : s
-          );
-        }
-        return [{ date: today, preview: title, messageCount: 2 }, ...prev];
-      });
+      await supabase
+        .from("chat_sessions")
+        .update({ title, updated_at: new Date().toISOString() })
+        .eq("id", sessionId);
+
+      setChatHistory((prev) =>
+        prev.map((s) => (s.id === sessionId ? { ...s, title } : s))
+      );
     } catch {
-      // Silent — don't show error to user
+      // Silent — sidebar stays with "Нов чат"
     }
-  }, [t]);
+  }, []);
 
   const handleVoiceToggle = async () => {
     if (isRecording) {
@@ -294,9 +303,12 @@ export function ChatPage() {
     }
   };
 
+  const displayTitle = (title: string) =>
+    title ? title.charAt(0).toUpperCase() + title.slice(1) : "Нов чат";
+
   const filteredHistory = searchQuery.trim()
     ? chatHistory.filter((s) =>
-        s.preview.toLowerCase().includes(searchQuery.toLowerCase())
+        s.title.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : chatHistory;
 
@@ -393,33 +405,26 @@ export function ChatPage() {
             ) : (
               filteredHistory.map((session) => (
                 <button
-                  key={session.date}
-                  onClick={() => {
-                    const loadSession = async () => {
-                      const { data: { session: authSession } } = await supabase.auth.getSession();
-                      if (!authSession) return;
-                      const dayStart = session.date + "T00:00:00.000Z";
-                      const dayEnd = session.date + "T23:59:59.999Z";
-                      const { data } = await supabase
-                        .from("chat_messages")
-                        .select("id, role, content")
-                        .eq("user_id", authSession.user.id)
-                        .gte("created_at", dayStart)
-                        .lte("created_at", dayEnd)
-                        .order("created_at", { ascending: true });
-                      if (data) setMessages(data as Message[]);
-                      setSidebarOpen(false);
-                    };
-                    loadSession();
+                  key={session.id}
+                  onClick={async () => {
+                    setCurrentSessionId(session.id);
+                    const { data } = await supabase
+                      .from("chat_messages")
+                      .select("id, role, content")
+                      .eq("session_id", session.id)
+                      .order("created_at", { ascending: true });
+                    if (data) setMessages(data as Message[]);
+                    setSidebarOpen(false);
                   }}
-                  className="w-full text-left px-2 py-2 rounded-lg hover:bg-secondary/60 transition-colors group"
+                  className={`w-full text-left px-2 py-2 rounded-lg transition-colors group ${
+                    currentSessionId === session.id ? "bg-secondary" : "hover:bg-secondary/60"
+                  }`}
                 >
                   <p className="text-sm font-medium text-foreground truncate group-hover:text-primary transition-colors">
-                    {session.preview ? session.preview.charAt(0).toUpperCase() + session.preview.slice(1) : "Нов чат"}
+                    {displayTitle(session.title)}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">
-                    {new Date(session.date).toLocaleDateString("bg-BG", { day: "numeric", month: "short" })}
-                    {" · "}{session.messageCount} съобщ.
+                    {new Date(session.updated_at).toLocaleDateString("bg-BG", { day: "numeric", month: "short" })}
                   </p>
                 </button>
               ))
