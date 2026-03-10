@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { Link, NavLink, Outlet } from "react-router-dom";
+import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { Header } from "../components/header";
 import { useTranslation } from "react-i18next";
 import { cn } from "../lib/utils";
-import { CreditCard, User, FileText, Shield, PanelLeftOpen, PanelLeftClose } from "lucide-react";
+import { CreditCard, User, FileText, Shield, PanelLeftOpen, PanelLeftClose, MessageCircle } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 
 const appNav = [
@@ -13,6 +13,7 @@ const appNav = [
 
 export function AppLayout() {
   const { t } = useTranslation();
+  const location = useLocation();
   const [isAdmin, setIsAdmin] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -49,6 +50,22 @@ export function AppLayout() {
                 ? <PanelLeftOpen className="h-4 w-4" />
                 : <PanelLeftClose className="h-4 w-4" />}
             </button>
+
+            {/* Back to chat */}
+            {location.pathname !== "/app" && (
+              <Link
+                to="/app"
+                title={isCollapsed ? t("nav.backToChat") : undefined}
+                className={cn(
+                  "flex items-center rounded-xl text-sm font-medium mb-2 transition-colors duration-200",
+                  "bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20",
+                  isCollapsed ? "justify-center w-10 h-10 mx-auto" : "gap-3 px-3 py-2.5"
+                )}
+              >
+                <MessageCircle className="w-4 h-4 shrink-0" />
+                {!isCollapsed && <span>{t("nav.backToChat")}</span>}
+              </Link>
+            )}
 
             {/* Main nav */}
             {appNav.map((item) => {
