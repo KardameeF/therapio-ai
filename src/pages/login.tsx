@@ -1,239 +1,129 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/ui/tabs";
 import { useAuth } from "../providers/AuthProvider";
 import { useTranslation } from "react-i18next";
-import { Brain, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader2, ArrowLeft } from "lucide-react";
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from "react-google-recaptcha-v3";
-import { useToast } from "../hooks/use-toast";
 import { supabase } from "../lib/supabaseClient";
 
-interface LoginFormData {
-  email: string;
-  password: string;
-  rememberMe: boolean;
-}
+const getStrength = (pw: string) => {
+  let s = 0;
+  if (pw.length >= 8) s++;
+  if (/[a-z]/.test(pw)) s++;
+  if (/[A-Z]/.test(pw)) s++;
+  if (/[0-9]/.test(pw)) s++;
+  if (/[^a-zA-Z0-9]/.test(pw)) s++;
+  return s;
+};
 
-interface SignupFormData {
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
+const STRENGTH_COLOR = ["", "bg-red-500", "bg-orange-500", "bg-yellow-500", "bg-green-500", "bg-emerald-500"];
 
-// Inner component that uses the reCAPTCHA hook
-export function LoginForm({ onSuccess, defaultTab = "login" }: { onSuccess?: () => void; defaultTab?: "login" | "signup" } = {}) {
+type View = "login" | "register" | "forgot";
+
+function LoginFormInner({ defaultTab = "login" }: { defaultTab?: "login" | "register" }) {
+  const [view, setView] = useState<View>(defaultTab);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [showLoginPassword, setShowLoginPassword] = useState(false);
-  const [showSignupPassword, setShowSignupPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
+  // login
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [showLoginPw, setShowLoginPw] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+
+  // signup
+  const [displayName, setDisplayName] = useState("");
+  const [signupEmail, setSignupEmail] = useState("");
+  const [signupPassword, setSignupPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showSignupPw, setShowSignupPw] = useState(false);
+  const [showConfirmPw, setShowConfirmPw] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+
+  // forgot
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotSent, setForgotSent] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
-  const [captchaError, setCaptchaError] = useState<string | null>(null);
-  const { signIn, signInWithGoogle } = useAuth();
+
+  const { signInWithGoogle } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
-  const { toast } = useToast();
   const { executeRecaptcha } = useGoogleReCaptcha();
-
-  // Login form
-  const loginForm = useForm<LoginFormData>({
-    mode: 'onChange',
-    reValidateMode: 'onChange'
-  });
-
-  // Signup form
-  const signupForm = useForm<SignupFormData>({
-    mode: 'onChange',
-    reValidateMode: 'onChange'
-  });
-
+  const emailRef = useRef<HTMLInputElement>(null);
   const from = (location.state as any)?.from?.pathname || "/app";
-  
-  // Login form watchers
-  const loginEmail = loginForm.watch("email");
-  const loginPassword = loginForm.watch("password");
-  const rememberMe = loginForm.watch("rememberMe");
-  
-  // Signup form watchers
-  const signupEmail = signupForm.watch("email");
-  const signupPassword = signupForm.watch("password");
-  const confirmPassword = signupForm.watch("confirmPassword");
 
-  const validatePassword = (password: string) => {
-    // Use the regex pattern: ^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
-    
-    if (!passwordRegex.test(password)) {
-      // Provide specific feedback based on what's missing
-      if (password.length < 8) return t("validation.password.minLength");
-      if (!/[a-z]/.test(password)) return t("validation.password.lowercase");
-      if (!/[A-Z]/.test(password)) return t("validation.password.uppercase");
-      if (!/\d/.test(password)) return t("validation.password.number");
-      if (!/[^A-Za-z\d]/.test(password)) return t("validation.password.special");
-    }
-    return true;
-  };
+  useEffect(() => {
+    emailRef.current?.focus();
+  }, [view]);
 
-  // Check if login form is valid for submission
-  const isLoginFormValid = () => {
-    const hasValidEmail = loginEmail && /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(loginEmail);
-    const hasValidPassword = loginPassword && loginPassword.length > 0;
-    
-    return hasValidEmail && hasValidPassword;
-  };
-
-  // Check if signup form is valid for submission
-  const isSignupFormValid = () => {
-    const hasValidEmail = signupEmail && /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(signupEmail);
-    const hasValidPassword = signupPassword && validatePassword(signupPassword) === true;
-    const passwordsMatch = signupPassword && confirmPassword && signupPassword === confirmPassword;
-    const hasRequiredFields = signupPassword && confirmPassword;
-    
-    return hasValidEmail && hasValidPassword && passwordsMatch && hasRequiredFields;
-  };
-
-  // Verify CAPTCHA token with Netlify function
   const verifyCaptcha = async (token: string): Promise<boolean> => {
     try {
-      const response = await fetch('/.netlify/functions/verify-captcha', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const res = await fetch("/.netlify/functions/verify-captcha", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token }),
       });
-
-      const result = await response.json();
+      const result = await res.json();
       return result.success === true;
-    } catch (error) {
-      console.error('Error verifying CAPTCHA:', error);
+    } catch {
       return false;
     }
   };
 
-  const onLoginSubmit = async (data: LoginFormData) => {
+  const clearErrors = () => setFieldErrors({});
+
+  const onLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    clearErrors();
     setLoading(true);
-    setError(null);
-    setCaptchaError(null);
-
     try {
-      // Execute reCAPTCHA v3
-      if (!executeRecaptcha) {
-        setCaptchaError(t("auth.captchaError"));
-        return;
-      }
+      if (!executeRecaptcha) { setFieldErrors({ form: t("auth.captchaError") }); return; }
+      const token = await executeRecaptcha("login");
+      if (!token || !(await verifyCaptcha(token))) { setFieldErrors({ form: t("auth.captchaFailed") }); return; }
 
-      const token = await executeRecaptcha('login');
-      if (!token) {
-        setCaptchaError(t("auth.captchaError"));
-        return;
-      }
-
-      // Verify CAPTCHA token
-      const captchaValid = await verifyCaptcha(token);
-      if (!captchaValid) {
-        setCaptchaError(t("auth.captchaFailed"));
-        return;
-      }
-
-      // Sign in
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email: data.email,
-        password: data.password
-      });
-
-      if (!signInError) {
-        // Login successful
-        toast({
-          variant: "success",
-          title: t("auth.welcomeBack"),
-          description: t("auth.loginSuccess"),
-        });
-        onSuccess?.();
-        navigate(from, { replace: true });
+      const { error } = await supabase.auth.signInWithPassword({ email: loginEmail, password: loginPassword });
+      if (error) {
+        setFieldErrors({ password: t("auth.wrongEmailOrPassword") });
       } else {
-        // Login error
-        setError(signInError.message);
-        toast({
-          variant: "destructive",
-          title: t("auth.loginFailed"),
-          description: signInError.message,
-        });
+        navigate(from, { replace: true });
       }
-    } catch (err) {
-      setError(t("auth.unexpectedError"));
-      toast({
-        variant: "destructive",
-        title: t("auth.error"),
-        description: t("auth.tryAgain"),
-      });
+    } catch {
+      setFieldErrors({ form: t("auth.unexpectedError") });
     } finally {
       setLoading(false);
     }
   };
 
-  const onSignupSubmit = async (data: SignupFormData) => {
+  const onSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    clearErrors();
+    const errs: Record<string, string> = {};
+    if (signupPassword !== confirmPassword) errs.confirmPassword = t("auth.passwordsDontMatch");
+    if (signupPassword.length < 8) errs.password = t("validation.password.minLength");
+    if (Object.keys(errs).length) { setFieldErrors(errs); return; }
+
     setLoading(true);
-    setError(null);
-    setCaptchaError(null);
-
     try {
-      // Execute reCAPTCHA v3
-      if (!executeRecaptcha) {
-        setCaptchaError(t("auth.captchaError"));
-        return;
-      }
+      if (!executeRecaptcha) { setFieldErrors({ form: t("auth.captchaError") }); return; }
+      const token = await executeRecaptcha("signup");
+      if (!token || !(await verifyCaptcha(token))) { setFieldErrors({ form: t("auth.captchaFailed") }); return; }
 
-      const token = await executeRecaptcha('signup');
-      if (!token) {
-        setCaptchaError(t("auth.captchaError"));
-        return;
-      }
-
-      // Verify CAPTCHA token
-      const captchaValid = await verifyCaptcha(token);
-      if (!captchaValid) {
-        setCaptchaError(t("auth.captchaFailed"));
-        return;
-      }
-
-      // Sign up
-      const { error: signUpError } = await supabase.auth.signUp({
-        email: data.email,
-        password: data.password
-      });
-
-      if (!signUpError) {
-        // Signup successful
-        toast({
-          variant: "success",
-          title: t("auth.signupSuccess"),
-          description: t("auth.checkEmail"),
-        });
-        onSuccess?.();
-        navigate(from, { replace: true });
+      const { data, error } = await supabase.auth.signUp({ email: signupEmail, password: signupPassword });
+      if (error) {
+        if (error.message.toLowerCase().includes("already")) {
+          setFieldErrors({ email: t("auth.emailAlreadyRegistered") });
+        } else {
+          setFieldErrors({ form: error.message });
+        }
       } else {
-        // Signup error
-        setError(signUpError.message);
-        toast({
-          variant: "destructive",
-          title: t("auth.signupFailed"),
-          description: signUpError.message,
-        });
+        if (displayName && data.user) {
+          await supabase.from("profiles").update({ display_name: displayName }).eq("id", data.user.id);
+        }
+        navigate(from, { replace: true });
       }
-    } catch (err) {
-      setError(t("auth.unexpectedError"));
-      toast({
-        variant: "destructive",
-        title: t("auth.error"),
-        description: t("auth.tryAgain"),
-      });
+    } catch {
+      setFieldErrors({ form: t("auth.unexpectedError") });
     } finally {
       setLoading(false);
     }
@@ -241,365 +131,241 @@ export function LoginForm({ onSuccess, defaultTab = "login" }: { onSuccess?: () 
 
   const handleGoogleSignIn = async () => {
     setLoading(true);
-    setError(null);
+    clearErrors();
     try {
       const { error } = await signInWithGoogle();
-      // signInWithGoogle прави browser redirect към Google.
-      // НЕ викай navigate() тук — браузърът сам ще се пренасочи.
-      // Ако има error ПРЕДИ redirect (мрежова грешка и т.н.), показваме го.
-      if (error) {
-        setError(error.message);
-        toast({
-          variant: "destructive",
-          title: "Google sign-in failed",
-          description: error.message,
-        });
-        setLoading(false);
-      }
-      // Ако няма error — браузърът вече се redirect-ва към Google,
-      // loading остава true докато страницата се смени.
-    } catch (err) {
-      setError("An unexpected error occurred");
-      toast({
-        variant: "destructive",
-        title: "Sign-in failed",
-        description: "Please try again.",
-      });
+      if (error) { setFieldErrors({ form: error.message }); setLoading(false); }
+    } catch {
+      setFieldErrors({ form: t("auth.unexpectedError") });
       setLoading(false);
     }
   };
 
-  const handleForgotPassword = async () => {
-    if (!loginEmail) {
-      toast({
-        variant: "destructive",
-        title: t("auth.emailRequired"),
-        description: t("auth.enterEmailFirst"),
-      });
-      return;
-    }
-
+  const handleForgotSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!forgotEmail) return;
     setIsResetting(true);
-    try {
-      const { error } = await supabase.auth.resetPasswordForEmail(loginEmail, {
-        redirectTo: `${window.location.origin}/reset-password`,
-      });
-
-      if (error) {
-        toast({
-          variant: "destructive",
-          title: t("auth.resetFailed"),
-          description: error.message,
-        });
-      } else {
-        toast({
-          variant: "success",
-          title: t("auth.resetEmailSent"),
-          description: t("auth.checkEmailReset"),
-        });
-      }
-    } catch (err) {
-      toast({
-        variant: "destructive",
-        title: t("auth.error"),
-        description: t("auth.tryAgain"),
-      });
-    } finally {
-      setIsResetting(false);
-    }
+    const { error } = await supabase.auth.resetPasswordForEmail(forgotEmail, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setIsResetting(false);
+    if (!error) setForgotSent(true);
   };
+
+  const strength = getStrength(signupPassword);
+  const strengthKeys = ["", "strength.veryWeak", "strength.weak", "strength.medium", "strength.strong", "strength.veryStrong"];
+
+  const inputCls = "w-full mt-1 px-3 py-2 rounded-xl border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition-colors";
+  const btnPrimaryCls = "w-full py-2.5 rounded-xl bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2";
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-background">
-      <Card className="w-full max-w-md shadow-soft-lg">
-        <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <div className="relative">
-              <div className="absolute inset-0 bg-primary/20 rounded-xl blur-lg"></div>
-              <Brain className="relative h-12 w-12 text-primary" />
-            </div>
+      <div className="w-full max-w-md rounded-2xl border border-border bg-card p-8">
+
+        {/* Logo */}
+        <div className="flex justify-center mb-4">
+          <svg width="32" height="32" viewBox="0 0 28 28" fill="none" className="text-primary">
+            <circle cx="14" cy="14" r="12" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.25"/>
+            <circle cx="14" cy="14" r="7" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.5"/>
+            <circle cx="14" cy="14" r="2.5" fill="currentColor"/>
+            <ellipse cx="14" cy="14" rx="12" ry="4.5" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.35" transform="rotate(-30 14 14)"/>
+          </svg>
+        </div>
+        <h2 className="text-center text-xl font-semibold mb-1">{t("app.title")}</h2>
+
+        {/* ===== FORGOT VIEW ===== */}
+        {view === "forgot" ? (
+          <div className="mt-6 space-y-4">
+            <button onClick={() => { setView("login"); setForgotSent(false); }} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              {t("auth.backToLogin")}
+            </button>
+            <h3 className="text-lg font-semibold">{t("auth.resetPassword")}</h3>
+            <p className="text-sm text-muted-foreground">{t("auth.resetPasswordDesc")}</p>
+            <form onSubmit={handleForgotSubmit} className="space-y-4">
+              <input
+                type="email"
+                value={forgotEmail}
+                onChange={(e) => setForgotEmail(e.target.value)}
+                placeholder="email@example.com"
+                className={inputCls}
+                autoFocus
+              />
+              <button type="submit" disabled={isResetting || !forgotEmail} className={btnPrimaryCls}>
+                {isResetting
+                  ? <><Loader2 className="w-4 h-4 animate-spin" /> {t("auth.sendingResetLink")}</>
+                  : t("auth.sendResetLink")}
+              </button>
+            </form>
+            {forgotSent && (
+              <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-3 text-sm text-green-700 dark:text-green-300">
+                ✓ {t("auth.resetSentTo")} <strong>{forgotEmail}</strong>
+              </div>
+            )}
           </div>
-          <CardTitle className="text-2xl font-heading">{t("app.title")}</CardTitle>
-          <CardDescription className="text-base">
-            Въведи данните си за вход
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <Tabs defaultValue={defaultTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="login">{t("auth.login")}</TabsTrigger>
-              <TabsTrigger value="signup">{t("auth.signup")}</TabsTrigger>
-            </TabsList>
-            
-            {/* Login Tab */}
-            <TabsContent value="login" className="space-y-4">
-              <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="loginEmail">{t("auth.email")}</Label>
-                  <Input
-                    id="loginEmail"
-                    type="email"
-                    placeholder="Въведи имейл"
-                    {...loginForm.register("email", { 
-                      required: t("validation.required"),
-                      pattern: {
-                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                        message: t("validation.email")
-                      }
-                    })}
-                  />
-                  {loginForm.formState.errors.email && (
-                    <p className="text-sm text-accent">{loginForm.formState.errors.email.message}</p>
-                  )}
+        ) : (
+          <>
+            {/* Dynamic subtitle */}
+            <p className="text-center text-sm text-muted-foreground mb-6">
+              {view === "login" ? t("auth.welcomeBack") : t("auth.createAccount")}
+            </p>
+
+            {/* Underline tabs */}
+            <div className="flex border-b border-border mb-6">
+              <button
+                className={`pb-3 px-1 mr-6 text-sm font-medium transition-colors border-b-2 -mb-px ${view === "login" ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}
+                onClick={() => { setView("login"); clearErrors(); }}
+              >
+                {t("auth.login")}
+              </button>
+              <button
+                className={`pb-3 px-1 text-sm font-medium transition-colors border-b-2 -mb-px ${view === "register" ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}
+                onClick={() => { setView("register"); clearErrors(); }}
+              >
+                {t("auth.signup")}
+              </button>
+            </div>
+
+            {/* ===== LOGIN ===== */}
+            {view === "login" && (
+              <form onSubmit={onLogin} className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium text-foreground">{t("auth.email")}</label>
+                  <input ref={emailRef} type="email" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} placeholder="email@example.com" className={inputCls} autoFocus />
+                  {fieldErrors.email && <p className="text-xs text-destructive mt-1">{fieldErrors.email}</p>}
                 </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="loginPassword">{t("auth.password")}</Label>
+                <div>
+                  <label className="text-sm font-medium text-foreground">{t("auth.password")}</label>
                   <div className="relative">
-                    <Input
-                      id="loginPassword"
-                      type={showLoginPassword ? "text" : "password"}
-                      placeholder="Въведи парола"
-                      {...loginForm.register("password", { 
-                        required: t("validation.required")
-                      })}
-                      className="pr-10"
-                    />
-                    <button
-                      type="button"
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                      onClick={() => setShowLoginPassword(!showLoginPassword)}
-                    >
-                      {showLoginPassword ? (
-                        <EyeOff className="h-4 w-4 text-gray-400" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-gray-400" />
-                      )}
+                    <input type={showLoginPw ? "text" : "password"} value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} className={`${inputCls} pr-10`} />
+                    <button type="button" onClick={() => setShowLoginPw((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 mt-0.5 text-muted-foreground hover:text-foreground transition-colors">
+                      {showLoginPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
-                  {loginForm.formState.errors.password && (
-                    <p className="text-sm text-accent">{loginForm.formState.errors.password.message}</p>
-                  )}
+                  {fieldErrors.password && <p className="text-xs text-destructive mt-1">{fieldErrors.password}</p>}
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      id="rememberMe"
-                      {...loginForm.register("rememberMe")}
-                      className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-                    />
-                    <Label htmlFor="rememberMe" className="text-sm font-medium">
-                      Запомни ме
-                    </Label>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={handleForgotPassword}
-                    disabled={isResetting}
-                    className="text-sm text-primary hover:underline font-medium"
-                  >
-                    {isResetting ? "Изпраща..." : t("auth.forgotPassword")}
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} className="accent-primary" />
+                    <span className="text-xs text-muted-foreground">Remember me</span>
+                  </label>
+                  <button type="button" onClick={() => { setView("forgot"); setForgotEmail(loginEmail); }} className="text-xs text-muted-foreground hover:text-primary transition-colors hover:underline underline-offset-2">
+                    {t("auth.forgotPassword")}
                   </button>
                 </div>
 
-                {captchaError && (
-                  <p className="text-sm text-accent">{captchaError}</p>
-                )}
+                {fieldErrors.form && <p className="text-xs text-destructive bg-destructive/10 p-3 rounded-xl">{fieldErrors.form}</p>}
 
-                {error && (
-                  <p className="text-sm text-accent bg-accent/10 p-3 rounded-lg">{error}</p>
-                )}
-
-                <Button 
-                  type="submit" 
-                  className="w-full" 
-                  disabled={loading || !isLoginFormValid()}
-                >
-                  {loading ? "Зарежда..." : t("auth.login")}
-                </Button>
+                <button type="submit" disabled={loading || !loginEmail || !loginPassword} className={btnPrimaryCls}>
+                  {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> {t("auth.signingIn")}</> : t("auth.login")}
+                </button>
               </form>
-            </TabsContent>
-            
-            {/* Signup Tab */}
-            <TabsContent value="signup" className="space-y-4">
-              <form onSubmit={signupForm.handleSubmit(onSignupSubmit)} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="signupEmail">{t("auth.email")}</Label>
-                  <Input
-                    id="signupEmail"
-                    type="email"
-                    placeholder="Въведи имейл"
-                    {...signupForm.register("email", { 
-                      required: t("validation.required"),
-                      pattern: {
-                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                        message: t("validation.email")
-                      }
-                    })}
-                  />
-                  {signupForm.formState.errors.email && (
-                    <p className="text-sm text-accent">{signupForm.formState.errors.email.message}</p>
-                  )}
+            )}
+
+            {/* ===== REGISTER ===== */}
+            {view === "register" && (
+              <form onSubmit={onSignup} className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium text-foreground">{t("auth.displayName")}</label>
+                  <input type="text" value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder={t("auth.displayNamePlaceholder")} className={inputCls} />
                 </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="signupPassword">{t("auth.password")}</Label>
+                <div>
+                  <label className="text-sm font-medium text-foreground">{t("auth.email")}</label>
+                  <input ref={emailRef} type="email" value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)} placeholder="email@example.com" className={inputCls} autoFocus />
+                  {fieldErrors.email && <p className="text-xs text-destructive mt-1">{fieldErrors.email}</p>}
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-foreground">{t("auth.password")}</label>
                   <div className="relative">
-                    <Input
-                      id="signupPassword"
-                      type={showSignupPassword ? "text" : "password"}
-                      placeholder="Въведи парола"
-                      {...signupForm.register("password", { 
-                        required: t("validation.required"),
-                        validate: validatePassword
-                      })}
-                      className="pr-10"
-                    />
-                    <button
-                      type="button"
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                      onClick={() => setShowSignupPassword(!showSignupPassword)}
-                    >
-                      {showSignupPassword ? (
-                        <EyeOff className="h-4 w-4 text-gray-400" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-gray-400" />
-                      )}
+                    <input type={showSignupPw ? "text" : "password"} value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} className={`${inputCls} pr-10`} />
+                    <button type="button" onClick={() => setShowSignupPw((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 mt-0.5 text-muted-foreground hover:text-foreground transition-colors">
+                      {showSignupPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
-                  {signupForm.formState.errors.password && (
-                    <p className="text-sm text-accent">{signupForm.formState.errors.password.message}</p>
-                  )}
+                  {fieldErrors.password && <p className="text-xs text-destructive mt-1">{fieldErrors.password}</p>}
                   {signupPassword && (
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2 text-xs">
-                        <div className={`w-2 h-2 rounded-full ${signupPassword.length >= 8 ? 'bg-green-500' : 'bg-gray-300'}`}></div>
-                        <span className={signupPassword.length >= 8 ? 'text-green-600' : 'text-gray-500'}>
-                          {t("validation.password.minLength")}
-                        </span>
+                    <>
+                      <div className="flex gap-1 mt-2">
+                        {[1, 2, 3, 4, 5].map((i) => (
+                          <div key={i} className={`h-1 flex-1 rounded-full transition-colors ${i <= strength ? STRENGTH_COLOR[strength] : "bg-border"}`} />
+                        ))}
                       </div>
-                      <div className="flex items-center gap-2 text-xs">
-                        <div className={`w-2 h-2 rounded-full ${/[a-z]/.test(signupPassword) ? 'bg-green-500' : 'bg-gray-300'}`}></div>
-                        <span className={/[a-z]/.test(signupPassword) ? 'text-green-600' : 'text-gray-500'}>
-                          {t("validation.password.lowercase")}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-xs">
-                        <div className={`w-2 h-2 rounded-full ${/[A-Z]/.test(signupPassword) ? 'bg-green-500' : 'bg-gray-300'}`}></div>
-                        <span className={/[A-Z]/.test(signupPassword) ? 'text-green-600' : 'text-gray-500'}>
-                          {t("validation.password.uppercase")}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-xs">
-                        <div className={`w-2 h-2 rounded-full ${/\d/.test(signupPassword) ? 'bg-green-500' : 'bg-gray-300'}`}></div>
-                        <span className={/\d/.test(signupPassword) ? 'text-green-600' : 'text-gray-500'}>
-                          {t("validation.password.number")}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-xs">
-                        <div className={`w-2 h-2 rounded-full ${/[^A-Za-z\d]/.test(signupPassword) ? 'bg-green-500' : 'bg-gray-300'}`}></div>
-                        <span className={/[^A-Za-z\d]/.test(signupPassword) ? 'text-green-600' : 'text-gray-500'}>
-                          {t("validation.password.special")}
-                        </span>
-                      </div>
-                    </div>
+                      {strength > 0 && (
+                        <p className="text-xs text-muted-foreground mt-1">{t(`auth.${strengthKeys[strength]}`)}</p>
+                      )}
+                    </>
                   )}
                 </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">{t("auth.confirmPassword")}</Label>
+                <div>
+                  <label className="text-sm font-medium text-foreground">{t("auth.confirmPassword")}</label>
                   <div className="relative">
-                    <Input
-                      id="confirmPassword"
-                      type={showConfirmPassword ? "text" : "password"}
-                      placeholder="Потвърди паролата"
-                      {...signupForm.register("confirmPassword", { 
-                        required: t("validation.required"),
-                        validate: (value) => 
-                          value === signupPassword ? true : t("validation.confirmPassword")
-                      })}
-                      className="pr-10"
-                    />
-                    <button
-                      type="button"
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    >
-                      {showConfirmPassword ? (
-                        <EyeOff className="h-4 w-4 text-gray-400" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-gray-400" />
-                      )}
+                    <input type={showConfirmPw ? "text" : "password"} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className={`${inputCls} pr-10`} />
+                    <button type="button" onClick={() => setShowConfirmPw((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 mt-0.5 text-muted-foreground hover:text-foreground transition-colors">
+                      {showConfirmPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
-                  {signupForm.formState.errors.confirmPassword && (
-                    <p className="text-sm text-accent">{signupForm.formState.errors.confirmPassword.message}</p>
-                  )}
+                  {fieldErrors.confirmPassword && <p className="text-xs text-destructive mt-1">{fieldErrors.confirmPassword}</p>}
                 </div>
 
-                {captchaError && (
-                  <p className="text-sm text-accent">{captchaError}</p>
-                )}
+                {/* Terms & Privacy checkbox */}
+                <label className="flex items-start gap-2 cursor-pointer">
+                  <input type="checkbox" checked={agreedToTerms} onChange={(e) => setAgreedToTerms(e.target.checked)} className="mt-0.5 accent-primary" />
+                  <span className="text-xs text-muted-foreground leading-relaxed">
+                    {t("auth.agreeToTermsBefore")}
+                    <Link to="/legal/terms" className="text-primary hover:underline mx-1">{t("auth.termsOfService")}</Link>
+                    {t("auth.agreeToTermsAnd")}
+                    <Link to="/legal/privacy" className="text-primary hover:underline mx-1">{t("auth.privacyPolicy")}</Link>
+                    {t("auth.agreeToTermsAfter")}
+                  </span>
+                </label>
 
-                {error && (
-                  <p className="text-sm text-accent bg-accent/10 p-3 rounded-lg">{error}</p>
-                )}
+                {fieldErrors.form && <p className="text-xs text-destructive bg-destructive/10 p-3 rounded-xl">{fieldErrors.form}</p>}
 
-                <Button 
-                  type="submit" 
-                  className="w-full" 
-                  disabled={loading || !isSignupFormValid()}
-                >
-                  {loading ? "Зарежда..." : t("auth.signup")}
-                </Button>
+                <button type="submit" disabled={loading || !signupEmail || !signupPassword || !confirmPassword || !agreedToTerms} className={btnPrimaryCls}>
+                  {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> {t("auth.creatingAccount")}</> : t("auth.signup")}
+                </button>
               </form>
-            </TabsContent>
-          </Tabs>
+            )}
 
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-border" />
+            {/* Divider */}
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-border" /></div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-card px-2 text-muted-foreground">{t("auth.continueWith")}</span>
+              </div>
             </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-foreground-muted">Или продължи с</span>
-            </div>
-          </div>
 
-          <div className="space-y-3">
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={handleGoogleSignIn}
-              disabled={loading}
-            >
-              <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24">
+            {/* Google */}
+            <button onClick={handleGoogleSignIn} disabled={loading} className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-border bg-background hover:bg-secondary text-foreground text-sm font-medium transition-colors disabled:opacity-40">
+              <svg className="w-4 h-4" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
               </svg>
-              Продължи с Google
-            </Button>
-          </div>
+              {t("auth.continueWithGoogle")}
+            </button>
 
-          <div className="text-center">
-            <Link to="/" className="text-sm text-foreground-muted hover:text-primary hover:underline transition-colors">
-              Обратно към началото
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
+            <div className="text-center mt-6">
+              <Link to="/" className="text-sm text-muted-foreground hover:text-primary hover:underline transition-colors">
+                {t("auth.backToHome")}
+              </Link>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }
 
-// Main component that wraps the form with reCAPTCHA provider
+export function LoginForm({ onSuccess, defaultTab = "login" }: { onSuccess?: () => void; defaultTab?: "login" | "register" } = {}) {
+  return <LoginFormInner defaultTab={defaultTab} />;
+}
+
 export function LoginPage() {
   return (
     <GoogleReCaptchaProvider reCaptchaKey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}>
-      <LoginForm />
+      <LoginFormInner />
     </GoogleReCaptchaProvider>
   );
 }
