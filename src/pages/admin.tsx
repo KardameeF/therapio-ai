@@ -15,8 +15,8 @@ interface UserRow {
 
 const PLAN_COLORS: Record<string, string> = {
   first_step: "text-muted-foreground bg-muted",
-  personal_growth: "text-violet-600 bg-violet-100 dark:bg-violet-900/30",
-  expanded_horizons: "text-cyan-600 bg-cyan-100 dark:bg-cyan-900/30",
+  personal_growth: "text-primary bg-accent",
+  expanded_horizons: "text-accent-foreground bg-accent",
 };
 
 export function AdminPage() {
@@ -94,7 +94,7 @@ export function AdminPage() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: "Общо потребители", value: totalUsers, icon: Users, color: "text-foreground" },
-          { label: "Платени", value: paidUsers, icon: TrendingUp, color: "text-violet-500" },
+          { label: "Платени", value: paidUsers, icon: TrendingUp, color: "text-primary" },
           { label: "Безплатни", value: freeUsers, icon: UserCheck, color: "text-muted-foreground" },
           { label: "Блокирани", value: blockedUsers, icon: Ban, color: "text-destructive" },
         ].map(stat => (
@@ -116,7 +116,7 @@ export function AdminPage() {
           placeholder="Търси по имейл..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="w-full pl-9 pr-4 py-2 text-sm rounded-xl border border-border/50 bg-background outline-none focus:border-violet-400/60 transition-colors"
+          className="w-full pl-9 pr-4 py-2 text-sm rounded-xl border border-border/50 bg-background outline-none focus:border-primary/60 transition-colors"
         />
       </div>
 

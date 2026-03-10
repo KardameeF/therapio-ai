@@ -8,7 +8,6 @@ import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../components/ui/card";
 import { useSEO } from "../hooks/use-seo";
 import {
-  Sparkles,
   Shield,
   Globe,
   Zap,
@@ -93,70 +92,58 @@ export function LandingPage() {
     <div className="flex flex-col min-h-screen bg-background">
 
       {/* ── HERO ── */}
-      <section className="relative flex items-center justify-center px-4 py-24 md:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-violet-500/8 via-cyan-500/5 to-transparent pointer-events-none" />
-        <div className="absolute top-24 left-8 w-40 h-40 bg-violet-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-16 right-8 w-56 h-56 bg-cyan-400/8 rounded-full blur-3xl pointer-events-none" />
+      <section className="relative px-4 py-20 md:py-32 overflow-hidden">
+        <div className="relative max-w-5xl mx-auto">
+          <div className="max-w-2xl space-y-6">
+            <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-[1.1]">
+              {t("landing.hero.tagline")}
+            </h1>
 
-        <div className="relative max-w-4xl mx-auto text-center space-y-8">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-violet-500/10 border border-violet-400/20 text-sm text-violet-400">
-            <Sparkles className="w-3.5 h-3.5" />
-            {t("landing.hero.badge")}
-          </div>
+            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-lg">
+              {t("landing.hero.subtitle")}
+            </p>
 
-          {/* Headline */}
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-tight">
-            {t("landing.hero.tagline")}
-          </h1>
-
-          {/* Subtitle */}
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            {t("landing.hero.subtitle")}
-          </p>
-
-          {/* CTA buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-2">
-            {user ? (
-              <Link to="/app">
-                <Button size="lg" className="w-full sm:w-auto text-base px-8 py-5">
-                  Към чата
-                </Button>
-              </Link>
-            ) : (
-              <>
-                <Button
-                  size="lg"
-                  className="w-full sm:w-auto text-base px-8 py-5"
-                  onClick={() => { setAuthTab("signup"); setAuthOpen(true); }}
-                >
-                  {t("landing.hero.cta")}
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="w-full sm:w-auto text-base px-8 py-5"
-                  onClick={() => { setAuthTab("login"); setAuthOpen(true); }}
-                >
-                  {t("landing.hero.signIn")}
-                </Button>
-              </>
-            )}
-          </div>
-
-          {/* Trust badges */}
-          <div className="flex items-center gap-6 flex-wrap justify-center pt-4">
-            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-              <Shield className="w-4 h-4 text-violet-400" />
-              <span>{t("landing.hero.trust.secure")}</span>
+            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+              {user ? (
+                <Link to="/app">
+                  <Button size="lg" className="w-full sm:w-auto text-base px-8 py-5 rounded-xl">
+                    Към чата
+                  </Button>
+                </Link>
+              ) : (
+                <>
+                  <Button
+                    size="lg"
+                    className="w-full sm:w-auto text-base px-8 py-5 rounded-xl"
+                    onClick={() => { setAuthTab("signup"); setAuthOpen(true); }}
+                  >
+                    {t("landing.hero.cta")}
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="w-full sm:w-auto text-base px-8 py-5 rounded-xl"
+                    onClick={() => { setAuthTab("login"); setAuthOpen(true); }}
+                  >
+                    {t("landing.hero.signIn")}
+                  </Button>
+                </>
+              )}
             </div>
-            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-              <Globe className="w-4 h-4 text-violet-400" />
-              <span>{t("landing.hero.trust.users")}</span>
-            </div>
-            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-              <Zap className="w-4 h-4 text-violet-400" />
-              <span>{t("landing.hero.trust.ai")}</span>
+
+            <div className="flex items-center gap-6 flex-wrap pt-4">
+              <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                <Shield className="w-4 h-4 text-primary" />
+                <span>{t("landing.hero.trust.secure")}</span>
+              </div>
+              <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                <Globe className="w-4 h-4 text-primary" />
+                <span>{t("landing.hero.trust.users")}</span>
+              </div>
+              <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                <Zap className="w-4 h-4 text-primary" />
+                <span>{t("landing.hero.trust.ai")}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -164,109 +151,79 @@ export function LandingPage() {
 
       {/* ── FEATURES ── */}
       <section id="features" className="py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-14">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+        <div className="max-w-5xl mx-auto">
+          <div className="mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-3">
               {t("landing.features.title")}
             </h2>
-            <p className="text-xl text-muted-foreground max-w-xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-lg">
               {t("landing.features.description")}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-border/60 rounded-xl overflow-hidden border border-border/60">
             {features.map(({ Icon, titleKey, descKey }) => (
-              <Card
+              <div
                 key={titleKey}
-                className="group border border-border/50 hover:border-violet-400/30 hover:shadow-lg hover:-translate-y-1 transition-all duration-200"
+                className="bg-card p-6 md:p-8 space-y-3"
               >
-                <CardHeader>
-                  <div className="w-10 h-10 rounded-xl bg-violet-500/10 flex items-center justify-center mb-4">
-                    <Icon className="w-5 h-5 text-violet-400" />
-                  </div>
-                  <CardTitle className="text-lg">{t(titleKey)}</CardTitle>
-                  <CardDescription className="text-sm leading-relaxed">{t(descKey)}</CardDescription>
-                </CardHeader>
-              </Card>
+                <Icon className="w-5 h-5 text-primary" />
+                <h3 className="text-base font-semibold">{t(titleKey)}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{t(descKey)}</p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* ── PRICING ── */}
-      <section className="py-20 px-4 bg-gradient-to-r from-violet-500/5 to-cyan-500/5">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-14">
-            <h2 className="text-4xl font-bold mb-4">{t("landing.pricing.title")}</h2>
-            <p className="text-xl text-muted-foreground">{t("landing.pricing.subtitle")}</p>
+      <section className="py-20 px-4">
+        <div className="max-w-5xl mx-auto">
+          <div className="mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-3">{t("landing.pricing.title")}</h2>
+            <p className="text-lg text-muted-foreground">{t("landing.pricing.subtitle")}</p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-6">
             {plans.map((plan) => {
               const planFeatures = t(plan.featuresKey, { returnObjects: true }) as string[];
+              const isHighlighted = plan.key === "personal_growth";
               return (
-                <Card
+                <div
                   key={plan.key}
-                  className={`relative overflow-hidden ${
-                    plan.popular
-                      ? "border-2 border-primary shadow-lg shadow-primary/10"
-                      : "border border-border/50"
+                  className={`rounded-xl p-6 space-y-5 ${
+                    isHighlighted
+                      ? "border-2 border-primary bg-card"
+                      : "border border-border bg-card"
                   }`}
                 >
-                  {plan.popular && (
-                    <div className="absolute top-0 right-0 bg-primary text-primary-foreground px-4 py-1 text-xs font-semibold rounded-bl-lg">
-                      {t("landing.pricing.popular", "Популярен")}
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground mb-1">{t(plan.nameKey)}</p>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-3xl font-bold">{plan.price}</span>
+                      <span className="text-sm text-muted-foreground">{plan.period}</span>
                     </div>
-                  )}
-                  <CardHeader className={`text-center pb-4 ${plan.popular ? "pt-10" : "pt-6"}`}>
-                    <div
-                      className={`inline-flex items-center self-center px-3 py-1 rounded-full text-sm font-medium mb-4 ${
-                        plan.popular
-                          ? "bg-primary/15 text-primary"
-                          : "bg-secondary text-secondary-foreground"
-                      }`}
-                    >
-                      {t(plan.nameKey)}
-                    </div>
-                    <div className="space-y-1">
-                      <div className="text-4xl font-bold">
-                        {plan.price}
-                        <span className="text-lg font-normal text-muted-foreground">{plan.period}</span>
-                      </div>
-                      {plan.bgnNote && (
-                        <p className="text-xs text-muted-foreground">{plan.bgnNote}</p>
-                      )}
-                      <p className="text-sm text-muted-foreground pt-1">{t(plan.descKey)}</p>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <ul className="space-y-2.5">
-                      {Array.isArray(planFeatures) && planFeatures.map((feat) => (
-                        <li key={feat} className="flex items-start gap-2.5 text-sm">
-                          <Check className="w-4 h-4 text-violet-400 shrink-0 mt-0.5" />
-                          <span className="text-muted-foreground">{feat}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    {plan.priceId ? (
-                      <Button
-                        variant={plan.ctaVariant}
-                        className="w-full"
-                        onClick={() => { setAuthTab("signup"); setAuthOpen(true); }}
-                      >
-                        {t(plan.ctaKey)}
-                      </Button>
-                    ) : (
-                      <Button
-                        variant={plan.ctaVariant}
-                        className="w-full"
-                        onClick={() => { setAuthTab("signup"); setAuthOpen(true); }}
-                      >
-                        {t(plan.ctaKey)}
-                      </Button>
+                    {plan.bgnNote && (
+                      <p className="text-xs text-muted-foreground mt-0.5">{plan.bgnNote}</p>
                     )}
-                  </CardContent>
-                </Card>
+                    <p className="text-sm text-muted-foreground mt-2">{t(plan.descKey)}</p>
+                  </div>
+                  <ul className="space-y-2">
+                    {Array.isArray(planFeatures) && planFeatures.map((feat) => (
+                      <li key={feat} className="flex items-start gap-2 text-sm">
+                        <Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                        <span className="text-muted-foreground">{feat}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <Button
+                    variant={plan.priceId ? "default" : "outline"}
+                    className="w-full rounded-xl"
+                    onClick={() => { setAuthTab("signup"); setAuthOpen(true); }}
+                  >
+                    {t(plan.ctaKey)}
+                  </Button>
+                </div>
               );
             })}
           </div>
@@ -276,26 +233,24 @@ export function LandingPage() {
       {/* ── CTA ── */}
       <section className="py-20 px-4">
         <div className="max-w-3xl mx-auto text-center">
-          <Card className="bg-gradient-to-r from-violet-500/10 to-cyan-500/10 border-primary/20">
-            <CardContent className="py-16 space-y-6">
-              <h2 className="text-4xl font-bold">{t("landing.cta.title")}</h2>
-              <p className="text-xl text-muted-foreground max-w-xl mx-auto">
-                {t("landing.cta.description")}
-              </p>
-              <Button
-                size="lg"
-                className="text-base px-10 py-5 mt-2"
-                onClick={() => { setAuthTab("signup"); setAuthOpen(true); }}
-              >
-                {t("landing.cta.button")}
-              </Button>
-            </CardContent>
-          </Card>
+          <div className="rounded-xl border border-border bg-card p-12 md:p-16 space-y-5">
+            <h2 className="text-3xl md:text-4xl font-bold">{t("landing.cta.title")}</h2>
+            <p className="text-lg text-muted-foreground max-w-lg mx-auto">
+              {t("landing.cta.description")}
+            </p>
+            <Button
+              size="lg"
+              className="text-base px-10 py-5 rounded-xl mt-2"
+              onClick={() => { setAuthTab("signup"); setAuthOpen(true); }}
+            >
+              {t("landing.cta.button")}
+            </Button>
+          </div>
         </div>
       </section>
 
       {/* ── FOOTER ── */}
-      <footer className="border-t border-border bg-background py-10 px-4 text-center text-sm text-muted-foreground space-y-3">
+      <footer className="border-t border-border bg-secondary/40 py-10 px-4 text-center text-sm text-muted-foreground space-y-3">
         <p>{t("footer.rights")}</p>
         <p className="max-w-xl mx-auto leading-relaxed">{t("footer.disclaimer")}</p>
         <div className="flex justify-center gap-4 flex-wrap pt-1">

@@ -35,7 +35,7 @@ export function SuccessPage() {
         </p>
         <button
           onClick={() => navigate("/app")}
-          className="w-full py-2 px-4 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-sm font-medium transition-colors"
+          className="w-full py-2 px-4 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium transition-colors"
         >
           Към чата сега
         </button>

@@ -231,19 +231,13 @@ export function ChatPage() {
         {/* Лого */}
         <div className="flex items-center justify-between p-4 border-b border-border/50">
           <Link to="/" className="flex items-center gap-2">
-            <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
-              <circle cx="14" cy="14" r="12" stroke="url(#eg)" strokeWidth="1.5" fill="none" opacity="0.25"/>
-              <circle cx="14" cy="14" r="7" stroke="url(#eg)" strokeWidth="1.5" fill="none" opacity="0.5"/>
-              <circle cx="14" cy="14" r="2.5" fill="url(#eg)"/>
-              <ellipse cx="14" cy="14" rx="12" ry="4.5" stroke="url(#eg)" strokeWidth="1" fill="none" opacity="0.35" transform="rotate(-30 14 14)"/>
-              <defs>
-                <linearGradient id="eg" x1="2" y1="2" x2="26" y2="26" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stopColor="#a78bfa"/>
-                  <stop offset="100%" stopColor="#22d3ee"/>
-                </linearGradient>
-              </defs>
+            <svg width="20" height="20" viewBox="0 0 28 28" fill="none">
+              <circle cx="14" cy="14" r="12" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.25"/>
+              <circle cx="14" cy="14" r="7" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.5"/>
+              <circle cx="14" cy="14" r="2.5" fill="currentColor"/>
+              <ellipse cx="14" cy="14" rx="12" ry="4.5" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.35" transform="rotate(-30 14 14)"/>
             </svg>
-            <span className="font-semibold text-sm bg-gradient-to-r from-violet-400 to-cyan-400 bg-clip-text text-transparent">
+            <span className="font-semibold text-sm text-foreground">
               Eterapp
             </span>
           </Link>
@@ -257,7 +251,7 @@ export function ChatPage() {
           <button
             onClick={() => { handleNewChat(); setSidebarOpen(false); }}
             className="w-full flex items-center gap-2 px-3 py-2 rounded-xl
-              bg-violet-600 hover:bg-violet-500 text-white text-sm font-medium
+              bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium
               transition-colors">
             <Plus className="w-4 h-4" />
             Нов чат
@@ -286,7 +280,7 @@ export function ChatPage() {
               placeholder="Търси в чатовете..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-8 pr-3 py-2 text-xs bg-background/60 border border-border/40 rounded-lg outline-none focus:border-violet-400/50 text-foreground placeholder:text-muted-foreground"
+              className="w-full pl-8 pr-3 py-2 text-xs bg-background/60 border border-border/40 rounded-lg outline-none focus:border-primary/50 text-foreground placeholder:text-muted-foreground"
             />
           </div>
 
@@ -323,7 +317,7 @@ export function ChatPage() {
                   }}
                   className="w-full text-left px-2 py-2 rounded-lg hover:bg-secondary/60 transition-colors group"
                 >
-                  <p className="text-xs font-medium text-foreground truncate group-hover:text-violet-400 transition-colors">
+                  <p className="text-xs font-medium text-foreground truncate group-hover:text-primary transition-colors">
                     {session.preview}
                   </p>
                   <p className="text-[10px] text-muted-foreground mt-0.5">
@@ -342,8 +336,8 @@ export function ChatPage() {
             className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-secondary transition-colors cursor-pointer"
             onClick={() => setProfileOpen((o) => !o)}
           >
-            <div className="w-8 h-8 rounded-full bg-violet-500/20 flex items-center justify-center shrink-0">
-              <User className="w-4 h-4 text-violet-400" />
+            <div className="w-8 h-8 rounded-full bg-primary/15 flex items-center justify-center shrink-0">
+              <User className="w-4 h-4 text-primary" />
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-xs text-muted-foreground truncate">Профил</p>
@@ -450,27 +444,21 @@ export function ChatPage() {
                   className={`flex gap-3 mb-6 ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}
                 >
                   <div className={`w-8 h-8 rounded-full shrink-0 flex items-center justify-center
-                    ${msg.role === "user" ? "bg-violet-500/20" : "bg-card border border-border/50"}`}>
+                    ${msg.role === "user" ? "bg-primary/15" : "bg-card border border-border/50"}`}>
                     {msg.role === "user" ? (
-                      <User className="w-4 h-4 text-violet-400" />
+                      <User className="w-4 h-4 text-primary" />
                     ) : (
-                      <svg width="16" height="16" viewBox="0 0 28 28" fill="none">
-                        <circle cx="14" cy="14" r="12" stroke="url(#ma)" strokeWidth="1.5" fill="none" opacity="0.25"/>
-                        <circle cx="14" cy="14" r="7" stroke="url(#ma)" strokeWidth="1.5" fill="none" opacity="0.5"/>
-                        <circle cx="14" cy="14" r="2.5" fill="url(#ma)"/>
-                        <ellipse cx="14" cy="14" rx="12" ry="4.5" stroke="url(#ma)" strokeWidth="1" fill="none" opacity="0.35" transform="rotate(-30 14 14)"/>
-                        <defs>
-                          <linearGradient id="ma" x1="2" y1="2" x2="26" y2="26" gradientUnits="userSpaceOnUse">
-                            <stop offset="0%" stopColor="#a78bfa"/>
-                            <stop offset="100%" stopColor="#22d3ee"/>
-                          </linearGradient>
-                        </defs>
+                      <svg width="16" height="16" viewBox="0 0 28 28" fill="none" className="text-primary">
+                        <circle cx="14" cy="14" r="12" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.25"/>
+                        <circle cx="14" cy="14" r="7" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.5"/>
+                        <circle cx="14" cy="14" r="2.5" fill="currentColor"/>
+                        <ellipse cx="14" cy="14" rx="12" ry="4.5" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.35" transform="rotate(-30 14 14)"/>
                       </svg>
                     )}
                   </div>
                   <div className={`max-w-[75%] px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap
                     ${msg.role === "user"
-                      ? "bg-violet-600 text-white rounded-tr-sm"
+                      ? "bg-primary text-primary-foreground rounded-tr-sm"
                       : "bg-card text-foreground rounded-tl-sm border border-border/40"}`}>
                     {msg.content}
                   </div>
@@ -481,17 +469,11 @@ export function ChatPage() {
               {isStreaming && streamingMessage && (
                 <div className="flex gap-3 mb-6">
                   <div className="w-8 h-8 rounded-full bg-card border border-border/50 flex items-center justify-center shrink-0">
-                    <svg width="16" height="16" viewBox="0 0 28 28" fill="none">
-                      <circle cx="14" cy="14" r="12" stroke="url(#ta)" strokeWidth="1.5" fill="none" opacity="0.25"/>
-                      <circle cx="14" cy="14" r="7" stroke="url(#ta)" strokeWidth="1.5" fill="none" opacity="0.5"/>
-                      <circle cx="14" cy="14" r="2.5" fill="url(#ta)"/>
-                      <ellipse cx="14" cy="14" rx="12" ry="4.5" stroke="url(#ta)" strokeWidth="1" fill="none" opacity="0.35" transform="rotate(-30 14 14)"/>
-                      <defs>
-                        <linearGradient id="ta" x1="2" y1="2" x2="26" y2="26" gradientUnits="userSpaceOnUse">
-                          <stop offset="0%" stopColor="#a78bfa"/>
-                          <stop offset="100%" stopColor="#22d3ee"/>
-                        </linearGradient>
-                      </defs>
+                    <svg width="16" height="16" viewBox="0 0 28 28" fill="none" className="text-primary">
+                      <circle cx="14" cy="14" r="12" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.25"/>
+                      <circle cx="14" cy="14" r="7" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.5"/>
+                      <circle cx="14" cy="14" r="2.5" fill="currentColor"/>
+                      <ellipse cx="14" cy="14" rx="12" ry="4.5" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.35" transform="rotate(-30 14 14)"/>
                     </svg>
                   </div>
                   <div className="max-w-[75%] px-4 py-3 rounded-2xl rounded-tl-sm bg-card text-foreground text-sm leading-relaxed whitespace-pre-wrap border border-border/40">
@@ -504,17 +486,11 @@ export function ChatPage() {
               {isLoading && (
                 <div className="flex gap-3 mb-6">
                   <div className="w-8 h-8 rounded-full bg-card border border-border/50 flex items-center justify-center shrink-0">
-                    <svg width="16" height="16" viewBox="0 0 28 28" fill="none">
-                      <circle cx="14" cy="14" r="12" stroke="url(#ta)" strokeWidth="1.5" fill="none" opacity="0.25"/>
-                      <circle cx="14" cy="14" r="7" stroke="url(#ta)" strokeWidth="1.5" fill="none" opacity="0.5"/>
-                      <circle cx="14" cy="14" r="2.5" fill="url(#ta)"/>
-                      <ellipse cx="14" cy="14" rx="12" ry="4.5" stroke="url(#ta)" strokeWidth="1" fill="none" opacity="0.35" transform="rotate(-30 14 14)"/>
-                      <defs>
-                        <linearGradient id="ta" x1="2" y1="2" x2="26" y2="26" gradientUnits="userSpaceOnUse">
-                          <stop offset="0%" stopColor="#a78bfa"/>
-                          <stop offset="100%" stopColor="#22d3ee"/>
-                        </linearGradient>
-                      </defs>
+                    <svg width="16" height="16" viewBox="0 0 28 28" fill="none" className="text-primary">
+                      <circle cx="14" cy="14" r="12" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.25"/>
+                      <circle cx="14" cy="14" r="7" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.5"/>
+                      <circle cx="14" cy="14" r="2.5" fill="currentColor"/>
+                      <ellipse cx="14" cy="14" rx="12" ry="4.5" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.35" transform="rotate(-30 14 14)"/>
                     </svg>
                   </div>
                   <div className="px-4 py-3 rounded-2xl rounded-tl-sm bg-card border border-border/40">
@@ -537,7 +513,7 @@ export function ChatPage() {
           <div className="max-w-3xl mx-auto">
             <div className="flex items-end gap-2 px-4 py-3 rounded-2xl
               border border-border/60 bg-background
-              focus-within:border-violet-400/60
+              focus-within:border-primary/60
               transition-all duration-200">
               <textarea
                 value={input}
@@ -553,11 +529,11 @@ export function ChatPage() {
               <button
                 onClick={handleSend}
                 disabled={!input.trim() || isLoading || isStreaming}
-                className="w-8 h-8 rounded-xl bg-violet-600 hover:bg-violet-500
+                className="w-8 h-8 rounded-xl bg-primary hover:bg-primary/90
                   disabled:opacity-30 disabled:cursor-not-allowed
                   flex items-center justify-center shrink-0
                   transition-colors">
-                <Send className="w-4 h-4 text-white" />
+                <Send className="w-4 h-4 text-primary-foreground" />
               </button>
             </div>
             <p className="text-center text-xs text-muted-foreground mt-2">
