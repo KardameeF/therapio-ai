@@ -5,42 +5,42 @@
 @tailwind utilities;
 
 :root {
-  --background: hsl(39 30% 96%);
-  --foreground: hsl(25 25% 18%);
-  --foreground-muted: hsl(25 15% 48%);
-  --card: hsl(38 28% 98%);
-  --card-foreground: hsl(25 25% 18%);
-  --border: hsl(35 20% 87%);
-  --input: hsl(38 28% 98%);
-  --primary: hsl(16 45% 52%);
-  --primary-foreground: hsl(38 28% 98%);
-  --secondary: hsl(37 30% 91%);
-  --secondary-foreground: hsl(25 25% 25%);
-  --muted: hsl(37 20% 93%);
-  --muted-foreground: hsl(25 15% 48%);
-  --accent: hsl(16 35% 88%);
-  --accent-foreground: hsl(16 45% 35%);
-  --ring: hsl(16 45% 52%);
+  --background: hsl(48 33% 97%);
+  --foreground: hsl(60 3% 8%);
+  --foreground-muted: hsl(51 3% 44%);
+  --card: hsl(53 29% 94%);
+  --card-foreground: hsl(60 3% 8%);
+  --border: hsl(48 15% 85%);
+  --input: hsl(53 29% 94%);
+  --primary: hsl(15 54% 51%);
+  --primary-foreground: hsl(48 33% 97%);
+  --secondary: hsl(48 25% 92%);
+  --secondary-foreground: hsl(60 3% 8%);
+  --muted: hsl(50 21% 89%);
+  --muted-foreground: hsl(51 3% 44%);
+  --accent: hsl(50 21% 89%);
+  --accent-foreground: hsl(15 54% 51%);
+  --ring: hsl(15 54% 51%);
   --radius: 0.75rem;
 }
 
 .dark {
-  --background: hsl(25 20% 10%);
-  --foreground: hsl(38 25% 88%);
-  --foreground-muted: hsl(35 12% 55%);
-  --card: hsl(25 18% 13%);
-  --card-foreground: hsl(38 25% 88%);
-  --border: hsl(25 15% 20%);
-  --input: hsl(25 18% 13%);
-  --primary: hsl(16 42% 58%);
-  --primary-foreground: hsl(25 20% 10%);
-  --secondary: hsl(25 15% 18%);
-  --secondary-foreground: hsl(38 20% 78%);
-  --muted: hsl(25 12% 16%);
-  --muted-foreground: hsl(35 12% 55%);
-  --accent: hsl(16 25% 22%);
-  --accent-foreground: hsl(16 42% 68%);
-  --ring: hsl(16 42% 58%);
+  --background: hsl(25 8% 12%);
+  --foreground: hsl(48 20% 88%);
+  --foreground-muted: hsl(48 8% 52%);
+  --card: hsl(25 7% 15%);
+  --card-foreground: hsl(48 20% 88%);
+  --border: hsl(25 8% 22%);
+  --input: hsl(25 7% 15%);
+  --primary: hsl(15 50% 58%);
+  --primary-foreground: hsl(25 8% 12%);
+  --secondary: hsl(25 6% 19%);
+  --secondary-foreground: hsl(48 15% 75%);
+  --muted: hsl(25 6% 17%);
+  --muted-foreground: hsl(48 8% 52%);
+  --accent: hsl(25 6% 20%);
+  --accent-foreground: hsl(15 50% 65%);
+  --ring: hsl(15 50% 58%);
 }
 
 html, body, #root {
