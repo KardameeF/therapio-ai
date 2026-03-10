@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
+import { Search, Users, TrendingUp, UserCheck, Ban } from "lucide-react";
 
 interface UserRow {
   id: string;
@@ -27,29 +28,26 @@ export function AdminPage() {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
 
   const totalUsers = users.length;
-  const paidUsers = users.filter((u) => u.subscription_plan !== "first_step").length;
-  const freeUsers = users.filter((u) => u.subscription_plan === "first_step").length;
-  const blockedUsers = users.filter((u) => u.is_blocked).length;
+  const paidUsers = users.filter(u => u.subscription_plan !== "first_step").length;
+  const freeUsers = users.filter(u => u.subscription_plan === "first_step").length;
+  const blockedUsers = users.filter(u => u.is_blocked).length;
 
   useEffect(() => {
     const init = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) { navigate("/"); return; }
-
       const { data: profile } = await supabase
         .from("profiles")
         .select("role")
         .eq("id", session.user.id)
         .single();
-
       if (profile?.role !== "admin") { navigate("/app"); return; }
-
       setAuthorized(true);
       await loadUsers();
       setLoading(false);
     };
     init();
-  }, [navigate]);
+  }, []);
 
   const loadUsers = async () => {
     const { data } = await supabase
@@ -74,11 +72,11 @@ export function AdminPage() {
   };
 
   const filtered = search.trim()
-    ? users.filter((u) => u.email?.toLowerCase().includes(search.toLowerCase()))
+    ? users.filter(u => u.email?.toLowerCase().includes(search.toLowerCase()))
     : users;
 
   if (loading) return (
-    <div className="flex items-center justify-center h-full py-20">
+    <div className="flex items-center justify-center py-20">
       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
     </div>
   );
@@ -86,40 +84,46 @@ export function AdminPage() {
   if (!authorized) return null;
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">Администраторски панел</h1>
-        <p className="text-muted-foreground text-sm">Управление на потребители и абонаменти</p>
+        <p className="text-sm text-muted-foreground">Управление на потребители и абонаменти</p>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { label: "Общо потребители", value: totalUsers, color: "text-foreground" },
-          { label: "Платени", value: paidUsers, color: "text-violet-500" },
-          { label: "Безплатни", value: freeUsers, color: "text-muted-foreground" },
-          { label: "Блокирани", value: blockedUsers, color: "text-destructive" },
-        ].map((stat) => (
-          <div key={stat.label} className="rounded-xl border border-border/50 bg-card p-4">
-            <p className="text-xs text-muted-foreground">{stat.label}</p>
-            <p className={`text-3xl font-bold mt-1 ${stat.color}`}>{stat.value}</p>
+          { label: "Общо потребители", value: totalUsers, icon: Users, color: "text-foreground" },
+          { label: "Платени", value: paidUsers, icon: TrendingUp, color: "text-violet-500" },
+          { label: "Безплатни", value: freeUsers, icon: UserCheck, color: "text-muted-foreground" },
+          { label: "Блокирани", value: blockedUsers, icon: Ban, color: "text-destructive" },
+        ].map(stat => (
+          <div key={stat.label} className="rounded-xl border border-border/50 bg-card p-4 flex items-center gap-3">
+            <stat.icon className={`w-8 h-8 ${stat.color} opacity-70`} />
+            <div>
+              <p className="text-xs text-muted-foreground">{stat.label}</p>
+              <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
+            </div>
           </div>
         ))}
       </div>
 
       {/* Search */}
-      <input
-        type="text"
-        placeholder="Търси по имейл..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="w-full max-w-sm px-4 py-2 text-sm rounded-xl border border-border/50 bg-background outline-none focus:border-violet-400/60"
-      />
+      <div className="relative max-w-sm">
+        <Search className="absolute left-3 top-2.5 w-4 h-4 text-muted-foreground pointer-events-none" />
+        <input
+          type="text"
+          placeholder="Търси по имейл..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          className="w-full pl-9 pr-4 py-2 text-sm rounded-xl border border-border/50 bg-background outline-none focus:border-violet-400/60 transition-colors"
+        />
+      </div>
 
       {/* Table */}
-      <div className="rounded-xl border border-border/50 overflow-hidden">
+      <div className="rounded-xl border border-border/50 overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-muted/50">
+          <thead className="bg-muted/50 border-b border-border/30">
             <tr>
               <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">Имейл</th>
               <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">План</th>
@@ -129,30 +133,30 @@ export function AdminPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-border/30">
-            {filtered.map((user) => (
-              <tr key={user.id} className={user.is_blocked ? "opacity-50" : ""}>
-                <td className="px-4 py-3 font-mono text-xs">{user.email}</td>
+            {filtered.map(user => (
+              <tr key={user.id} className={`transition-colors hover:bg-muted/30 ${user.is_blocked ? "opacity-40" : ""}`}>
+                <td className="px-4 py-3 font-mono text-xs max-w-[200px] truncate">{user.email}</td>
                 <td className="px-4 py-3">
                   <select
                     value={user.subscription_plan}
                     disabled={actionLoading === user.id + "_plan"}
-                    onChange={(e) => handlePlanChange(user.id, e.target.value)}
-                    className={`text-xs px-2 py-1 rounded-lg font-medium border-0 outline-none cursor-pointer ${PLAN_COLORS[user.subscription_plan] || ""}`}
+                    onChange={e => handlePlanChange(user.id, e.target.value)}
+                    className={`text-xs px-2 py-1 rounded-lg font-medium border-0 outline-none cursor-pointer ${PLAN_COLORS[user.subscription_plan]}`}
                   >
-                    <option value="first_step">Free</option>
-                    <option value="personal_growth">Personal Growth</option>
-                    <option value="expanded_horizons">Expanded Horizons</option>
+                    <option value="first_step">Първа Стъпка</option>
+                    <option value="personal_growth">Личен Растеж</option>
+                    <option value="expanded_horizons">Разширени Хоризонти</option>
                   </select>
                 </td>
-                <td className="px-4 py-3 text-muted-foreground">{user.messages_used}</td>
-                <td className="px-4 py-3 text-muted-foreground text-xs">
+                <td className="px-4 py-3 text-muted-foreground tabular-nums">{user.messages_used}</td>
+                <td className="px-4 py-3 text-muted-foreground text-xs tabular-nums">
                   {new Date(user.created_at).toLocaleDateString("bg-BG")}
                 </td>
                 <td className="px-4 py-3">
                   <button
                     onClick={() => handleToggleBlock(user.id, user.is_blocked)}
                     disabled={actionLoading === user.id + "_block" || user.role === "admin"}
-                    className={`text-xs px-3 py-1 rounded-lg font-medium transition-colors disabled:opacity-30 ${
+                    className={`text-xs px-3 py-1 rounded-lg font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed ${
                       user.is_blocked
                         ? "bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-400"
                         : "bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-400"

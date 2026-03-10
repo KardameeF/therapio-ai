@@ -1,8 +1,10 @@
+import { useState, useEffect } from "react";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { Header } from "../components/header";
 import { useTranslation } from "react-i18next";
 import { cn } from "../lib/utils";
-import { CreditCard, User, FileText } from "lucide-react";
+import { CreditCard, User, FileText, Shield } from "lucide-react";
+import { supabase } from "../lib/supabaseClient";
 
 const appNav = [
   { to: "/billing", label: "nav.billing", icon: CreditCard },
@@ -11,6 +13,21 @@ const appNav = [
 
 export function AppLayout() {
   const { t } = useTranslation();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const check = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+      const { data } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", session.user.id)
+        .single();
+      setIsAdmin(data?.role === "admin");
+    };
+    check();
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -43,6 +60,23 @@ export function AppLayout() {
                 );
               })}
               
+              {isAdmin && (
+                <NavLink
+                  to="/admin"
+                  className={({ isActive }) =>
+                    cn(
+                      "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 group",
+                      isActive
+                        ? "bg-destructive/10 text-destructive"
+                        : "text-muted-foreground hover:bg-destructive/5 hover:text-destructive"
+                    )
+                  }
+                >
+                  <Shield className="h-5 w-5" />
+                  <span>Админ</span>
+                </NavLink>
+              )}
+
               <div className="pt-6 border-t border-border/50">
                 <div className="px-4 py-2 text-xs font-medium text-foreground-muted uppercase tracking-wider mb-3">
                   {t("nav.legal")}
