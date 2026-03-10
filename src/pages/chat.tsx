@@ -628,7 +628,7 @@ export function ChatPage() {
                   </div>
                 ) : (
                   <div key={msg.id} className={`flex gap-3 ${isNewSender ? "mt-4" : "mt-1"}`}>
-                    <div className="w-8 h-8 rounded-full shrink-0 flex items-center justify-center bg-muted">
+                    <div className={`w-8 h-8 rounded-full shrink-0 flex items-center justify-center bg-muted ${isLoading && index === messages.length - 1 ? "bot-thinking" : ""}`}>
                       <svg width="16" height="16" viewBox="0 0 28 28" fill="none" className="text-primary">
                         <circle cx="14" cy="14" r="12" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.25"/>
                         <circle cx="14" cy="14" r="7" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.5"/>
@@ -646,7 +646,7 @@ export function ChatPage() {
               {/* Typing indicator */}
               {isLoading && (
                 <div className="flex gap-3 mt-4">
-                  <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center shrink-0 bot-thinking">
                     <svg width="16" height="16" viewBox="0 0 28 28" fill="none" className="text-primary">
                       <circle cx="14" cy="14" r="12" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.25"/>
                       <circle cx="14" cy="14" r="7" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.5"/>
