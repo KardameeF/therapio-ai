@@ -92,9 +92,9 @@ body {
   @apply outline-none ring-2 ring-primary ring-offset-2;
 }
 
-/* iubenda consent banner z-index */
+/* iubenda cookie button — скрит визуално */
 #iubenda-cs-banner {
-  z-index: 9999 !important;
+  display: none !important;
 }
 
 /* Скриване на iubenda floating privacy widget бутони */

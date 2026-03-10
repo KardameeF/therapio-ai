@@ -222,49 +222,52 @@ export function ChatPage() {
       <aside className={`
         fixed inset-y-0 left-0 z-50 flex flex-col
         bg-background border-r border-border
-        transform transition-all duration-200
+        transform transition-all duration-200 ease-in-out
         md:relative
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
         md:translate-x-0
-        ${sidebarCollapsed ? "md:w-0 md:overflow-hidden md:min-w-0" : "w-64"}
+        ${sidebarCollapsed ? "md:w-14" : "w-56"}
       `}>
         {/* Лого */}
-        <div className="flex items-center justify-between p-4 border-b border-border">
+        <div className={`flex items-center p-4 border-b border-border ${sidebarCollapsed ? "justify-center" : "justify-between"}`}>
           <Link to="/" className="flex items-center gap-2">
-            <svg width="20" height="20" viewBox="0 0 28 28" fill="none">
+            <svg width="20" height="20" viewBox="0 0 28 28" fill="none" className="shrink-0">
               <circle cx="14" cy="14" r="12" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.25"/>
               <circle cx="14" cy="14" r="7" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.5"/>
               <circle cx="14" cy="14" r="2.5" fill="currentColor"/>
               <ellipse cx="14" cy="14" rx="12" ry="4.5" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.35" transform="rotate(-30 14 14)"/>
             </svg>
-            <span className="font-semibold text-sm text-foreground">
-              Eterapp
-            </span>
+            {!sidebarCollapsed && (
+              <span className="font-semibold text-sm text-foreground">
+                Eterapp
+              </span>
+            )}
           </Link>
-          <button onClick={() => setSidebarOpen(false)} className="md:hidden">
-            <X className="w-4 h-4 text-muted-foreground" />
-          </button>
+          {!sidebarCollapsed && (
+            <button onClick={() => setSidebarOpen(false)} className="md:hidden">
+              <X className="w-4 h-4 text-muted-foreground" />
+            </button>
+          )}
         </div>
 
         {/* New Chat */}
         <div className="p-3">
           <button
             onClick={() => { handleNewChat(); setSidebarOpen(false); }}
-            className="w-full flex items-center gap-2 px-3 py-2 rounded-xl
-              border border-border bg-transparent hover:bg-secondary text-foreground text-sm font-medium
-              transition-colors">
-            <Plus className="w-4 h-4" />
-            Нов чат
+            title="Нов чат"
+            className={`w-full flex items-center rounded-xl border border-border bg-transparent hover:bg-secondary text-foreground text-sm font-medium transition-colors ${sidebarCollapsed ? "justify-center p-2" : "gap-2 px-3 py-2"}`}>
+            <Plus className="w-4 h-4 shrink-0" />
+            {!sidebarCollapsed && "Нов чат"}
           </button>
         </div>
 
-        {messagesLimit - messagesUsed <= 10 && messagesLimit - messagesUsed > 0 && (
+        {!sidebarCollapsed && messagesLimit - messagesUsed <= 10 && messagesLimit - messagesUsed > 0 && (
           <div className="mx-3 mb-2 px-3 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-600 dark:text-amber-400">
             <span className="font-medium">Остават {messagesLimit - messagesUsed} съобщения</span>
             <p className="text-amber-500/80 mt-0.5">Надгради за повече</p>
           </div>
         )}
-        {messagesUsed >= messagesLimit && (
+        {!sidebarCollapsed && messagesUsed >= messagesLimit && (
           <div className="mx-3 mb-2 px-3 py-2 rounded-xl bg-red-500/10 border border-red-500/20 text-xs text-red-600 dark:text-red-400">
             <span className="font-medium">Лимитът е достигнат</span>
             <p className="text-red-500/80 mt-0.5"><Link to="/billing" className="underline">Надгради сега</Link></p>
@@ -273,6 +276,15 @@ export function ChatPage() {
 
         {/* История */}
         <div className="flex-1 flex flex-col overflow-hidden min-h-0 px-3">
+          {sidebarCollapsed ? (
+            <button
+              title="Търси"
+              className="flex justify-center w-full p-2 rounded-lg hover:bg-secondary text-muted-foreground transition-colors"
+            >
+              <Search className="w-4 h-4" />
+            </button>
+          ) : (
+            <>
           <div className="relative mb-2">
             <Search className="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
             <input
@@ -328,20 +340,25 @@ export function ChatPage() {
               ))
             )}
           </div>
+            </>
+          )}
         </div>
 
         {/* User */}
         <div ref={profilePopupRef} className="p-3 border-t border-border relative">
           <div
-            className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-secondary transition-colors cursor-pointer"
+            className={`flex items-center rounded-lg hover:bg-secondary transition-colors cursor-pointer ${sidebarCollapsed ? "justify-center p-2" : "gap-3 px-2 py-2"}`}
             onClick={() => setProfileOpen((o) => !o)}
+            title="Профил"
           >
             <div className="w-8 h-8 rounded-full bg-secondary border border-border flex items-center justify-center shrink-0">
               <User className="w-4 h-4 text-muted-foreground" />
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs text-muted-foreground truncate">Профил</p>
-            </div>
+            {!sidebarCollapsed && (
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-muted-foreground truncate">Профил</p>
+              </div>
+            )}
           </div>
 
           {profileOpen && (
@@ -535,15 +552,6 @@ export function ChatPage() {
             </div>
             <p className="text-center text-xs text-muted-foreground mt-2">
               Eterapp не е медицинска услуга.
-              <span className="text-muted-foreground/40"> · </span>
-              <a
-                href="https://policies.google.com/privacy"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-muted-foreground/40 hover:text-muted-foreground/60 transition-colors"
-              >
-                reCAPTCHA
-              </a>
             </p>
           </div>
         </div>
