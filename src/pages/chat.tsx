@@ -311,6 +311,22 @@ export function ChatPage() {
   const displayTitle = (title: string) =>
     title ? title.charAt(0).toUpperCase() + title.slice(1) : "Нов чат";
 
+  const deleteSession = async (sessionId: string | number) => {
+    const idForEq = typeof sessionId === "string" && /^\d+$/.test(sessionId)
+      ? parseInt(sessionId, 10)
+      : sessionId;
+
+    await supabase.from("chat_messages").delete().eq("session_id", idForEq);
+    await supabase.from("chat_sessions").delete().eq("id", idForEq);
+
+    setChatHistory((prev) => prev.filter((s) => String(s.id) !== String(sessionId)));
+
+    if (String(currentSessionId) === String(sessionId)) {
+      setCurrentSessionId(null);
+      setMessages([]);
+    }
+  };
+
   const filteredHistory = searchQuery.trim()
     ? chatHistory.filter((s) =>
         s.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -409,29 +425,43 @@ export function ChatPage() {
               </p>
             ) : (
               filteredHistory.map((session) => (
-                <button
-                  key={session.id}
-                  onClick={async () => {
-                    setCurrentSessionId(session.id);
-                    const { data } = await supabase
-                      .from("chat_messages")
-                      .select("id, role, content")
-                      .eq("session_id", session.id)
-                      .order("created_at", { ascending: true });
-                    if (data) setMessages(data as Message[]);
-                    setSidebarOpen(false);
-                  }}
-                  className={`w-full text-left px-2 py-2 rounded-lg transition-colors group ${
-                    String(currentSessionId) === String(session.id) ? "bg-secondary" : "hover:bg-secondary/60"
-                  }`}
-                >
-                  <p className="text-sm font-medium text-foreground truncate group-hover:text-primary transition-colors">
-                    {displayTitle(session.title)}
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {new Date(session.updated_at).toLocaleDateString("bg-BG", { day: "numeric", month: "short" })}
-                  </p>
-                </button>
+                <div key={session.id} className="relative group">
+                  <button
+                    onClick={async () => {
+                      setCurrentSessionId(session.id);
+                      const { data } = await supabase
+                        .from("chat_messages")
+                        .select("id, role, content")
+                        .eq("session_id", session.id)
+                        .order("created_at", { ascending: true });
+                      if (data) setMessages(data as Message[]);
+                      setSidebarOpen(false);
+                    }}
+                    className={`w-full text-left px-2 py-2 rounded-lg transition-colors ${
+                      String(currentSessionId) === String(session.id) ? "bg-secondary" : "hover:bg-secondary/60"
+                    }`}
+                  >
+                    <p className="text-sm font-medium text-foreground truncate group-hover:text-primary transition-colors pr-6">
+                      {displayTitle(session.title)}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {new Date(session.updated_at).toLocaleDateString("bg-BG", { day: "numeric", month: "short" })}
+                    </p>
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteSession(session.id);
+                    }}
+                    className="absolute right-2 top-1/2 -translate-y-1/2
+                      opacity-0 group-hover:opacity-100 transition-opacity
+                      p-1 rounded hover:bg-destructive/20
+                      text-muted-foreground hover:text-destructive"
+                    title={t("chat.deleteSession")}
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </div>
               ))
             )}
           </div>

@@ -398,7 +398,8 @@ const resources = {
         voiceUpgradeRequired: "Upgrade your plan for voice messages",
         recording: "Recording... Tap again to stop",
         transcribing: "Transcribing...",
-        micError: "Cannot access microphone"
+        micError: "Cannot access microphone",
+        deleteSession: "Delete chat"
       },
       footer: {
         rights: "© 2026 Eterapp. All rights reserved.",
@@ -805,7 +806,8 @@ const resources = {
         voiceUpgradeRequired: "Надгради плана си за гласови съобщения",
         recording: "Записва се... Натисни отново за спиране",
         transcribing: "Транскрибира се...",
-        micError: "Не може да се получи достъп до микрофона"
+        micError: "Не може да се получи достъп до микрофона",
+        deleteSession: "Изтрий чат"
       },
       footer: {
         rights: "© 2026 Eterapp. Всички права запазени.",
