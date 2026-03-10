@@ -38,8 +38,6 @@ export function ChatPage() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isStreaming, setIsStreaming] = useState(false);
-  const [streamingMessage, setStreamingMessage] = useState("");
   const [messagesUsed, setMessagesUsed] = useState(0);
   const [messagesLimit, setMessagesLimit] = useState(30);
   const [currentPlan, setCurrentPlan] = useState("first_step");
@@ -54,10 +52,41 @@ export function ChatPage() {
 
   const { isRecording, isTranscribing, startRecording, stopAndTranscribe } = useVoiceRecorder();
   const isPaidPlan = ["personal_growth", "expanded_horizons"].includes(currentPlan);
+  const typewriterRef = useRef<{ timeoutId: ReturnType<typeof setTimeout> | null; cancelled: boolean }>({
+    timeoutId: null,
+    cancelled: false,
+  });
+
+  const typewriterEffect = useCallback(
+    (fullText: string, onUpdate: (current: string) => void, onDone: () => void) => {
+      typewriterRef.current.cancelled = false;
+      let i = 0;
+      let scrollCounter = 0;
+
+      const type = () => {
+        if (typewriterRef.current.cancelled) return;
+        if (i < fullText.length) {
+          const delay = Math.random() * 18 + 15;
+          onUpdate(fullText.slice(0, i + 1));
+          i++;
+          scrollCounter++;
+          if (scrollCounter % 10 === 0) {
+            messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+          }
+          typewriterRef.current.timeoutId = setTimeout(type, delay);
+        } else {
+          typewriterRef.current.timeoutId = null;
+          onDone();
+        }
+      };
+      type();
+    },
+    []
+  );
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isLoading, isStreaming, streamingMessage]);
+  }, [messages, isLoading]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -133,7 +162,13 @@ export function ChatPage() {
 
   const handleSend = async () => {
     const text = input.trim();
-    if (!text || isLoading || isStreaming) return;
+    if (!text || isLoading) return;
+
+    typewriterRef.current.cancelled = true;
+    if (typewriterRef.current.timeoutId) {
+      clearTimeout(typewriterRef.current.timeoutId);
+      typewriterRef.current.timeoutId = null;
+    }
 
     const isFirstMessage = messages.length === 0;
     const userMsg: Message = { id: crypto.randomUUID(), role: "user", content: text };
@@ -175,21 +210,24 @@ export function ChatPage() {
       setMessagesUsed(data.used ?? messagesUsed + 1);
       setMessagesLimit(data.limit ?? messagesLimit);
 
-      const streamText = async (fullText: string) => {
-        setIsStreaming(true);
-        setStreamingMessage("");
-        const words = fullText.split(" ");
-        let current = "";
-        for (let i = 0; i < words.length; i++) {
-          current += (i === 0 ? "" : " ") + words[i];
-          setStreamingMessage(current);
-          await new Promise((r) => setTimeout(r, 30));
+      setIsLoading(false);
+
+      const tempId = crypto.randomUUID();
+      setMessages((prev) => [...prev, { id: tempId, role: "assistant", content: "" }]);
+
+      typewriterEffect(
+        data.reply,
+        (currentText) => {
+          setMessages((prev) =>
+            prev.map((m) => (m.id === tempId ? { ...m, content: currentText } : m))
+          );
+        },
+        () => {
+          setMessages((prev) =>
+            prev.map((m) => (m.id === tempId ? { ...m, content: data.reply } : m))
+          );
         }
-        setIsStreaming(false);
-        setStreamingMessage("");
-        setMessages((prev) => [...prev, { id: crypto.randomUUID(), role: "assistant", content: fullText }]);
-      };
-      await streamText(data.reply);
+      );
 
       const { data: { session: currentSession } } = await supabase.auth.getSession();
       if (currentSession) {
@@ -605,23 +643,6 @@ export function ChatPage() {
                 );
               })}
 
-              {/* Streaming bubble */}
-              {isStreaming && streamingMessage && (
-                <div className="flex gap-3 mt-4">
-                  <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center shrink-0">
-                    <svg width="16" height="16" viewBox="0 0 28 28" fill="none" className="text-primary">
-                      <circle cx="14" cy="14" r="12" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.25"/>
-                      <circle cx="14" cy="14" r="7" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.5"/>
-                      <circle cx="14" cy="14" r="2.5" fill="currentColor"/>
-                      <ellipse cx="14" cy="14" rx="12" ry="4.5" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.35" transform="rotate(-30 14 14)"/>
-                    </svg>
-                  </div>
-                  <div className="max-w-[75%] px-4 py-3 rounded-2xl rounded-tl-sm bg-muted text-foreground text-sm leading-relaxed whitespace-pre-wrap">
-                    {streamingMessage}
-                  </div>
-                </div>
-              )}
-
               {/* Typing indicator */}
               {isLoading && (
                 <div className="flex gap-3 mt-4">
@@ -686,7 +707,7 @@ export function ChatPage() {
                   onChange={e => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
                   rows={1}
-                  disabled={isLoading || isStreaming || isTranscribing}
+                  disabled={isLoading || isTranscribing}
                   className="w-full bg-transparent resize-none outline-none text-sm
                     text-foreground max-h-32 overflow-y-auto disabled:cursor-not-allowed"
                 />
@@ -697,7 +718,7 @@ export function ChatPage() {
                 <button
                   type="button"
                   onClick={isPaidPlan ? handleVoiceToggle : undefined}
-                  disabled={isTranscribing || isLoading || isStreaming}
+                  disabled={isTranscribing || isLoading}
                   className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200
                     ${!isPaidPlan
                       ? "text-muted-foreground/30 cursor-not-allowed"
@@ -729,7 +750,7 @@ export function ChatPage() {
 
               <button
                 onClick={handleSend}
-                disabled={!input.trim() || isLoading || isStreaming}
+                disabled={!input.trim() || isLoading}
                 className="w-8 h-8 rounded-xl bg-primary hover:bg-primary/90
                   disabled:opacity-30 disabled:cursor-not-allowed
                   flex items-center justify-center shrink-0
