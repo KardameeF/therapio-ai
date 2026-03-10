@@ -92,21 +92,21 @@ export function LandingPage() {
     <div className="flex flex-col min-h-screen bg-background">
 
       {/* ── HERO ── */}
-      <section className="relative px-4 py-20 md:py-32 overflow-hidden">
-        <div className="relative max-w-5xl mx-auto">
-          <div className="max-w-2xl space-y-6">
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-[1.1]">
+      <section className="px-4 py-16 md:py-28">
+        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+          <div className="space-y-7">
+            <h1 className="text-6xl md:text-7xl font-light tracking-tight leading-[1.05]">
               {t("landing.hero.tagline")}
             </h1>
 
-            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-lg">
+            <p className="text-lg text-muted-foreground leading-relaxed">
               {t("landing.hero.subtitle")}
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+            <div className="flex flex-col sm:flex-row gap-3">
               {user ? (
                 <Link to="/app">
-                  <Button size="lg" className="w-full sm:w-auto text-base px-8 py-5 rounded-xl">
+                  <Button size="lg" className="w-full sm:w-auto text-base px-8 rounded-xl">
                     Към чата
                   </Button>
                 </Link>
@@ -114,7 +114,7 @@ export function LandingPage() {
                 <>
                   <Button
                     size="lg"
-                    className="w-full sm:w-auto text-base px-8 py-5 rounded-xl"
+                    className="w-full sm:w-auto text-base px-8 rounded-xl"
                     onClick={() => { setAuthTab("signup"); setAuthOpen(true); }}
                   >
                     {t("landing.hero.cta")}
@@ -122,7 +122,7 @@ export function LandingPage() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="w-full sm:w-auto text-base px-8 py-5 rounded-xl"
+                    className="w-full sm:w-auto text-base px-8 rounded-xl"
                     onClick={() => { setAuthTab("login"); setAuthOpen(true); }}
                   >
                     {t("landing.hero.signIn")}
@@ -131,7 +131,7 @@ export function LandingPage() {
               )}
             </div>
 
-            <div className="flex items-center gap-6 flex-wrap pt-4">
+            <div className="flex items-center gap-5 flex-wrap">
               <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
                 <Shield className="w-4 h-4 text-primary" />
                 <span>{t("landing.hero.trust.secure")}</span>
@@ -143,6 +143,22 @@ export function LandingPage() {
               <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
                 <Zap className="w-4 h-4 text-primary" />
                 <span>{t("landing.hero.trust.ai")}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Decorative right column */}
+          <div className="hidden md:flex items-center justify-center">
+            <div className="w-56 h-56 rounded-full border border-primary/20 flex items-center justify-center">
+              <div className="w-36 h-36 rounded-full border border-primary/30 flex items-center justify-center">
+                <div className="w-16 h-16 rounded-full bg-primary/10 border border-primary/40 flex items-center justify-center">
+                  <svg width="28" height="28" viewBox="0 0 28 28" fill="none" className="text-primary">
+                    <circle cx="14" cy="14" r="12" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.3"/>
+                    <circle cx="14" cy="14" r="7" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.5"/>
+                    <circle cx="14" cy="14" r="2.5" fill="currentColor"/>
+                    <ellipse cx="14" cy="14" rx="12" ry="4.5" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.4" transform="rotate(-30 14 14)"/>
+                  </svg>
+                </div>
               </div>
             </div>
           </div>
@@ -288,6 +304,12 @@ export function LandingPage() {
             {t("footer.cookies")}
           </a>
         </div>
+        <p className="text-xs text-muted-foreground/70 mt-2">
+          Защитено от reCAPTCHA —{" "}
+          <a href="https://policies.google.com/privacy" className="underline hover:text-muted-foreground transition-colors">Поверителност</a>
+          {" "}и{" "}
+          <a href="https://policies.google.com/terms" className="underline hover:text-muted-foreground transition-colors">Условия</a>
+        </p>
       </footer>
 
       <AuthModal

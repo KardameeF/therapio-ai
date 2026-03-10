@@ -8,39 +8,47 @@
   --background: hsl(48 33% 97%);
   --foreground: hsl(60 3% 8%);
   --foreground-muted: hsl(51 3% 44%);
-  --card: hsl(53 29% 94%);
+  --card: hsl(48 33% 97%);
   --card-foreground: hsl(60 3% 8%);
-  --border: hsl(48 15% 85%);
-  --input: hsl(53 29% 94%);
+  --popover: hsl(48 33% 97%);
+  --popover-foreground: hsl(60 3% 8%);
+  --border: hsl(48 15% 88%);
+  --input: hsl(48 15% 88%);
   --primary: hsl(15 54% 51%);
   --primary-foreground: hsl(48 33% 97%);
-  --secondary: hsl(48 25% 92%);
+  --secondary: hsl(53 29% 94%);
   --secondary-foreground: hsl(60 3% 8%);
-  --muted: hsl(50 21% 89%);
+  --muted: hsl(48 25% 92%);
   --muted-foreground: hsl(51 3% 44%);
-  --accent: hsl(50 21% 89%);
+  --accent: hsl(48 25% 92%);
   --accent-foreground: hsl(15 54% 51%);
+  --destructive: hsl(0 58% 34%);
+  --destructive-foreground: hsl(48 33% 97%);
   --ring: hsl(15 54% 51%);
   --radius: 0.75rem;
 }
 
 .dark {
-  --background: hsl(25 8% 12%);
-  --foreground: hsl(48 20% 88%);
+  --background: hsl(60 2% 14%);
+  --foreground: hsl(48 33% 97%);
   --foreground-muted: hsl(48 8% 52%);
-  --card: hsl(25 7% 15%);
-  --card-foreground: hsl(48 20% 88%);
-  --border: hsl(25 8% 22%);
-  --input: hsl(25 7% 15%);
-  --primary: hsl(15 50% 58%);
-  --primary-foreground: hsl(25 8% 12%);
-  --secondary: hsl(25 6% 19%);
-  --secondary-foreground: hsl(48 15% 75%);
-  --muted: hsl(25 6% 17%);
-  --muted-foreground: hsl(48 8% 52%);
-  --accent: hsl(25 6% 20%);
-  --accent-foreground: hsl(15 50% 65%);
-  --ring: hsl(15 50% 58%);
+  --card: hsl(60 2% 14%);
+  --card-foreground: hsl(48 33% 97%);
+  --popover: hsl(60 2% 18%);
+  --popover-foreground: hsl(48 33% 97%);
+  --border: hsl(60 2% 22%);
+  --input: hsl(60 2% 22%);
+  --primary: hsl(15 63% 60%);
+  --primary-foreground: hsl(60 2% 8%);
+  --secondary: hsl(60 2% 18%);
+  --secondary-foreground: hsl(50 9% 74%);
+  --muted: hsl(60 2% 18%);
+  --muted-foreground: hsl(48 5% 59%);
+  --accent: hsl(60 2% 20%);
+  --accent-foreground: hsl(15 63% 60%);
+  --destructive: hsl(0 56% 45%);
+  --destructive-foreground: hsl(48 33% 97%);
+  --ring: hsl(15 63% 60%);
 }
 
 html, body, #root {
@@ -95,4 +103,15 @@ body {
 .iubenda-cs-uspr-link,
 .iub__us-widget__link--privacy-choices {
   display: none !important;
+}
+
+/* Flat design — нула box-shadow */
+[class*="shadow-"] {
+  box-shadow: none !important;
+}
+
+/* Скриване на reCAPTCHA badge (задължителен текст остава в footer) */
+.grecaptcha-badge {
+  visibility: hidden !important;
+  opacity: 0 !important;
 }

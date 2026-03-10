@@ -221,7 +221,7 @@ export function ChatPage() {
       {/* SIDEBAR */}
       <aside className={`
         fixed inset-y-0 left-0 z-50 flex flex-col
-        bg-muted/80 border-r border-border/50
+        bg-background border-r border-border
         transform transition-all duration-200
         md:relative
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
@@ -229,7 +229,7 @@ export function ChatPage() {
         ${sidebarCollapsed ? "md:w-0 md:overflow-hidden md:min-w-0" : "w-64"}
       `}>
         {/* Лого */}
-        <div className="flex items-center justify-between p-4 border-b border-border/50">
+        <div className="flex items-center justify-between p-4 border-b border-border">
           <Link to="/" className="flex items-center gap-2">
             <svg width="20" height="20" viewBox="0 0 28 28" fill="none">
               <circle cx="14" cy="14" r="12" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.25"/>
@@ -251,7 +251,7 @@ export function ChatPage() {
           <button
             onClick={() => { handleNewChat(); setSidebarOpen(false); }}
             className="w-full flex items-center gap-2 px-3 py-2 rounded-xl
-              bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium
+              border border-border bg-transparent hover:bg-secondary text-foreground text-sm font-medium
               transition-colors">
             <Plus className="w-4 h-4" />
             Нов чат
@@ -331,13 +331,13 @@ export function ChatPage() {
         </div>
 
         {/* User */}
-        <div ref={profilePopupRef} className="p-3 border-t border-border/50 relative">
+        <div ref={profilePopupRef} className="p-3 border-t border-border relative">
           <div
             className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-secondary transition-colors cursor-pointer"
             onClick={() => setProfileOpen((o) => !o)}
           >
-            <div className="w-8 h-8 rounded-full bg-primary/15 flex items-center justify-center shrink-0">
-              <User className="w-4 h-4 text-primary" />
+            <div className="w-8 h-8 rounded-full bg-secondary border border-border flex items-center justify-center shrink-0">
+              <User className="w-4 h-4 text-muted-foreground" />
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-xs text-muted-foreground truncate">Профил</p>
@@ -345,7 +345,7 @@ export function ChatPage() {
           </div>
 
           {profileOpen && (
-            <div className="absolute bottom-16 left-4 right-4 z-50 rounded-xl border border-border/50 bg-card shadow-xl p-3 space-y-2">
+            <div className="absolute bottom-16 left-4 right-4 z-50 rounded-xl border border-border bg-background p-3 space-y-2">
               {userEmail && <p className="text-xs text-muted-foreground truncate px-2">{userEmail}</p>}
               <Link to="/profile" className="block text-sm px-2 py-1.5 rounded-lg hover:bg-secondary" onClick={() => setProfileOpen(false)}>
                 Настройки на профила
@@ -403,7 +403,7 @@ export function ChatPage() {
 
         {/* TOPBAR */}
         <header className="flex items-center justify-between px-4 h-14
-          border-b border-border/50 bg-background/80 backdrop-blur-sm shrink-0">
+          border-t-2 border-primary/20 border-b border-border bg-background shrink-0">
           <div className="flex items-center gap-2">
             <button onClick={() => setSidebarOpen(true)} className="md:hidden">
               <Menu className="w-5 h-5 text-muted-foreground" />
@@ -439,36 +439,33 @@ export function ChatPage() {
           ) : (
             <div className="max-w-3xl mx-auto space-y-0">
               {messages.map((msg) => (
-                <div
-                  key={msg.id}
-                  className={`flex gap-3 mb-6 ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}
-                >
-                  <div className={`w-8 h-8 rounded-full shrink-0 flex items-center justify-center
-                    ${msg.role === "user" ? "bg-primary/15" : "bg-card border border-border/50"}`}>
-                    {msg.role === "user" ? (
-                      <User className="w-4 h-4 text-primary" />
-                    ) : (
+                msg.role === "user" ? (
+                  <div key={msg.id} className="mb-6 flex justify-end">
+                    <p className="ml-auto max-w-[75%] text-right text-foreground text-base leading-relaxed whitespace-pre-wrap">
+                      {msg.content}
+                    </p>
+                  </div>
+                ) : (
+                  <div key={msg.id} className="flex gap-3 mb-6">
+                    <div className="w-8 h-8 rounded-full shrink-0 flex items-center justify-center bg-secondary border border-border">
                       <svg width="16" height="16" viewBox="0 0 28 28" fill="none" className="text-primary">
                         <circle cx="14" cy="14" r="12" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.25"/>
                         <circle cx="14" cy="14" r="7" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.5"/>
                         <circle cx="14" cy="14" r="2.5" fill="currentColor"/>
                         <ellipse cx="14" cy="14" rx="12" ry="4.5" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.35" transform="rotate(-30 14 14)"/>
                       </svg>
-                    )}
+                    </div>
+                    <div className="max-w-[75%] px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap bg-secondary text-foreground rounded-tl-sm border border-border">
+                      {msg.content}
+                    </div>
                   </div>
-                  <div className={`max-w-[75%] px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap
-                    ${msg.role === "user"
-                      ? "bg-primary text-primary-foreground rounded-tr-sm"
-                      : "bg-card text-foreground rounded-tl-sm border border-border/40"}`}>
-                    {msg.content}
-                  </div>
-                </div>
+                )
               ))}
 
               {/* Streaming bubble */}
               {isStreaming && streamingMessage && (
                 <div className="flex gap-3 mb-6">
-                  <div className="w-8 h-8 rounded-full bg-card border border-border/50 flex items-center justify-center shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-secondary border border-border flex items-center justify-center shrink-0">
                     <svg width="16" height="16" viewBox="0 0 28 28" fill="none" className="text-primary">
                       <circle cx="14" cy="14" r="12" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.25"/>
                       <circle cx="14" cy="14" r="7" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.5"/>
@@ -476,7 +473,7 @@ export function ChatPage() {
                       <ellipse cx="14" cy="14" rx="12" ry="4.5" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.35" transform="rotate(-30 14 14)"/>
                     </svg>
                   </div>
-                  <div className="max-w-[75%] px-4 py-3 rounded-2xl rounded-tl-sm bg-card text-foreground text-sm leading-relaxed whitespace-pre-wrap border border-border/40">
+                  <div className="max-w-[75%] px-4 py-3 rounded-2xl rounded-tl-sm bg-secondary text-foreground text-sm leading-relaxed whitespace-pre-wrap border border-border">
                     {streamingMessage}
                   </div>
                 </div>
@@ -485,7 +482,7 @@ export function ChatPage() {
               {/* Typing indicator */}
               {isLoading && (
                 <div className="flex gap-3 mb-6">
-                  <div className="w-8 h-8 rounded-full bg-card border border-border/50 flex items-center justify-center shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-secondary border border-border flex items-center justify-center shrink-0">
                     <svg width="16" height="16" viewBox="0 0 28 28" fill="none" className="text-primary">
                       <circle cx="14" cy="14" r="12" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.25"/>
                       <circle cx="14" cy="14" r="7" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.5"/>
@@ -493,7 +490,7 @@ export function ChatPage() {
                       <ellipse cx="14" cy="14" rx="12" ry="4.5" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.35" transform="rotate(-30 14 14)"/>
                     </svg>
                   </div>
-                  <div className="px-4 py-3 rounded-2xl rounded-tl-sm bg-card border border-border/40">
+                  <div className="px-4 py-3 rounded-2xl rounded-tl-sm bg-secondary border border-border">
                     <div className="flex gap-1 items-center h-4">
                       <span className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
                       <span className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
@@ -509,12 +506,12 @@ export function ChatPage() {
         </div>
 
         {/* INPUT BAR */}
-        <div className="shrink-0 px-4 py-4 border-t border-border/50">
+        <div className="shrink-0 px-4 py-4 border-t border-border">
           <div className="max-w-3xl mx-auto">
-            <div className="flex items-end gap-2 px-4 py-3 rounded-2xl
-              border border-border/60 bg-background
-              focus-within:border-primary/60
-              transition-all duration-200">
+            <div className="flex items-end gap-2 px-4 py-3 rounded-xl
+              border border-border bg-background
+              focus-within:border-primary/50
+              transition-colors">
               <textarea
                 value={input}
                 onChange={e => setInput(e.target.value)}

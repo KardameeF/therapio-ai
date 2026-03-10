@@ -46,8 +46,8 @@ export function AppLayout() {
                       cn(
                         "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 group",
                         isActive
-                          ? "bg-primary text-primary-foreground shadow-soft"
-                          : "text-foreground-muted hover:bg-primary/10 hover:text-primary hover:shadow-soft"
+                          ? "bg-primary text-primary-foreground"
+                          : "text-foreground-muted hover:bg-secondary hover:text-foreground"
                       )
                     }
                   >
