@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { Button } from "../components/ui/button";
 import { Check } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
@@ -86,6 +87,11 @@ export function BillingPage() {
     }
   };
 
+  const cardVariants = {
+    hidden: { opacity: 0, y: 16 },
+    visible: (i: number) => ({ opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut", delay: i * 0.1 } }),
+  };
+
   return (
     <div className="grid gap-6 md:grid-cols-3">
       {currentPlan !== "first_step" && (
@@ -96,7 +102,7 @@ export function BillingPage() {
         </div>
       )}
 
-      <div className="rounded-2xl border border-border bg-card p-6">
+      <motion.div className="rounded-2xl border border-border bg-card p-6" custom={0} initial="hidden" animate="visible" variants={cardVariants}>
         <div className="mb-4">
           <h3 className="text-base font-semibold flex items-center justify-between">
             <span>{t("billing.plans.first_step.name")}</span>
@@ -114,9 +120,9 @@ export function BillingPage() {
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.history30")}</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.bgEn")}</span></div>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="rounded-2xl border-2 border-primary bg-card p-6">
+      <motion.div className="rounded-2xl border-2 border-primary bg-card p-6" custom={1} initial="hidden" animate="visible" variants={cardVariants}>
         <div className="mb-4">
           <h3 className="text-base font-semibold flex items-center justify-between">
             <span>{t("billing.plans.personal_growth.name")}</span>
@@ -137,9 +143,9 @@ export function BillingPage() {
             {loading ? t("billing.loading") : currentPlan === "personal_growth" ? t("billing.currentPlan") : t("billing.choosePlan")}
           </Button>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="rounded-2xl border border-border bg-card p-6">
+      <motion.div className="rounded-2xl border border-border bg-card p-6" custom={2} initial="hidden" animate="visible" variants={cardVariants}>
         <div className="mb-4">
           <h3 className="text-base font-semibold flex items-center justify-between">
             <span>{t("billing.plans.expanded_horizons.name")}</span>
@@ -160,7 +166,7 @@ export function BillingPage() {
             {loading ? t("billing.loading") : currentPlan === "expanded_horizons" ? t("billing.currentPlan") : t("billing.choosePlan")}
           </Button>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

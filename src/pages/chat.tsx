@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { Plus, Send, User, Menu, X, PanelLeftOpen, PanelLeftClose, LogOut, Search, Mic, MicOff, Loader2 } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
@@ -31,6 +32,14 @@ const PLACEHOLDER_PHRASES = [
 export function ChatPage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const [isDesktop, setIsDesktop] = useState(() => typeof window !== "undefined" && window.innerWidth >= 768);
+
+  useEffect(() => {
+    const handler = () => setIsDesktop(window.innerWidth >= 768);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, []);
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
@@ -375,15 +384,17 @@ export function ChatPage() {
     <div className="flex h-screen bg-background overflow-hidden">
 
       {/* SIDEBAR */}
-      <aside className={`
-        fixed inset-y-0 left-0 z-50 flex flex-col
-        bg-background border-r border-border
-        transform transition-all duration-200 ease-in-out
-        md:relative
-        ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
-        md:translate-x-0
-        ${sidebarCollapsed ? "md:w-14" : "w-56"}
-      `}>
+      <motion.aside
+        className={`
+          fixed inset-y-0 left-0 z-50 flex flex-col
+          bg-background border-r border-border
+          md:relative
+          ${sidebarCollapsed ? "md:w-14" : "w-56"}
+        `}
+        initial={false}
+        animate={{ x: isDesktop || sidebarOpen ? 0 : "-100%" }}
+        transition={{ duration: 0.2, ease: "easeInOut" }}
+      >
         {/* Лого */}
         <div className={`flex items-center p-4 border-b border-border ${sidebarCollapsed ? "justify-center" : "justify-between"}`}>
           <Link to="/" className="flex items-center gap-2">
@@ -570,7 +581,7 @@ export function ChatPage() {
             </div>
           )}
         </div>
-      </aside>
+      </motion.aside>
 
       {/* Overlay за мобилен */}
       {sidebarOpen && (
@@ -621,13 +632,25 @@ export function ChatPage() {
               {messages.map((msg, index) => {
                 const isNewSender = index === 0 || messages[index - 1].role !== msg.role;
                 return msg.role === "user" ? (
-                  <div key={msg.id} className={`flex justify-end ${isNewSender ? "mt-4" : "mt-1"}`}>
+                  <motion.div
+                    key={msg.id}
+                    className={`flex justify-end ${isNewSender ? "mt-4" : "mt-1"}`}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.25, ease: "easeOut" }}
+                  >
                     <div className="bg-primary/10 text-foreground rounded-2xl px-4 py-2.5 ml-auto max-w-[75%] text-base leading-relaxed whitespace-pre-wrap">
                       {msg.content}
                     </div>
-                  </div>
+                  </motion.div>
                 ) : (
-                  <div key={msg.id} className={`flex gap-3 ${isNewSender ? "mt-4" : "mt-1"}`}>
+                  <motion.div
+                    key={msg.id}
+                    className={`flex gap-3 ${isNewSender ? "mt-4" : "mt-1"}`}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.25, ease: "easeOut" }}
+                  >
                     <div className={`w-8 h-8 rounded-full shrink-0 flex items-center justify-center bg-muted ${isLoading && index === messages.length - 1 ? "bot-thinking" : ""}`}>
                       <svg width="16" height="16" viewBox="0 0 28 28" fill="none" className="text-primary">
                         <circle cx="14" cy="14" r="12" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.25"/>
@@ -639,7 +662,7 @@ export function ChatPage() {
                     <div className="max-w-[75%] px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap bg-muted text-foreground rounded-tl-sm">
                       {msg.content}
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
 

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../providers/theme-provider";
 import { useAuth } from "../providers/AuthProvider";
@@ -94,16 +95,33 @@ export function LandingPage() {
       {/* ── HERO ── */}
       <section className="px-4 py-16 md:py-28">
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-          <div className="space-y-7">
-            <h1 className="font-display text-6xl md:text-7xl font-normal tracking-tight leading-[1.05]">
+          <motion.div
+            className="space-y-7"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: {},
+              visible: { transition: { staggerChildren: 0.15 } },
+            }}
+          >
+            <motion.h1
+              className="font-display text-6xl md:text-7xl font-normal tracking-tight leading-[1.05]"
+              variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } } }}
+            >
               {t("landing.hero.tagline")}
-            </h1>
+            </motion.h1>
 
-            <p className="text-lg text-muted-foreground leading-relaxed">
+            <motion.p
+              className="text-lg text-muted-foreground leading-relaxed"
+              variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } } }}
+            >
               {t("landing.hero.subtitle")}
-            </p>
+            </motion.p>
 
-            <div className="flex flex-col sm:flex-row gap-3 sm:justify-center md:justify-start">
+            <motion.div
+              className="flex flex-col sm:flex-row gap-3 sm:justify-center md:justify-start"
+              variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } } }}
+            >
               {user ? (
                 <Link to="/app">
                   <Button size="lg" className="w-full sm:w-auto text-base px-8 rounded-xl">
@@ -119,9 +137,12 @@ export function LandingPage() {
                   {t("landing.hero.cta")}
                 </Button>
               )}
-            </div>
+            </motion.div>
 
-            <div className="flex items-center gap-5 flex-wrap">
+            <motion.div
+              className="flex items-center gap-5 flex-wrap"
+              variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } } }}
+            >
               <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
                 <Shield className="w-4 h-4 text-primary" />
                 <span>{t("landing.hero.trust.secure")}</span>
@@ -134,8 +155,8 @@ export function LandingPage() {
                 <Zap className="w-4 h-4 text-primary" />
                 <span>{t("landing.hero.trust.ai")}</span>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
           {/* Decorative right column */}
           <div className="hidden md:flex items-center justify-center">
