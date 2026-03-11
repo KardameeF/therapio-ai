@@ -167,7 +167,7 @@ function LoginFormInner({ defaultTab = "login" }: { defaultTab?: "login" | "regi
             <circle cx="14" cy="14" r="12" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.25"/>
             <circle cx="14" cy="14" r="7" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.5"/>
             <circle cx="14" cy="14" r="2.5" fill="currentColor"/>
-            <ellipse cx="14" cy="14" rx="12" ry="4.5" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.35" transform="rotate(-30 14 14)"/>
+            <ellipse cx="14" cy="14" rx="12" ry="4.5" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.35" transform="rotate(-30 14 14)" className="icon-orbit"/>
           </svg>
         </div>
         <h2 className="text-center text-xl font-semibold mb-1">{t("app.title")}</h2>

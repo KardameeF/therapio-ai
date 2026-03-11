@@ -126,6 +126,16 @@ body {
   pointer-events: none !important;
 }
 
+@keyframes orbit-spin {
+  from { transform: rotate(-30deg); }
+  to   { transform: rotate(330deg); }
+}
+
+.icon-orbit {
+  transform-origin: center;
+  animation: orbit-spin 8s linear infinite;
+}
+
 @keyframes bot-thinking {
   0%, 100% { transform: translateY(0px) scale(1); }
   30%       { transform: translateY(-4px) scale(1.08); }
