@@ -22,7 +22,7 @@ const STRIPE_PRICE_IDS = {
 
 export function LandingPage() {
   const [authOpen, setAuthOpen] = useState(false);
-  const [authTab, setAuthTab] = useState<"login" | "signup">("signup");
+  const [authTab, setAuthTab] = useState<"login" | "register">("register");
   const { user } = useAuth();
   const { t } = useTranslation();
   const { theme } = useTheme();
@@ -103,7 +103,7 @@ export function LandingPage() {
               {t("landing.hero.subtitle")}
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex flex-col sm:flex-row gap-3 sm:justify-center md:justify-start">
               {user ? (
                 <Link to="/app">
                   <Button size="lg" className="w-full sm:w-auto text-base px-8 rounded-xl">
@@ -114,7 +114,7 @@ export function LandingPage() {
                 <Button
                   size="lg"
                   className="w-full sm:w-auto text-base px-8 rounded-xl"
-                  onClick={() => { setAuthTab("signup"); setAuthOpen(true); }}
+                  onClick={() => { setAuthTab("register"); setAuthOpen(true); }}
                 >
                   {t("landing.hero.cta")}
                 </Button>
@@ -225,7 +225,7 @@ export function LandingPage() {
                   <Button
                     variant={plan.priceId ? "default" : "outline"}
                     className="w-full rounded-xl"
-                    onClick={() => { setAuthTab("signup"); setAuthOpen(true); }}
+                    onClick={() => { setAuthTab("register"); setAuthOpen(true); }}
                   >
                     {t(plan.ctaKey)}
                   </Button>
@@ -247,7 +247,7 @@ export function LandingPage() {
             <Button
               size="lg"
               className="text-base px-10 py-5 rounded-xl mt-2"
-              onClick={() => { setAuthTab("signup"); setAuthOpen(true); }}
+              onClick={() => { setAuthTab("register"); setAuthOpen(true); }}
             >
               {t("landing.cta.button")}
             </Button>

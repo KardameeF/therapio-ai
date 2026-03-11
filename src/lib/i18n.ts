@@ -277,43 +277,6 @@ const resources = {
           signOutDesc: "Sign out from this device"
         }
       },
-      billing: {
-        title: "Billing",
-        currentPlan: "Current plan",
-        choosePlan: "Choose plan",
-        startFree: "Start for free",
-        month: "month",
-        manageSub: "Manage subscription",
-        loading: "Loading...",
-        plans: {
-          first_step: {
-            name: "First Step",
-            subtitle: "Ideal start with no commitment"
-          },
-          personal_growth: {
-            name: "Personal Growth",
-            subtitle: "For deeper emotional work"
-          },
-          expanded_horizons: {
-            name: "Expanded Horizons",
-            subtitle: "Full transformation with all features"
-          }
-        },
-        features: {
-          aiMessages30: "30 AI messages/month",
-          aiMessages500: "500 AI messages/month",
-          aiMessages1500: "1500 AI messages/month",
-          history30: "30 days conversation history",
-          history90: "90 days conversation history",
-          history180: "180 days conversation history",
-          basicAI: "Basic AI assistant",
-          powerfulAI: "More powerful AI assistant",
-          mostPowerfulAI: "Most powerful AI assistant",
-          bgEn: "BG/EN support",
-          prioritySupport: "Priority support",
-          prioritySupport247: "Priority support 24/7"
-        }
-      },
       admin: {
         title: "Admin Dashboard",
         subtitle: "Manage users, subscriptions, and usage analytics",
@@ -669,43 +632,6 @@ const resources = {
           subtitle: "Необратими действия",
           signOut: "Изход",
           signOutDesc: "Излез от акаунта на това устройство"
-        }
-      },
-      billing: {
-        title: "Плащания",
-        currentPlan: "Текущ план",
-        choosePlan: "Избери план",
-        startFree: "Започни безплатно",
-        month: "месец",
-        manageSub: "Управление на абонамента",
-        loading: "Зареждане...",
-        plans: {
-          first_step: {
-            name: "Първа Стъпка",
-            subtitle: "Идеален старт без ангажимент"
-          },
-          personal_growth: {
-            name: "Личен Растеж",
-            subtitle: "За задълбочена емоционална работа"
-          },
-          expanded_horizons: {
-            name: "Разширени Хоризонти",
-            subtitle: "Пълна трансформация с всички функции"
-          }
-        },
-        features: {
-          aiMessages30: "30 AI съобщения на месец",
-          aiMessages500: "500 AI съобщения на месец",
-          aiMessages1500: "1500 AI съобщения на месец",
-          history30: "30 дни история на разговорите",
-          history90: "90 дни история на разговорите",
-          history180: "180 дни история на разговорите",
-          basicAI: "Основен AI асистент",
-          powerfulAI: "По-мощен AI асистент",
-          mostPowerfulAI: "Най-мощният AI асистент",
-          bgEn: "BG/EN поддръжка",
-          prioritySupport: "Приоритетна поддръжка",
-          prioritySupport247: "Приоритетна поддръжка 24/7"
         }
       },
       security: {

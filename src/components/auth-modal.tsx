@@ -5,7 +5,7 @@ import { LoginForm } from "../pages/login";
 interface AuthModalProps {
   open: boolean;
   onClose: () => void;
-  defaultTab?: "login" | "signup";
+  defaultTab?: "login" | "register";
 }
 
 export function AuthModal({ open, onClose, defaultTab }: AuthModalProps) {
