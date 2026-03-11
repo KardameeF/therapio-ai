@@ -120,19 +120,41 @@ const resources = {
         currentPlan: "Current Plan",
         upgrade: "Upgrade",
         perMonth: "/month",
+        month: "month",
+        choosePlan: "Choose plan",
+        startFree: "Start for free",
+        manageSub: "Manage subscription",
+        loading: "Loading...",
         plans: {
           first_step: {
             name: "First Step",
-            description: "30 messages/month • 30 days history"
+            description: "30 messages/month • 30 days history",
+            subtitle: "Ideal start with no commitment"
           },
           personal_growth: {
             name: "Personal Growth",
-            description: "500 messages/month • Voice assistant • 90 days history"
+            description: "500 messages/month • Voice assistant • 90 days history",
+            subtitle: "For deeper emotional work"
           },
           expanded_horizons: {
             name: "Expanded Horizons",
-            description: "1500 messages/month • Voice + OCR • 180 days history"
+            description: "1500 messages/month • Voice + OCR • 180 days history",
+            subtitle: "Full transformation with all features"
           }
+        },
+        features: {
+          aiMessages30: "30 AI messages/month",
+          aiMessages500: "500 AI messages/month",
+          aiMessages1500: "1500 AI messages/month",
+          history30: "30 days history",
+          history90: "90 days history",
+          history180: "180 days history",
+          basicAi: "Basic AI assistant",
+          powerfulAi: "Powerful AI assistant",
+          mostPowerfulAi: "Most powerful AI assistant",
+          bgEn: "BG/EN support",
+          prioritySupport: "Priority support",
+          prioritySupport247: "Priority support 24/7"
         }
       },
       landing: {
@@ -491,19 +513,41 @@ const resources = {
         currentPlan: "Текущ план",
         upgrade: "Надгради",
         perMonth: "/месец",
+        month: "месец",
+        choosePlan: "Избери план",
+        startFree: "Започни безплатно",
+        manageSub: "Управление на абонамент",
+        loading: "Зареждане...",
         plans: {
           first_step: {
             name: "Първа Стъпка",
-            description: "30 съобщения/месец • 30 дни история"
+            description: "30 съобщения/месец • 30 дни история",
+            subtitle: "Идеален старт без ангажимент"
           },
           personal_growth: {
             name: "Личен Растеж",
-            description: "500 съобщения/месец • 90 дни история"
+            description: "500 съобщения/месец • 90 дни история",
+            subtitle: "За задълбочена емоционална работа"
           },
           expanded_horizons: {
             name: "Разширени Хоризонти",
-            description: "1500 съобщения/месец • 180 дни история"
+            description: "1500 съобщения/месец • 180 дни история",
+            subtitle: "Пълна трансформация с всички функции"
           }
+        },
+        features: {
+          aiMessages30: "30 AI съобщения/месец",
+          aiMessages500: "500 AI съобщения/месец",
+          aiMessages1500: "1500 AI съобщения/месец",
+          history30: "30 дни история",
+          history90: "90 дни история",
+          history180: "180 дни история",
+          basicAi: "Основен AI асистент",
+          powerfulAi: "По-мощен AI асистент",
+          mostPowerfulAi: "Най-мощният AI асистент",
+          bgEn: "BG/EN поддръжка",
+          prioritySupport: "Приоритетна поддръжка",
+          prioritySupport247: "Приоритетна поддръжка 24/7"
         }
       },
       landing: {
