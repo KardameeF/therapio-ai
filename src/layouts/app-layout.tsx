@@ -34,7 +34,7 @@ export function AppLayout() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <div className="mx-auto flex max-w-7xl gap-8 px-6 py-8">
+      <div className="mx-auto flex max-w-7xl gap-4 md:gap-8 px-4 md:px-6 py-4 md:py-8">
 
         {/* SIDEBAR */}
         <aside className={`hidden md:flex flex-col shrink-0 transition-all duration-200 ease-in-out ${isCollapsed ? "w-16" : "w-56"}`}>
@@ -152,12 +152,36 @@ export function AppLayout() {
           </div>
         </aside>
 
-        <main className="flex-1 min-w-0">
+        <main className="flex-1 min-w-0 pb-24 md:pb-0">
           <div className="space-y-8">
             <Outlet />
           </div>
         </main>
       </div>
+
+      {/* Mobile bottom nav */}
+      <nav className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-background border-t border-border px-2 py-2 safe-area-bottom">
+        <div className="flex items-center justify-around max-w-lg mx-auto">
+          <Link to="/app" className="flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl hover:bg-secondary transition-colors">
+            <MessageCircle className="w-5 h-5 text-muted-foreground" />
+            <span className="text-[10px] text-muted-foreground">{t("nav.backToChat").replace("← ", "")}</span>
+          </Link>
+          <NavLink to="/billing" className={({ isActive }) => `flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-colors ${isActive ? "text-primary" : "text-muted-foreground hover:bg-secondary"}`}>
+            <CreditCard className="w-5 h-5" />
+            <span className="text-[10px]">{t("nav.billing")}</span>
+          </NavLink>
+          <NavLink to="/profile" className={({ isActive }) => `flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-colors ${isActive ? "text-primary" : "text-muted-foreground hover:bg-secondary"}`}>
+            <User className="w-5 h-5" />
+            <span className="text-[10px]">{t("nav.profile")}</span>
+          </NavLink>
+          {isAdmin && (
+            <NavLink to="/admin" className={({ isActive }) => `flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-colors ${isActive ? "text-destructive" : "text-muted-foreground hover:bg-secondary"}`}>
+              <Shield className="w-5 h-5" />
+              <span className="text-[10px]">{t("nav.admin")}</span>
+            </NavLink>
+          )}
+        </div>
+      </nav>
     </div>
   );
 }

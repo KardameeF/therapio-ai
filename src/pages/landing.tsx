@@ -105,7 +105,7 @@ export function LandingPage() {
             }}
           >
             <motion.h1
-              className="font-display text-6xl md:text-7xl font-normal tracking-tight leading-[1.05]"
+              className="font-display text-4xl sm:text-5xl md:text-7xl font-normal tracking-tight leading-[1.05]"
               variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } } }}
             >
               {t("landing.hero.tagline")}
@@ -211,7 +211,7 @@ export function LandingPage() {
             <p className="text-lg text-muted-foreground">{t("landing.pricing.subtitle")}</p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-4 md:gap-6">
             {plans.map((plan) => {
               const planFeatures = t(plan.featuresKey, { returnObjects: true }) as string[];
               const isHighlighted = plan.key === "personal_growth";
@@ -260,7 +260,7 @@ export function LandingPage() {
       {/* ── CTA ── */}
       <section className="py-20 px-4">
         <div className="max-w-3xl mx-auto text-center">
-          <div className="rounded-xl border border-border bg-card p-12 md:p-16 space-y-5">
+            <div className="rounded-xl border border-border bg-card p-8 sm:p-12 md:p-16 space-y-5">
             <h2 className="text-3xl md:text-4xl font-bold">{t("landing.cta.title")}</h2>
             <p className="text-lg text-muted-foreground max-w-lg mx-auto">
               {t("landing.cta.description")}

@@ -131,9 +131,9 @@ export function ProfilePage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">{t("profile.title")}</h1>
+        <h1 className="text-2xl md:text-3xl font-bold">{t("profile.title")}</h1>
         <p className="text-muted-foreground">{t("profile.subtitle")}</p>
       </div>
 
@@ -161,7 +161,7 @@ export function ProfilePage() {
                 <Mail className="h-4 w-4" />
                 {t("profile.accountInfo.email")}
               </Label>
-              <Input value={user?.email || ''} disabled />
+              <Input value={user?.email || ''} disabled className="text-base" />
             </div>
           </div>
         </div>
@@ -178,6 +178,7 @@ export function ProfilePage() {
                 id="displayName"
                 {...register("displayName")}
                 placeholder={t("profile.settings.displayNamePlaceholder")}
+                className="text-base"
               />
             </div>
 
@@ -187,6 +188,7 @@ export function ProfilePage() {
                 id="bio"
                 {...register("bio")}
                 placeholder={t("profile.settings.bioPlaceholder")}
+                className="text-base"
               />
             </div>
 
@@ -211,7 +213,7 @@ export function ProfilePage() {
           <h3 className="text-base font-semibold">{t("security.title")}</h3>
           <p className="text-sm text-muted-foreground mt-1">{t("security.subtitle")}</p>
         </div>
-        <form onSubmit={handleSubmitPw(onPasswordSubmit)} className="space-y-4 max-w-sm">
+        <form onSubmit={handleSubmitPw(onPasswordSubmit)} className="space-y-4">
 
           {/* Current password */}
           <div className="space-y-2">
@@ -221,12 +223,12 @@ export function ProfilePage() {
                 id="currentPassword"
                 type={showCurrent ? "text" : "password"}
                 {...registerPw("currentPassword", { required: true })}
-                className="pr-10"
+                className="pr-12 text-base"
               />
               <button
                 type="button"
                 onClick={() => setShowCurrent((v) => !v)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-muted-foreground hover:text-foreground transition-colors"
               >
                 {showCurrent ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -258,12 +260,12 @@ export function ProfilePage() {
                   minLength: { value: 8, message: t("security.errorMinLength") },
                   validate: (v) => /\d/.test(v) || t("security.errorNoNumber"),
                 })}
-                className="pr-10"
+                className="pr-12 text-base"
               />
               <button
                 type="button"
                 onClick={() => setShowNew((v) => !v)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-muted-foreground hover:text-foreground transition-colors"
               >
                 {showNew ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -284,12 +286,12 @@ export function ProfilePage() {
                   required: true,
                   validate: (v) => v === newPasswordValue || t("security.errorPasswordsNoMatch"),
                 })}
-                className="pr-10"
+                className="pr-12 text-base"
               />
               <button
                 type="button"
                 onClick={() => setShowConfirm((v) => !v)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-muted-foreground hover:text-foreground transition-colors"
               >
                 {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -313,14 +315,14 @@ export function ProfilePage() {
           <h3 className="text-base font-semibold">{t("profile.dangerZone.title")}</h3>
           <p className="text-sm text-muted-foreground mt-1">{t("profile.dangerZone.subtitle")}</p>
         </div>
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-0 sm:justify-between">
           <div>
             <div className="font-medium">{t("profile.dangerZone.signOut")}</div>
             <div className="text-sm text-muted-foreground">
               {t("profile.dangerZone.signOutDesc")}
             </div>
           </div>
-          <Button variant="outline" onClick={handleSignOut}>
+          <Button variant="outline" onClick={handleSignOut} className="w-full sm:w-auto">
             {t("profile.dangerZone.signOut")}
           </Button>
         </div>

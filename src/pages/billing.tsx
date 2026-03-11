@@ -93,10 +93,10 @@ export function BillingPage() {
   };
 
   return (
-    <div className="grid gap-6 md:grid-cols-3">
+    <div className="grid gap-4 md:gap-6 md:grid-cols-3">
       {currentPlan !== "first_step" && (
         <div className="md:col-span-3 flex justify-end mb-2">
-          <Button variant="outline" onClick={handleManageBilling} disabled={loading}>
+          <Button variant="outline" onClick={handleManageBilling} disabled={loading} className="w-full sm:w-auto">
             {loading ? t("billing.loading") : t("billing.manageSub")}
           </Button>
         </div>
