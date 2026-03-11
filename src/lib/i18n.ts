@@ -384,7 +384,19 @@ const resources = {
         recording: "Recording... Tap again to stop",
         transcribing: "Transcribing...",
         micError: "Cannot access microphone",
-        deleteSession: "Delete chat"
+        deleteSession: "Delete chat",
+        newChat: "New Chat",
+        recent: "Recent",
+        noChats: "No chats yet",
+        noResults: "No results",
+        searchPlaceholder: "Search chats...",
+        disclaimer: "Eterapp is not a medical service.",
+        greeting: "Hello, how are you today?",
+        greetingSub: "I'm here for you. You can share anything.",
+        messagesLeft: "messages left",
+        upgradeForMore: "Upgrade for more",
+        limitReached: "Limit reached",
+        upgradeNow: "Upgrade now"
       },
       footer: {
         rights: "© 2026 Eterapp. All rights reserved.",
@@ -777,7 +789,19 @@ const resources = {
         recording: "Записва се... Натисни отново за спиране",
         transcribing: "Транскрибира се...",
         micError: "Не може да се получи достъп до микрофона",
-        deleteSession: "Изтрий чат"
+        deleteSession: "Изтрий чат",
+        newChat: "Нов чат",
+        recent: "Последни",
+        noChats: "Няма чатове още",
+        noResults: "Няма резултати",
+        searchPlaceholder: "Търси в чатовете...",
+        disclaimer: "Eterapp не е медицинска услуга.",
+        greeting: "Здравей, как си днес?",
+        greetingSub: "Тук съм за теб. Можеш да споделиш всичко.",
+        messagesLeft: "съобщения остават",
+        upgradeForMore: "Надгради за повече",
+        limitReached: "Лимитът е достигнат",
+        upgradeNow: "Надгради сега"
       },
       footer: {
         rights: "© 2026 Eterapp. Всички права запазени.",

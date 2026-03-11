@@ -237,14 +237,14 @@ export function ChatPage() {
         if (!sessionId) {
           const { data: newSession } = await supabase
             .from("chat_sessions")
-            .insert({ user_id: currentSession.user.id, title: "Нов чат" })
+            .insert({ user_id: currentSession.user.id, title: t("chat.newChat") })
             .select("id")
             .single();
           if (newSession) {
             sessionId = newSession.id;
             setCurrentSessionId(sessionId);
             setChatHistory((prev) => [
-              { id: sessionId!, title: "Нов чат", updated_at: new Date().toISOString() },
+              { id: sessionId!, title: t("chat.newChat"), updated_at: new Date().toISOString() },
               ...prev,
             ]);
           }
@@ -347,7 +347,7 @@ export function ChatPage() {
   };
 
   const displayTitle = (title: string) =>
-    title ? title.charAt(0).toUpperCase() + title.slice(1) : "Нов чат";
+    title ? title.charAt(0).toUpperCase() + title.slice(1) : t("chat.newChat");
 
   const deleteSession = async (sessionId: string | number) => {
     const idForEq = typeof sessionId === "string" && /^\d+$/.test(sessionId)
@@ -410,23 +410,23 @@ export function ChatPage() {
         <div className="p-3">
           <button
             onClick={() => { handleNewChat(); setSidebarOpen(false); }}
-            title="Нов чат"
+            title={t("chat.newChat")}
             className={`w-full flex items-center rounded-xl border border-border bg-transparent hover:bg-secondary text-foreground text-sm font-medium transition-colors ${sidebarCollapsed ? "justify-center p-2" : "gap-2 px-3 py-2"}`}>
             <Plus className="w-4 h-4 shrink-0" />
-            {!sidebarCollapsed && "Нов чат"}
+            {!sidebarCollapsed && t("chat.newChat")}
           </button>
         </div>
 
         {!sidebarCollapsed && messagesLimit - messagesUsed <= 10 && messagesLimit - messagesUsed > 0 && (
           <div className="mx-3 mb-2 px-3 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-600 dark:text-amber-400">
-            <span className="font-medium">Остават {messagesLimit - messagesUsed} съобщения</span>
-            <p className="text-amber-500/80 mt-0.5">Надгради за повече</p>
+            <span className="font-medium">{messagesLimit - messagesUsed} {t("chat.messagesLeft")}</span>
+            <p className="text-amber-500/80 mt-0.5">{t("chat.upgradeForMore")}</p>
           </div>
         )}
         {!sidebarCollapsed && messagesUsed >= messagesLimit && (
           <div className="mx-3 mb-2 px-3 py-2 rounded-xl bg-red-500/10 border border-red-500/20 text-xs text-red-600 dark:text-red-400">
-            <span className="font-medium">Лимитът е достигнат</span>
-            <p className="text-red-500/80 mt-0.5"><Link to="/billing" className="underline">Надгради сега</Link></p>
+            <span className="font-medium">{t("chat.limitReached")}</span>
+            <p className="text-red-500/80 mt-0.5"><Link to="/billing" className="underline">{t("chat.upgradeNow")}</Link></p>
           </div>
         )}
 
@@ -445,7 +445,7 @@ export function ChatPage() {
             <Search className="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
             <input
               type="text"
-              placeholder="Търси в чатовете..."
+              placeholder={t("chat.searchPlaceholder")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-8 pr-3 py-2 text-xs bg-background/60 border border-border/40 rounded-lg outline-none focus:border-primary/50 text-foreground placeholder:text-muted-foreground"
@@ -453,13 +453,13 @@ export function ChatPage() {
           </div>
 
           <p className="text-xs text-muted-foreground px-1 py-1 font-medium uppercase tracking-wider">
-            Последни
+            {t("chat.recent")}
           </p>
 
           <div className="flex-1 overflow-y-auto space-y-0.5 min-h-0">
             {filteredHistory.length === 0 ? (
               <p className="text-xs text-muted-foreground px-2 py-1">
-                {searchQuery ? "Няма резултати" : "Няма чатове още"}
+                {searchQuery ? t("chat.noResults") : t("chat.noChats")}
               </p>
             ) : (
               filteredHistory.map((session) => (
@@ -512,14 +512,14 @@ export function ChatPage() {
           <div
             className={`flex items-center rounded-lg hover:bg-secondary transition-colors cursor-pointer ${sidebarCollapsed ? "justify-center p-2" : "gap-3 px-2 py-2"}`}
             onClick={() => setProfileOpen((o) => !o)}
-            title="Профил"
+            title={t("nav.profile")}
           >
             <div className="w-8 h-8 rounded-full bg-secondary border border-border flex items-center justify-center shrink-0">
               <User className="w-4 h-4 text-muted-foreground" />
             </div>
             {!sidebarCollapsed && (
               <div className="flex-1 min-w-0">
-                <p className="text-xs text-muted-foreground truncate">Профил</p>
+                <p className="text-xs text-muted-foreground truncate">{t("nav.profile")}</p>
               </div>
             )}
           </div>
@@ -528,33 +528,33 @@ export function ChatPage() {
             <div className="absolute bottom-16 left-4 right-4 z-50 rounded-xl border border-border bg-background p-3 space-y-2">
               {userEmail && <p className="text-xs text-muted-foreground truncate px-2">{userEmail}</p>}
               <Link to="/profile" className="block text-sm px-2 py-1.5 rounded-lg hover:bg-secondary" onClick={() => setProfileOpen(false)}>
-                Настройки на профила
+                {t("profile.title")}
               </Link>
               <Link to="/billing" className="block text-sm px-2 py-1.5 rounded-lg hover:bg-secondary" onClick={() => setProfileOpen(false)}>
-                Твоят план
+                {t("nav.billing")}
               </Link>
               <div className="h-px bg-border/50 my-1" />
-              <p className="text-[10px] text-muted-foreground px-2 pt-1 uppercase tracking-wider">Правни</p>
+              <p className="text-[10px] text-muted-foreground px-2 pt-1 uppercase tracking-wider">{t("nav.legal")}</p>
               <Link
                 to="/legal/privacy"
                 className="block text-xs px-2 py-1 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground"
                 onClick={() => setProfileOpen(false)}
               >
-                Поверителност
+                {t("nav.privacy")}
               </Link>
               <Link
                 to="/legal/cookies"
                 className="block text-xs px-2 py-1 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground"
                 onClick={() => setProfileOpen(false)}
               >
-                Бисквитки
+                {t("nav.cookies")}
               </Link>
               <Link
                 to="/legal/terms"
                 className="block text-xs px-2 py-1 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground"
                 onClick={() => setProfileOpen(false)}
               >
-                Условия
+                {t("nav.terms")}
               </Link>
               <div className="h-px bg-border my-1" />
               <button
@@ -565,7 +565,7 @@ export function ChatPage() {
                 }}
               >
                 <LogOut className="w-4 h-4" />
-                Изход
+                {t("auth.logout")}
               </button>
             </div>
           )}
@@ -610,9 +610,9 @@ export function ChatPage() {
           {messages.length === 0 && !isLoading ? (
             <div className="flex items-center justify-center h-full">
               <div className="text-center space-y-4 max-w-md">
-                <h2 className="text-2xl font-semibold">Здравей, как си днес?</h2>
+                <h2 className="text-2xl font-semibold">{t("chat.greeting")}</h2>
                 <p className="text-muted-foreground text-sm">
-                  Тук съм за теб. Можеш да споделиш всичко.
+                  {t("chat.greetingSub")}
                 </p>
               </div>
             </div>
@@ -759,7 +759,7 @@ export function ChatPage() {
               </button>
             </div>
             <p className="text-center text-xs text-muted-foreground mt-2">
-              Eterapp не е медицинска услуга.
+              {t("chat.disclaimer")}
             </p>
           </div>
         </div>
