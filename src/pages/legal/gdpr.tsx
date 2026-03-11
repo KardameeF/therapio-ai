@@ -64,8 +64,7 @@ export function GDPRPage() {
           </p>
           <p>
             <strong>Contact Information:</strong><br />
-            Email: dpo@therapio.ai<br />
-            Phone: [Your Phone Number]
+            Email: dpo@eterapp.io
           </p>
         </CardContent>
       </Card>
@@ -110,7 +109,7 @@ export function GDPRPage() {
             To exercise any of your GDPR rights, please contact us at:
           </p>
           <p>
-            Email: privacy@therapio.ai<br />
+            Email: privacy@eterapp.io<br />
             Subject Line: "GDPR Rights Request"<br />
             Please include your full name and email address associated with your account.
           </p>

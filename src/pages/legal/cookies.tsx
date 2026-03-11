@@ -150,7 +150,7 @@ export function CookiesPage() {
             We may update this Cookie Policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the "Last updated" date.
           </p>
           <p>
-            If you have any questions about this Cookie Policy, please contact us at privacy@therapio.ai
+            If you have any questions about this Cookie Policy, please contact us at privacy@eterapp.io
           </p>
         </CardContent>
       </Card>

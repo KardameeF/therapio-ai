@@ -105,8 +105,8 @@ export function PrivacyPage() {
             If you have any questions about this Privacy Policy or our data practices, please contact us at:
           </p>
           <p>
-            Email: privacy@therapio.ai<br />
-            Address: [Your Company Address]
+            Email: privacy@eterapp.io<br />
+            Address: София, България
           </p>
         </CardContent>
       </Card>
