@@ -396,7 +396,10 @@ const resources = {
         messagesLeft: "messages left",
         upgradeForMore: "Upgrade for more",
         limitReached: "Limit reached",
-        upgradeNow: "Upgrade now"
+        upgradeNow: "Upgrade now",
+        imageUpgradeRequired: "Upgrade for image support",
+        imageTooLarge: "Image too large (max 4MB)",
+        imageAttached: "Image attached"
       },
       footer: {
         rights: "© 2026 Eterapp. All rights reserved.",
@@ -801,7 +804,10 @@ const resources = {
         messagesLeft: "съобщения остават",
         upgradeForMore: "Надгради за повече",
         limitReached: "Лимитът е достигнат",
-        upgradeNow: "Надгради сега"
+        upgradeNow: "Надгради сега",
+        imageUpgradeRequired: "Надгради плана за изображения",
+        imageTooLarge: "Изображението е твърде голямо (макс. 4MB)",
+        imageAttached: "Изображение прикачено"
       },
       footer: {
         rights: "© 2026 Eterapp. Всички права запазени.",

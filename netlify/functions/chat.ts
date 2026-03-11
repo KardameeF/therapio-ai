@@ -53,12 +53,29 @@ export const handler: Handler = async (event) => {
     };
   }
 
-  const { messages } = JSON.parse(event.body || "{}");
+  const { messages, image } = JSON.parse(event.body || "{}");
   if (!messages || !Array.isArray(messages)) {
     return { statusCode: 400, body: JSON.stringify({ error: "Invalid request" }) };
   }
 
+  if (image && image.length > 6_000_000) {
+    return { statusCode: 400, body: JSON.stringify({ error: "Image too large" }) };
+  }
+
   const model = plan === "first_step" ? "gpt-4o-mini" : "gpt-4o";
+
+  const openaiMessages = messages.map((m: { role: string; content: string }, idx: number) => {
+    if (idx === messages.length - 1 && m.role === "user" && image && plan !== "first_step") {
+      return {
+        role: "user",
+        content: [
+          { type: "text", text: m.content },
+          { type: "image_url", image_url: { url: image, detail: "low" } },
+        ],
+      };
+    }
+    return { role: m.role, content: m.content };
+  });
 
   try {
     const completion = await openai.chat.completions.create({
@@ -71,7 +88,7 @@ You provide empathetic, supportive responses. You are NOT a medical professional
 and always remind users to seek professional help for serious issues.
 Respond in the same language the user writes in (Bulgarian or English).`,
         },
-        ...messages,
+        ...openaiMessages,
       ],
       max_tokens: 500,
     });

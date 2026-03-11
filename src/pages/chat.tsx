@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
-import { Plus, Send, User, Menu, X, PanelLeftOpen, PanelLeftClose, LogOut, Search, Mic, MicOff, Loader2 } from "lucide-react";
+import { Plus, Send, User, Menu, X, PanelLeftOpen, PanelLeftClose, LogOut, Search, Mic, MicOff, Loader2, ImageIcon } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 import { ThemeToggle } from "../components/theme-toggle";
 import { DisplayNamePrompt } from "../components/display-name-prompt";
@@ -55,9 +55,11 @@ export function ChatPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
   const [placeholderVisible, setPlaceholderVisible] = useState(true);
+  const [attachedImage, setAttachedImage] = useState<{ base64: string; preview: string } | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const profilePopupRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { isRecording, isTranscribing, startRecording, stopAndTranscribe } = useVoiceRecorder();
   const isPaidPlan = ["personal_growth", "expanded_horizons"].includes(currentPlan);
@@ -199,6 +201,7 @@ export function ChatPage() {
         },
         body: JSON.stringify({
           messages: history.map(({ role, content }) => ({ role, content })),
+          ...(attachedImage ? { image: attachedImage.base64 } : {}),
         }),
       });
 
@@ -220,6 +223,7 @@ export function ChatPage() {
       setMessagesLimit(data.limit ?? messagesLimit);
 
       setIsLoading(false);
+      setAttachedImage(null);
 
       const tempId = crypto.randomUUID();
       setMessages((prev) => [...prev, { id: tempId, role: "assistant", content: "" }]);
@@ -353,6 +357,22 @@ export function ChatPage() {
     } else {
       await startRecording();
     }
+  };
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 4 * 1024 * 1024) {
+      alert(t("chat.imageTooLarge"));
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = reader.result as string;
+      setAttachedImage({ base64, preview: base64 });
+    };
+    reader.readAsDataURL(file);
+    e.target.value = "";
   };
 
   const displayTitle = (title: string) =>
@@ -696,6 +716,25 @@ export function ChatPage() {
         <div className="shrink-0 px-4 py-4 border-t border-border">
           <div className="max-w-2xl mx-auto w-full">
 
+            {attachedImage && (
+              <div className="flex items-center gap-2 mb-2">
+                <div className="relative">
+                  <img
+                    src={attachedImage.preview}
+                    alt="attachment"
+                    className="w-14 h-14 rounded-xl object-cover border border-border"
+                  />
+                  <button
+                    onClick={() => setAttachedImage(null)}
+                    className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-destructive flex items-center justify-center"
+                  >
+                    <X className="w-2.5 h-2.5 text-destructive-foreground" />
+                  </button>
+                </div>
+                <span className="text-xs text-muted-foreground">{t("chat.imageAttached")}</span>
+              </div>
+            )}
+
             {/* Recording indicator */}
             {isRecording && (
               <div className="flex items-center gap-2 px-4 py-1.5 text-xs text-destructive bg-destructive/10 rounded-full w-fit mx-auto mb-2">
@@ -771,6 +810,32 @@ export function ChatPage() {
                 )}
               </div>
 
+              {/* Image button */}
+              <div className="relative group">
+                <button
+                  type="button"
+                  onClick={isPaidPlan ? () => fileInputRef.current?.click() : undefined}
+                  disabled={isLoading || isTranscribing}
+                  className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200 ${
+                    !isPaidPlan
+                      ? "text-muted-foreground/30 cursor-not-allowed"
+                      : attachedImage
+                      ? "text-primary bg-primary/10"
+                      : "text-muted-foreground hover:text-primary hover:bg-primary/10"
+                  } disabled:opacity-30 disabled:cursor-not-allowed`}
+                >
+                  <ImageIcon className="w-4 h-4" />
+                </button>
+                {!isPaidPlan && (
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2
+                    px-2 py-1 text-xs bg-popover border border-border
+                    rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100
+                    transition-opacity pointer-events-none z-10">
+                    {t("chat.imageUpgradeRequired")}
+                  </div>
+                )}
+              </div>
+
               <button
                 onClick={handleSend}
                 disabled={!input.trim() || isLoading}
@@ -784,6 +849,13 @@ export function ChatPage() {
             <p className="text-center text-xs text-muted-foreground mt-2">
               {t("chat.disclaimer")}
             </p>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              className="hidden"
+              onChange={handleImageSelect}
+            />
           </div>
         </div>
 
