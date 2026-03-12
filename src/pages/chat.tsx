@@ -750,7 +750,7 @@ export function ChatPage() {
               </div>
             )}
 
-            <div className="flex items-end gap-2 px-4 py-3 rounded-2xl
+            <div className="flex items-center gap-2 px-4 py-3 rounded-2xl
               border border-border bg-card
               focus-within:border-primary/50
               transition-colors">
@@ -771,12 +771,12 @@ export function ChatPage() {
                   rows={1}
                   disabled={isLoading || isTranscribing}
                   className="w-full bg-transparent resize-none outline-none text-sm
-                    text-foreground max-h-32 overflow-y-auto disabled:cursor-not-allowed"
+                    text-foreground max-h-32 overflow-y-auto disabled:cursor-not-allowed py-1"
                 />
               </div>
 
               {/* Mic button */}
-              <div className="relative group">
+              <div className="relative group self-center">
                 <button
                   type="button"
                   onClick={isPaidPlan ? handleVoiceToggle : undefined}
@@ -811,7 +811,7 @@ export function ChatPage() {
               </div>
 
               {/* Image button */}
-              <div className="relative group">
+              <div className="relative group self-center">
                 <button
                   type="button"
                   onClick={isPaidPlan ? () => fileInputRef.current?.click() : undefined}
@@ -841,7 +841,7 @@ export function ChatPage() {
                 disabled={!input.trim() || isLoading}
                 className="w-8 h-8 rounded-xl bg-primary hover:bg-primary/90
                   disabled:opacity-30 disabled:cursor-not-allowed
-                  flex items-center justify-center shrink-0
+                  flex items-center justify-center shrink-0 self-center
                   transition-colors">
                 <Send className="w-4 h-4 text-primary-foreground" />
               </button>
