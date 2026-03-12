@@ -116,7 +116,7 @@ export function BillingPage() {
         </div>
         <div className="space-y-3 text-sm text-muted-foreground">
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.aiMessages30")}</span></div>
-          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.basicAI")}</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.basicAi")}</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.history30")}</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.bgEn")}</span></div>
         </div>
@@ -136,7 +136,7 @@ export function BillingPage() {
         </div>
         <div className="space-y-3 text-sm text-muted-foreground">
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.aiMessages500")}</span></div>
-          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.powerfulAI")}</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.powerfulAi")}</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.history90")}</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.prioritySupport")}</span></div>
           <Button onClick={() => handleUpgrade("price_1S8qnIDVd6WnP7HIrd5qxgrt")} disabled={loading || currentPlan === "personal_growth"} className="w-full mt-4">
@@ -159,7 +159,7 @@ export function BillingPage() {
         </div>
         <div className="space-y-3 text-sm text-muted-foreground">
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.aiMessages1500")}</span></div>
-          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.mostPowerfulAI")}</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.mostPowerfulAi")}</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.history180")}</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.prioritySupport247")}</span></div>
           <Button onClick={() => handleUpgrade("price_1S8qoxDVd6WnP7HI4Vjfan7y")} disabled={loading || currentPlan === "expanded_horizons"} className="w-full mt-4">
