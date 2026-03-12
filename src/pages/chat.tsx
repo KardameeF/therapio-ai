@@ -750,11 +750,11 @@ export function ChatPage() {
               </div>
             )}
 
-            <div className="flex items-center gap-2 px-4 py-3 rounded-2xl
+            <div className="flex items-center gap-2 px-4 py-3 rounded-2xl min-h-[44px]
               border border-border bg-card
               focus-within:border-primary/50
               transition-colors">
-              <div className="relative flex-1">
+              <div className="relative flex-1 flex items-center">
                 {input.length === 0 && !isRecording && (
                   <span
                     className="absolute inset-0 flex items-center text-sm text-muted-foreground pointer-events-none select-none"
@@ -771,7 +771,7 @@ export function ChatPage() {
                   rows={1}
                   disabled={isLoading || isTranscribing}
                   className="w-full bg-transparent resize-none outline-none text-sm
-                    text-foreground max-h-32 overflow-y-auto disabled:cursor-not-allowed py-1"
+                    text-foreground max-h-32 overflow-y-auto disabled:cursor-not-allowed py-1 self-center"
                 />
               </div>
 

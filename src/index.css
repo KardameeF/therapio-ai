@@ -181,3 +181,28 @@ body {
     min-width: 44px;
   }
 }
+
+/* iOS font-size zoom prevention */
+@media (max-width: 768px) {
+  input, textarea, select {
+    font-size: max(16px, 1em) !important;
+  }
+}
+
+/* Минимален touch target за мобилни */
+@media (max-width: 768px) {
+  button, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  /* Изключи малките inline бутони */
+  button.w-4, button.w-3\.5, button.h-3\.5 {
+    min-height: unset;
+    min-width: unset;
+  }
+}
+
+/* Safe area за iPhone notch */
+.pb-safe {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}

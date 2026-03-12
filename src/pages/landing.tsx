@@ -105,7 +105,7 @@ export function LandingPage() {
             }}
           >
             <motion.h1
-              className="font-display text-4xl sm:text-5xl md:text-7xl font-normal tracking-tight leading-[1.05]"
+              className="font-display text-3xl sm:text-4xl md:text-5xl font-normal tracking-tight leading-[1.05]"
               variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } } }}
             >
               {t("landing.hero.tagline")}
@@ -188,7 +188,7 @@ export function LandingPage() {
             </p>
           </div>
 
-          <div className="grid gap-px bg-border/60 rounded-xl overflow-hidden border border-border/60" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))' }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 w-full">
             {features.map(({ Icon, titleKey, descKey }) => (
               <div
                 key={titleKey}
@@ -211,7 +211,7 @@ export function LandingPage() {
             <p className="text-lg text-muted-foreground">{t("landing.pricing.subtitle")}</p>
           </div>
 
-          <div className="grid gap-4 md:gap-6" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))' }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 w-full">
             {plans.map((plan) => {
               const planFeatures = t(plan.featuresKey, { returnObjects: true }) as string[];
               const isHighlighted = plan.key === "personal_growth";

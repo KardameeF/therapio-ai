@@ -93,6 +93,7 @@ export function BillingPage() {
   };
 
   return (
+    <div className="w-full max-w-5xl mx-auto px-4 sm:px-6">
     <div className="grid gap-4 md:gap-6" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))' }}>
       {currentPlan !== "first_step" && (
         <div className="md:col-span-3 flex justify-end mb-2">
@@ -167,6 +168,7 @@ export function BillingPage() {
           </Button>
         </div>
       </motion.div>
+    </div>
     </div>
   );
 }
