@@ -417,7 +417,12 @@ const resources = {
         therapyAudioEmpty: "No therapy audio for this session.",
         upgradeForTherapy: "Upgrade to Expanded Horizons for guided therapies",
         listenNow: "Listen now",
-        duration: "Duration"
+        duration: "Duration",
+        voiceMode: "Voice mode",
+        voiceModeActive: "Voice mode active — speak now",
+        voiceModeUpgrade: "Upgrade to Expanded Horizons for voice assistant",
+        voiceModeSpeaking: "Speaking...",
+        voiceModeListening: "Listening..."
       },
       footer: {
         rights: "© 2026 Eterapp. All rights reserved.",
@@ -844,7 +849,12 @@ const resources = {
         therapyAudioEmpty: "Няма аудио терапия за тази сесия.",
         upgradeForTherapy: "Надгради до Разширени хоризонти за насочени терапии",
         listenNow: "Слушай сега",
-        duration: "Продължителност"
+        duration: "Продължителност",
+        voiceMode: "Гласов режим",
+        voiceModeActive: "Гласов режим — говори сега",
+        voiceModeUpgrade: "Надгради до Разширени хоризонти за гласов асистент",
+        voiceModeSpeaking: "Говори...",
+        voiceModeListening: "Слуша..."
       },
       footer: {
         rights: "© 2026 Eterapp. Всички права запазени.",

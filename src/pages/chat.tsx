@@ -88,6 +88,12 @@ export function ChatPage() {
   const [therapyModalSession, setTherapyModalSession] = useState<string | number | null>(null);
   const [therapyAudio, setTherapyAudio] = useState<TherapyAudio | null>(null);
   const [sessionsWithTherapy, setSessionsWithTherapy] = useState<Set<string>>(new Set());
+  const [voiceMode, setVoiceMode] = useState(false);
+  const [voiceListening, setVoiceListening] = useState(false);
+  const [voiceSpeaking, setVoiceSpeaking] = useState(false);
+  const [preferredVoice, setPreferredVoice] = useState<"alloy" | "onyx">("alloy");
+  const voiceRecognitionRef = useRef<SpeechRecognition | null>(null);
+  const voiceAudioRef = useRef<HTMLAudioElement | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const profilePopupRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -159,7 +165,7 @@ export function ChatPage() {
 
       const { data: profile } = await supabase
         .from("profiles")
-        .select("messages_used, subscription_plan")
+        .select("messages_used, subscription_plan, preferred_voice_gender")
         .eq("id", session.user.id)
         .single();
 
@@ -173,6 +179,7 @@ export function ChatPage() {
           expanded_horizons: 1500,
         };
         setMessagesLimit(limits[plan] ?? 30);
+        setPreferredVoice(profile.preferred_voice_gender === "male" ? "onyx" : "alloy");
       }
 
       // Load chat sessions for sidebar
@@ -287,6 +294,9 @@ export function ChatPage() {
           setMessages((prev) =>
             prev.map((m) => (m.id === tempId ? { ...m, content: data.reply } : m))
           );
+          if (voiceMode && data.reply) {
+            playTTS(data.reply);
+          }
         }
       );
 
@@ -406,6 +416,90 @@ export function ChatPage() {
       await startRecording();
     }
   };
+
+  const playTTS = useCallback(async (text: string) => {
+    try {
+      setVoiceSpeaking(true);
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
+      const res = await fetch("/.netlify/functions/tts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ text, voice: preferredVoice }),
+      });
+      if (!res.ok) return;
+      const { audio } = await res.json();
+      const audioBlob = new Blob(
+        [Uint8Array.from(atob(audio), (c) => c.charCodeAt(0))],
+        { type: "audio/mpeg" }
+      );
+      const url = URL.createObjectURL(audioBlob);
+      const audioEl = new Audio(url);
+      voiceAudioRef.current = audioEl;
+      audioEl.onended = () => {
+        setVoiceSpeaking(false);
+        URL.revokeObjectURL(url);
+        if (voiceMode) startVoiceListening();
+      };
+      await audioEl.play();
+    } catch {
+      setVoiceSpeaking(false);
+    }
+  }, [preferredVoice, voiceMode]);
+
+  const startVoiceListening = useCallback(() => {
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRec) return;
+
+    const recognition = new SpeechRec();
+    const lang = (localStorage.getItem("etherapp_language") || "bg").startsWith("en") ? "en-US" : "bg-BG";
+    recognition.lang = lang;
+    recognition.interimResults = false;
+    recognition.continuous = false;
+    voiceRecognitionRef.current = recognition;
+
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
+      const transcript = event.results[0]?.[0]?.transcript;
+      if (transcript) {
+        setVoiceListening(false);
+        setInput(transcript);
+        setTimeout(() => {
+          const sendBtn = document.querySelector<HTMLButtonElement>("[data-voice-send]");
+          sendBtn?.click();
+        }, 100);
+      }
+    };
+
+    recognition.onerror = () => setVoiceListening(false);
+    recognition.onend = () => setVoiceListening(false);
+
+    setVoiceListening(true);
+    recognition.start();
+  }, []);
+
+  const toggleVoiceMode = useCallback(() => {
+    if (voiceMode) {
+      voiceRecognitionRef.current?.abort();
+      voiceAudioRef.current?.pause();
+      setVoiceMode(false);
+      setVoiceListening(false);
+      setVoiceSpeaking(false);
+    } else {
+      setVoiceMode(true);
+      startVoiceListening();
+    }
+  }, [voiceMode, startVoiceListening]);
+
+  // Cleanup voice mode on unmount
+  useEffect(() => {
+    return () => {
+      voiceRecognitionRef.current?.abort();
+      voiceAudioRef.current?.pause();
+    };
+  }, []);
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -891,6 +985,36 @@ export function ChatPage() {
               </div>
             )}
 
+            {/* Voice mode indicator */}
+            {voiceMode && (
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <div className={`flex items-center gap-2 px-4 py-1.5 text-xs rounded-full w-fit ${
+                  voiceSpeaking
+                    ? "text-primary bg-primary/10"
+                    : voiceListening
+                      ? "text-green-600 bg-green-500/10"
+                      : "text-muted-foreground bg-muted"
+                }`}>
+                  {voiceSpeaking ? (
+                    <>
+                      <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                      {t("chat.voiceModeSpeaking")}
+                    </>
+                  ) : voiceListening ? (
+                    <>
+                      <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                      {t("chat.voiceModeListening")}
+                    </>
+                  ) : (
+                    <>
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                      {t("chat.voiceMode")}
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* Recording indicator */}
             {isRecording && (
               <div className="flex items-center gap-2 px-4 py-1.5 text-xs text-destructive bg-destructive/10 rounded-full w-fit mx-auto mb-2">
@@ -992,8 +1116,35 @@ export function ChatPage() {
                 )}
               </div>
 
+              {/* Voice assistant mode button */}
+              <div className="relative group self-center">
+                <button
+                  type="button"
+                  onClick={isTopPlan ? toggleVoiceMode : undefined}
+                  disabled={isLoading}
+                  className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200 ${
+                    !isTopPlan
+                      ? "text-muted-foreground/30 cursor-not-allowed"
+                      : voiceMode
+                        ? "text-primary bg-primary/10 animate-pulse"
+                        : "text-muted-foreground hover:text-primary hover:bg-primary/10"
+                  } disabled:opacity-30 disabled:cursor-not-allowed`}
+                >
+                  <Headphones className="w-4 h-4" />
+                </button>
+                {!isTopPlan && (
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2
+                    px-2 py-1 text-xs bg-popover border border-border
+                    rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100
+                    transition-opacity pointer-events-none z-10">
+                    {t("chat.voiceModeUpgrade")}
+                  </div>
+                )}
+              </div>
+
               <button
                 onClick={handleSend}
+                data-voice-send
                 disabled={!input.trim() || isLoading}
                 className="w-8 h-8 rounded-xl bg-primary hover:bg-primary/90
                   disabled:opacity-30 disabled:cursor-not-allowed
