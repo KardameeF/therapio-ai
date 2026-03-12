@@ -401,7 +401,7 @@ export function ChatPage() {
     : chatHistory;
 
   return (
-    <div className="flex h-screen bg-background overflow-hidden">
+    <div className="flex bg-background overflow-hidden" style={{ height: '100dvh' }}>
 
       {/* SIDEBAR */}
       <motion.aside
