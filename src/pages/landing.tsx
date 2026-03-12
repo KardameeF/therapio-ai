@@ -140,7 +140,7 @@ export function LandingPage() {
             </motion.div>
 
             <motion.div
-              className="flex items-center gap-5 flex-wrap"
+              className="flex flex-wrap items-center gap-x-4 gap-y-2"
               variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } } }}
             >
               <div className="flex items-center gap-1.5 text-sm text-muted-foreground">

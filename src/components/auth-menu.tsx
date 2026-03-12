@@ -41,8 +41,8 @@ export function AuthMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm" className="h-10 px-4 rounded-lg border-2 border-border hover:border-primary transition-colors font-medium">
-          <User className="mr-2 h-4 w-4" />
-          {user.email}
+          <User className="h-4 w-4 sm:mr-2" />
+          <span className="hidden sm:inline">{user.email}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-64 rounded-xl shadow-soft-lg border-border/50 bg-card/95 backdrop-blur-sm">
