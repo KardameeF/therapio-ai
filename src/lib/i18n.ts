@@ -426,7 +426,7 @@ const resources = {
         goals: "Цели",
         billing: "Плащания",
         profile: "Профил",
-        admin: "Админ",
+        admin: "Адм.",
         backToChat: "← Към чата",
         legal: "Правни",
         terms: "Условия",
