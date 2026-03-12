@@ -713,7 +713,7 @@ export function ChatPage() {
         </div>
 
         {/* INPUT BAR */}
-        <div className="shrink-0 px-4 py-2 md:py-4 border-t border-border">
+        <div className="shrink-0 px-4 pt-2 pb-[max(0.25rem,env(safe-area-inset-bottom))] md:py-4 border-t border-border">
           <div className="max-w-2xl mx-auto w-full">
 
             {attachedImage && (
@@ -846,7 +846,7 @@ export function ChatPage() {
                 <Send className="w-4 h-4 text-primary-foreground" />
               </button>
             </div>
-            <p className="text-center text-xs text-muted-foreground mt-1 md:mt-2">
+            <p className="text-center text-xs text-muted-foreground mt-1 mb-0 leading-none">
               {t("chat.disclaimer")}
             </p>
             <input
