@@ -1,13 +1,29 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
-import { Plus, Send, User, Menu, X, PanelLeftOpen, PanelLeftClose, LogOut, Search, Mic, MicOff, Loader2, ImageIcon } from "lucide-react";
+import { Plus, Send, User, Menu, X, PanelLeftOpen, PanelLeftClose, LogOut, Search, Mic, MicOff, Loader2, ImageIcon, ClipboardList, CheckSquare, Lock } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 import { ThemeToggle } from "../components/theme-toggle";
 import { DisplayNamePrompt } from "../components/display-name-prompt";
 import { DisclaimerModal } from "../components/disclaimer-modal";
 import { useVoiceRecorder } from "../hooks/useVoiceRecorder";
 import { useTranslation } from "react-i18next";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../components/ui/dialog";
+
+interface SessionNote {
+  id: string;
+  content: string;
+  is_read: boolean;
+  created_at: string;
+}
+
+interface SessionTask {
+  id: string;
+  title: string;
+  description: string;
+  is_completed: boolean;
+  completed_at: string | null;
+}
 
 interface Message {
   id: string;
@@ -56,6 +72,10 @@ export function ChatPage() {
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
   const [placeholderVisible, setPlaceholderVisible] = useState(true);
   const [attachedImage, setAttachedImage] = useState<{ base64: string; preview: string } | null>(null);
+  const [notesModalSession, setNotesModalSession] = useState<string | number | null>(null);
+  const [tasksModalSession, setTasksModalSession] = useState<string | number | null>(null);
+  const [sessionNotes, setSessionNotes] = useState<SessionNote[]>([]);
+  const [sessionTasks, setSessionTasks] = useState<SessionTask[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const profilePopupRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -202,6 +222,7 @@ export function ChatPage() {
         body: JSON.stringify({
           messages: history.map(({ role, content }) => ({ role, content })),
           ...(attachedImage ? { image: attachedImage.base64 } : {}),
+          ...(currentSessionId ? { sessionId: currentSessionId } : {}),
         }),
       });
 
@@ -394,6 +415,49 @@ export function ChatPage() {
     }
   };
 
+  const openNotesModal = async (sessionId: string | number) => {
+    if (!isPaidPlan) return;
+    setNotesModalSession(sessionId);
+    const { data } = await supabase
+      .from("session_notes")
+      .select("*")
+      .eq("chat_session_id", sessionId)
+      .order("created_at", { ascending: false });
+    setSessionNotes((data as SessionNote[]) || []);
+    if (data?.length) {
+      await supabase
+        .from("session_notes")
+        .update({ is_read: true })
+        .eq("chat_session_id", sessionId);
+    }
+  };
+
+  const openTasksModal = async (sessionId: string | number) => {
+    if (!isPaidPlan) return;
+    setTasksModalSession(sessionId);
+    const { data } = await supabase
+      .from("session_tasks")
+      .select("*")
+      .eq("chat_session_id", sessionId)
+      .order("created_at", { ascending: true });
+    setSessionTasks((data as SessionTask[]) || []);
+  };
+
+  const toggleTaskComplete = async (taskId: string, currentlyCompleted: boolean) => {
+    const completed_at = !currentlyCompleted ? new Date().toISOString() : null;
+    await supabase
+      .from("session_tasks")
+      .update({ is_completed: !currentlyCompleted, completed_at })
+      .eq("id", taskId);
+    setSessionTasks((prev) =>
+      prev.map((t) =>
+        t.id === taskId
+          ? { ...t, is_completed: !currentlyCompleted, completed_at }
+          : t
+      )
+    );
+  };
+
   const filteredHistory = searchQuery.trim()
     ? chatHistory.filter((s) =>
         s.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -517,19 +581,43 @@ export function ChatPage() {
                       {new Date(session.updated_at).toLocaleDateString("bg-BG", { day: "numeric", month: "short" })}
                     </p>
                   </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      deleteSession(session.id);
-                    }}
-                    className="absolute right-2 top-1/2 -translate-y-1/2
-                      opacity-0 group-hover:opacity-100 transition-opacity
-                      p-1 rounded hover:bg-destructive/20
-                      text-muted-foreground hover:text-destructive"
-                    title={t("chat.deleteSession")}
-                  >
-                    <X className="h-3.5 w-3.5" />
-                  </button>
+                  <div className="absolute right-1 top-1/2 -translate-y-1/2
+                    opacity-0 group-hover:opacity-100 transition-opacity
+                    flex items-center gap-0.5">
+                    {isPaidPlan ? (
+                      <>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); openNotesModal(session.id); }}
+                          className="p-1 rounded hover:bg-secondary text-muted-foreground hover:text-primary"
+                          title={t("chat.sessionNotes")}
+                        >
+                          <ClipboardList className="h-3 w-3" />
+                        </button>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); openTasksModal(session.id); }}
+                          className="p-1 rounded hover:bg-secondary text-muted-foreground hover:text-primary"
+                          title={t("chat.sessionTasks")}
+                        >
+                          <CheckSquare className="h-3 w-3" />
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        onClick={(e) => e.stopPropagation()}
+                        className="p-1 rounded text-muted-foreground/50 cursor-not-allowed"
+                        title={t("chat.upgradeForInsights")}
+                      >
+                        <Lock className="h-3 w-3" />
+                      </button>
+                    )}
+                    <button
+                      onClick={(e) => { e.stopPropagation(); deleteSession(session.id); }}
+                      className="p-1 rounded hover:bg-destructive/20 text-muted-foreground hover:text-destructive"
+                      title={t("chat.deleteSession")}
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
                 </div>
               ))
             )}
@@ -863,6 +951,80 @@ export function ChatPage() {
 
       <DisplayNamePrompt />
       <DisclaimerModal />
+
+      {/* Session Notes Modal */}
+      <Dialog open={notesModalSession !== null} onOpenChange={(open) => { if (!open) setNotesModalSession(null); }}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>{t("chat.sessionNotes")}</DialogTitle>
+            <DialogDescription className="sr-only">{t("chat.sessionNotes")}</DialogDescription>
+          </DialogHeader>
+          {sessionNotes.length === 0 ? (
+            <p className="text-sm text-muted-foreground py-4 text-center">
+              {t("chat.sessionNotesEmpty")}
+            </p>
+          ) : (
+            <div className="space-y-3 max-h-[60vh] overflow-y-auto">
+              {sessionNotes.map((note) => (
+                <div key={note.id} className="rounded-lg border border-border bg-muted/30 p-3">
+                  <p className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">
+                    {note.content}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground mt-2">
+                    {new Date(note.created_at).toLocaleString()}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Session Tasks Modal */}
+      <Dialog open={tasksModalSession !== null} onOpenChange={(open) => { if (!open) setTasksModalSession(null); }}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>{t("chat.sessionTasks")}</DialogTitle>
+            <DialogDescription className="sr-only">{t("chat.sessionTasks")}</DialogDescription>
+          </DialogHeader>
+          {sessionTasks.length === 0 ? (
+            <p className="text-sm text-muted-foreground py-4 text-center">
+              {t("chat.sessionTasksEmpty")}
+            </p>
+          ) : (
+            <div className="space-y-2 max-h-[60vh] overflow-y-auto">
+              {sessionTasks.map((task) => (
+                <label
+                  key={task.id}
+                  className={`flex items-start gap-3 rounded-lg border border-border p-3 cursor-pointer transition-colors ${
+                    task.is_completed ? "bg-muted/40 opacity-70" : "hover:bg-muted/20"
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={task.is_completed}
+                    onChange={() => toggleTaskComplete(task.id, task.is_completed)}
+                    className="mt-0.5 h-4 w-4 rounded border-border accent-primary shrink-0"
+                  />
+                  <div className="min-w-0">
+                    <p className={`text-sm font-medium ${task.is_completed ? "line-through text-muted-foreground" : "text-foreground"}`}>
+                      {task.title}
+                    </p>
+                    {task.description && (
+                      <p className="text-xs text-muted-foreground mt-0.5">{task.description}</p>
+                    )}
+                    {task.is_completed && task.completed_at && (
+                      <p className="text-[10px] text-muted-foreground mt-1">
+                        {t("chat.completed")} {new Date(task.completed_at).toLocaleDateString()}
+                      </p>
+                    )}
+                  </div>
+                </label>
+              ))}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

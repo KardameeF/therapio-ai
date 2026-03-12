@@ -399,7 +399,13 @@ const resources = {
         upgradeNow: "Upgrade now",
         imageUpgradeRequired: "Upgrade for image support",
         imageTooLarge: "Image too large (max 4MB)",
-        imageAttached: "Image attached"
+        imageAttached: "Image attached",
+        sessionNotes: "Session Notes",
+        sessionNotesEmpty: "No notes for this session yet.",
+        sessionTasks: "Session Tasks",
+        sessionTasksEmpty: "No tasks for this session yet.",
+        upgradeForInsights: "Upgrade to unlock session insights",
+        completed: "Completed"
       },
       footer: {
         rights: "© 2026 Eterapp. All rights reserved.",
@@ -808,7 +814,13 @@ const resources = {
         upgradeNow: "Надгради сега",
         imageUpgradeRequired: "Надгради плана за изображения",
         imageTooLarge: "Изображението е твърде голямо (макс. 4MB)",
-        imageAttached: "Изображение прикачено"
+        imageAttached: "Изображение прикачено",
+        sessionNotes: "Бележки от сесията",
+        sessionNotesEmpty: "Все още няма бележки за тази сесия.",
+        sessionTasks: "Задачи от сесията",
+        sessionTasksEmpty: "Все още няма задачи за тази сесия.",
+        upgradeForInsights: "Надгради за достъп до анализ на сесията",
+        completed: "Изпълнена"
       },
       footer: {
         rights: "© 2026 Eterapp. Всички права запазени.",
