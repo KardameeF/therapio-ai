@@ -42,8 +42,9 @@ export function Header() {
             <AuthMenu />
           ) : (
             <Link to="/login">
-              <Button variant="outline" size="sm">
-                {t("header.loginOrSignup")}
+              <Button variant="outline" size="sm" className="text-xs sm:text-sm px-2 sm:px-4 h-8 sm:h-9">
+                <span className="sm:hidden">Вход</span>
+                <span className="hidden sm:inline">{t("header.loginOrSignup")}</span>
               </Button>
             </Link>
           )}

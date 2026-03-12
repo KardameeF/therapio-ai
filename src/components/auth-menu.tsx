@@ -40,9 +40,9 @@ export function AuthMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" className="h-10 px-4 rounded-lg border-2 border-border hover:border-primary transition-colors font-medium">
+        <Button variant="outline" size="sm" className="h-8 sm:h-10 px-2 sm:px-4 rounded-lg border-2 border-border hover:border-primary transition-colors font-medium">
           <User className="h-4 w-4 sm:mr-2" />
-          <span className="hidden sm:inline">{user.email}</span>
+          <span className="hidden sm:inline text-sm">{user.email}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-64 rounded-xl shadow-soft-lg border-border/50 bg-card/95 backdrop-blur-sm">
