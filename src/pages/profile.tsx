@@ -5,7 +5,7 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { useAuth } from "../providers/AuthProvider";
 import { supabase } from "../lib/supabaseClient";
-import { User, Mail, Eye, EyeOff } from "lucide-react";
+import { User, Mail, Eye, EyeOff, Volume2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 interface ProfileFormData {
@@ -30,6 +30,8 @@ export function ProfilePage() {
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [forgotPasswordSent, setForgotPasswordSent] = useState(false);
+  const [voiceGender, setVoiceGender] = useState<"female" | "male">("female");
+  const [voiceSaved, setVoiceSaved] = useState(false);
   const { user, signOut } = useAuth();
   const { t } = useTranslation();
 
@@ -56,12 +58,13 @@ export function ProfilePage() {
       if (!session) return;
       const { data } = await supabase
         .from("profiles")
-        .select("display_name, bio")
+        .select("display_name, bio, preferred_voice_gender")
         .eq("id", session.user.id)
         .single();
       if (data) {
         setValue("displayName", data.display_name ?? "");
         setValue("bio", data.bio ?? "");
+        if (data.preferred_voice_gender) setVoiceGender(data.preferred_voice_gender);
       }
     };
     load();
@@ -205,6 +208,46 @@ export function ProfilePage() {
             </Button>
           </form>
         </div>
+      </div>
+
+      {/* Voice Preference */}
+      <div className="rounded-2xl border border-border bg-card p-6">
+        <div className="mb-4">
+          <h3 className="text-base font-semibold flex items-center gap-2">
+            <Volume2 className="h-4 w-4 text-primary" />
+            {t("profile.voicePreference.title")}
+          </h3>
+          <p className="text-sm text-muted-foreground mt-1">{t("profile.voicePreference.subtitle")}</p>
+        </div>
+        <div className="flex gap-3">
+          {(["female", "male"] as const).map((gender) => (
+            <button
+              key={gender}
+              onClick={async () => {
+                setVoiceGender(gender);
+                setVoiceSaved(false);
+                const { data: { session } } = await supabase.auth.getSession();
+                if (!session) return;
+                await supabase
+                  .from("profiles")
+                  .update({ preferred_voice_gender: gender })
+                  .eq("id", session.user.id);
+                setVoiceSaved(true);
+                setTimeout(() => setVoiceSaved(false), 2000);
+              }}
+              className={`flex-1 py-2.5 px-4 rounded-xl border text-sm font-medium transition-all ${
+                voiceGender === gender
+                  ? "border-primary bg-primary/10 text-primary"
+                  : "border-border bg-card text-muted-foreground hover:border-primary/40"
+              }`}
+            >
+              {t(`profile.voicePreference.${gender}`)}
+            </button>
+          ))}
+        </div>
+        {voiceSaved && (
+          <p className="text-xs text-green-600 mt-2">{t("profile.voicePreference.saved")}</p>
+        )}
       </div>
 
       {/* Security — password change */}

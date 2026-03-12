@@ -11,6 +11,16 @@ const supabase = createClient(
 const FAREWELL_RE =
   /\b(чао|довиждане|лека нощ|благодаря ти|мерси|сбогом|приятен ден|bye|goodbye|good night|thank you|thanks|see you|take care)\b/i;
 
+const DIFFICULT_CONDITIONS = [
+  "anxiety",
+  "depression",
+  "loneliness",
+  "grief",
+  "panic_attacks",
+  "chronic_stress",
+  "low_self_esteem",
+] as const;
+
 async function generateSessionInsights(
   userId: string,
   sessionId: string,
@@ -68,6 +78,81 @@ Respond ONLY with valid JSON:
   }
 
   return true;
+}
+
+async function matchTherapyAudio(
+  userId: string,
+  sessionId: string,
+  conversationMessages: { role: string; content: string }[]
+): Promise<string | null> {
+  const { data: existingTherapy } = await supabase
+    .from("user_therapy_sessions")
+    .select("id")
+    .eq("chat_session_id", sessionId)
+    .limit(1);
+
+  if (existingTherapy?.length) return null;
+
+  const classifyCompletion = await openai.chat.completions.create({
+    model: "gpt-4o-mini",
+    messages: [
+      {
+        role: "system",
+        content: `Analyze this conversation and decide if the user is dealing with a difficult emotional topic.
+If yes, classify it as ONE of: ${DIFFICULT_CONDITIONS.join(", ")}.
+If the conversation is casual / light / not emotionally difficult, respond with "none".
+
+Respond ONLY with valid JSON: {"condition":"..."}`,
+      },
+      ...conversationMessages.map((m) => ({
+        role: m.role as "user" | "assistant",
+        content: m.content,
+      })),
+    ],
+    max_tokens: 50,
+    response_format: { type: "json_object" },
+  });
+
+  const classifyRaw = classifyCompletion.choices[0].message.content || "{}";
+  const { condition } = JSON.parse(classifyRaw);
+
+  if (!condition || condition === "none") return null;
+
+  const { data: profileData } = await supabase
+    .from("profiles")
+    .select("preferred_voice_gender")
+    .eq("id", userId)
+    .single();
+
+  const voiceGender = profileData?.preferred_voice_gender || "female";
+
+  // Try exact match first, then any gender for that condition, then fallback
+  let { data: therapies } = await supabase
+    .from("therapy_audio")
+    .select("id")
+    .eq("condition", condition)
+    .eq("voice_gender", voiceGender)
+    .limit(5);
+
+  if (!therapies?.length) {
+    ({ data: therapies } = await supabase
+      .from("therapy_audio")
+      .select("id")
+      .eq("condition", condition)
+      .limit(5));
+  }
+
+  if (!therapies?.length) return null;
+
+  const picked = therapies[Math.floor(Math.random() * therapies.length)];
+
+  await supabase.from("user_therapy_sessions").insert({
+    user_id: userId,
+    chat_session_id: sessionId,
+    therapy_audio_id: picked.id,
+  });
+
+  return picked.id;
 }
 
 export const handler: Handler = async (event) => {
@@ -162,8 +247,9 @@ Respond in the same language the user writes in (Bulgarian or English).`,
 
     const reply = completion.choices[0].message.content;
 
-    // Session insights: paid plans only, after 10+ exchanges or farewell
     let hasNewInsights = false;
+    let therapyAudioId: string | null = null;
+
     if (sessionId && plan !== "first_step") {
       const userMsgCount = messages.filter(
         (m: { role: string }) => m.role === "user"
@@ -172,12 +258,19 @@ Respond in the same language the user writes in (Bulgarian or English).`,
         [...messages].reverse().find((m: { role: string }) => m.role === "user")
           ?.content || "";
 
-      if (userMsgCount >= 10 || FAREWELL_RE.test(lastUserMsg)) {
-        try {
-          const plainMessages = messages.map((m: { role: string; content: string }) => ({
+      const shouldAnalyze =
+        userMsgCount >= 10 || FAREWELL_RE.test(lastUserMsg);
+
+      if (shouldAnalyze) {
+        const plainMessages = messages.map(
+          (m: { role: string; content: string }) => ({
             role: m.role,
             content: m.content,
-          }));
+          })
+        );
+
+        // Notes + tasks (personal_growth and expanded_horizons)
+        try {
           hasNewInsights = await generateSessionInsights(
             user.id,
             sessionId,
@@ -186,13 +279,32 @@ Respond in the same language the user writes in (Bulgarian or English).`,
         } catch (err) {
           console.error("Session insights error:", err);
         }
+
+        // Therapy audio matching (expanded_horizons only)
+        if (plan === "expanded_horizons") {
+          try {
+            therapyAudioId = await matchTherapyAudio(
+              user.id,
+              sessionId,
+              plainMessages
+            );
+          } catch (err) {
+            console.error("Therapy audio match error:", err);
+          }
+        }
       }
     }
 
     return {
       statusCode: 200,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ reply, used: used + 1, limit, hasNewInsights }),
+      body: JSON.stringify({
+        reply,
+        used: used + 1,
+        limit,
+        hasNewInsights,
+        therapyAudioId,
+      }),
     };
   } catch (err) {
     console.error("OpenAI error:", err);

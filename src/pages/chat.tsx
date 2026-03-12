@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
-import { Plus, Send, User, Menu, X, PanelLeftOpen, PanelLeftClose, LogOut, Search, Mic, MicOff, Loader2, ImageIcon, ClipboardList, CheckSquare, Lock } from "lucide-react";
+import { Plus, Send, User, Menu, X, PanelLeftOpen, PanelLeftClose, LogOut, Search, Mic, MicOff, Loader2, ImageIcon, ClipboardList, CheckSquare, Lock, Headphones } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 import { ThemeToggle } from "../components/theme-toggle";
 import { DisplayNamePrompt } from "../components/display-name-prompt";
@@ -23,6 +23,15 @@ interface SessionTask {
   description: string;
   is_completed: boolean;
   completed_at: string | null;
+}
+
+interface TherapyAudio {
+  id: string;
+  title: string;
+  description: string;
+  duration_seconds: number;
+  storage_path: string;
+  condition: string;
 }
 
 interface Message {
@@ -76,6 +85,9 @@ export function ChatPage() {
   const [tasksModalSession, setTasksModalSession] = useState<string | number | null>(null);
   const [sessionNotes, setSessionNotes] = useState<SessionNote[]>([]);
   const [sessionTasks, setSessionTasks] = useState<SessionTask[]>([]);
+  const [therapyModalSession, setTherapyModalSession] = useState<string | number | null>(null);
+  const [therapyAudio, setTherapyAudio] = useState<TherapyAudio | null>(null);
+  const [sessionsWithTherapy, setSessionsWithTherapy] = useState<Set<string>>(new Set());
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const profilePopupRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -187,6 +199,17 @@ export function ChatPage() {
       }
 
       setUserEmail(session.user.email ?? "");
+
+      // Preload which sessions have therapy audio (expanded_horizons)
+      const { data: therapySessions } = await supabase
+        .from("user_therapy_sessions")
+        .select("chat_session_id")
+        .eq("user_id", session.user.id);
+      if (therapySessions?.length) {
+        setSessionsWithTherapy(
+          new Set(therapySessions.map((ts: { chat_session_id: string }) => String(ts.chat_session_id)))
+        );
+      }
     };
     loadData();
   }, []);
@@ -242,6 +265,10 @@ export function ChatPage() {
 
       setMessagesUsed(data.used ?? messagesUsed + 1);
       setMessagesLimit(data.limit ?? messagesLimit);
+
+      if (data.therapyAudioId && currentSessionId) {
+        setSessionsWithTherapy((prev) => new Set([...prev, String(currentSessionId)]));
+      }
 
       setIsLoading(false);
       setAttachedImage(null);
@@ -458,6 +485,38 @@ export function ChatPage() {
     );
   };
 
+  const openTherapyModal = async (sessionId: string | number) => {
+    setTherapyModalSession(sessionId);
+    setTherapyAudio(null);
+    const { data: uts } = await supabase
+      .from("user_therapy_sessions")
+      .select("therapy_audio_id")
+      .eq("chat_session_id", sessionId)
+      .limit(1)
+      .single();
+    if (uts?.therapy_audio_id) {
+      const { data: audio } = await supabase
+        .from("therapy_audio")
+        .select("id, title, description, duration_seconds, storage_path, condition")
+        .eq("id", uts.therapy_audio_id)
+        .single();
+      if (audio) setTherapyAudio(audio as TherapyAudio);
+      // Mark as listened
+      await supabase
+        .from("user_therapy_sessions")
+        .update({ listened_at: new Date().toISOString() })
+        .eq("chat_session_id", sessionId);
+    }
+  };
+
+  const formatDuration = (seconds: number) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}:${s.toString().padStart(2, "0")}`;
+  };
+
+  const isTopPlan = currentPlan === "expanded_horizons";
+
   const filteredHistory = searchQuery.trim()
     ? chatHistory.filter((s) =>
         s.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -600,6 +659,15 @@ export function ChatPage() {
                         >
                           <CheckSquare className="h-3 w-3" />
                         </button>
+                        {sessionsWithTherapy.has(String(session.id)) && (
+                          <button
+                            onClick={(e) => { e.stopPropagation(); openTherapyModal(session.id); }}
+                            className="p-1 rounded hover:bg-secondary text-muted-foreground hover:text-primary"
+                            title={t("chat.therapyAudio")}
+                          >
+                            <Headphones className="h-3 w-3" />
+                          </button>
+                        )}
                       </>
                     ) : (
                       <button
@@ -1021,6 +1089,38 @@ export function ChatPage() {
                   </div>
                 </label>
               ))}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Therapy Audio Modal */}
+      <Dialog open={therapyModalSession !== null} onOpenChange={(open) => { if (!open) setTherapyModalSession(null); }}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>{t("chat.therapyAudio")}</DialogTitle>
+            <DialogDescription className="sr-only">{t("chat.therapyAudio")}</DialogDescription>
+          </DialogHeader>
+          {!therapyAudio ? (
+            <p className="text-sm text-muted-foreground py-4 text-center">
+              {t("chat.therapyAudioEmpty")}
+            </p>
+          ) : (
+            <div className="space-y-4">
+              <div className="rounded-lg border border-border bg-muted/30 p-4">
+                <h4 className="font-medium text-foreground">{therapyAudio.title}</h4>
+                {therapyAudio.description && (
+                  <p className="text-sm text-muted-foreground mt-1">{therapyAudio.description}</p>
+                )}
+                <p className="text-xs text-muted-foreground mt-2">
+                  {t("chat.duration")}: {formatDuration(therapyAudio.duration_seconds)}
+                </p>
+              </div>
+              <audio
+                controls
+                className="w-full"
+                src={`${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/${therapyAudio.storage_path}`}
+              />
             </div>
           )}
         </DialogContent>

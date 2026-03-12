@@ -292,6 +292,13 @@ const resources = {
           successMsg: "Profile updated successfully!",
           errorMsg: "Error updating. Please try again."
         },
+        voicePreference: {
+          title: "Preferred voice",
+          subtitle: "Choose the voice for guided therapy sessions",
+          female: "Female",
+          male: "Male",
+          saved: "Saved!"
+        },
         dangerZone: {
           title: "Danger zone",
           subtitle: "Irreversible actions",
@@ -405,7 +412,12 @@ const resources = {
         sessionTasks: "Session Tasks",
         sessionTasksEmpty: "No tasks for this session yet.",
         upgradeForInsights: "Upgrade to unlock session insights",
-        completed: "Completed"
+        completed: "Completed",
+        therapyAudio: "Guided Therapy",
+        therapyAudioEmpty: "No therapy audio for this session.",
+        upgradeForTherapy: "Upgrade to Expanded Horizons for guided therapies",
+        listenNow: "Listen now",
+        duration: "Duration"
       },
       footer: {
         rights: "© 2026 Eterapp. All rights reserved.",
@@ -693,6 +705,13 @@ const resources = {
           successMsg: "Профилът е обновен успешно!",
           errorMsg: "Грешка при обновяване. Опитай отново."
         },
+        voicePreference: {
+          title: "Предпочитан глас",
+          subtitle: "Избери глас за насочените терапии",
+          female: "Женски",
+          male: "Мъжки",
+          saved: "Запазено!"
+        },
         dangerZone: {
           title: "Опасна зона",
           subtitle: "Необратими действия",
@@ -820,7 +839,12 @@ const resources = {
         sessionTasks: "Задачи от сесията",
         sessionTasksEmpty: "Все още няма задачи за тази сесия.",
         upgradeForInsights: "Надгради за достъп до анализ на сесията",
-        completed: "Изпълнена"
+        completed: "Изпълнена",
+        therapyAudio: "Насочена терапия",
+        therapyAudioEmpty: "Няма аудио терапия за тази сесия.",
+        upgradeForTherapy: "Надгради до Разширени хоризонти за насочени терапии",
+        listenNow: "Слушай сега",
+        duration: "Продължителност"
       },
       footer: {
         rights: "© 2026 Eterapp. Всички права запазени.",
