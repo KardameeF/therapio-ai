@@ -163,7 +163,7 @@ export function AdminPage() {
             <tr>
               <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">{t("admin.table.email")}</th>
               <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">{t("admin.table.plan")}</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground hidden sm:table-cell">{t("admin.table.messages")}</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">{t("admin.table.messages")}</th>
               <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground hidden sm:table-cell">{t("admin.table.registration")}</th>
               <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">{t("admin.table.actions")}</th>
             </tr>
@@ -184,7 +184,7 @@ export function AdminPage() {
                     <option value="expanded_horizons">{t("admin.plans.expanded_horizons")}</option>
                   </select>
                 </td>
-                <td className="px-4 py-3 text-muted-foreground tabular-nums hidden sm:table-cell">{user.messages_used}</td>
+                <td className="px-4 py-3 text-muted-foreground tabular-nums">{user.messages_used}</td>
                 <td className="px-4 py-3 text-muted-foreground text-xs tabular-nums hidden sm:table-cell">
                   {new Date(user.created_at).toLocaleDateString("bg-BG")}
                 </td>

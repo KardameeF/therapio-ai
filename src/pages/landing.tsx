@@ -188,7 +188,7 @@ export function LandingPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-border/60 rounded-xl overflow-hidden border border-border/60">
+          <div className="grid gap-px bg-border/60 rounded-xl overflow-hidden border border-border/60" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))' }}>
             {features.map(({ Icon, titleKey, descKey }) => (
               <div
                 key={titleKey}
@@ -211,7 +211,7 @@ export function LandingPage() {
             <p className="text-lg text-muted-foreground">{t("landing.pricing.subtitle")}</p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-4 md:gap-6">
+          <div className="grid gap-4 md:gap-6" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))' }}>
             {plans.map((plan) => {
               const planFeatures = t(plan.featuresKey, { returnObjects: true }) as string[];
               const isHighlighted = plan.key === "personal_growth";
