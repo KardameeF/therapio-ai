@@ -314,6 +314,9 @@ export function LandingPage() {
           >
             {t("footer.cookies")}
           </a>
+          <button className="iubenda-cs-preferences-link text-sm text-muted-foreground hover:text-foreground transition-colors bg-transparent border-none cursor-pointer p-0">
+            {t("footer.cookieSettings")}
+          </button>
         </div>
         <p className="text-xs text-muted-foreground/70 mt-2">
           Защитено от reCAPTCHA —{" "}

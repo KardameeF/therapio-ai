@@ -407,7 +407,8 @@ const resources = {
         terms: "Terms",
         privacy: "Privacy",
         gdpr: "GDPR",
-        cookies: "Cookies"
+        cookies: "Cookies",
+        cookieSettings: "Cookie Settings"
       }
     }
   },
@@ -815,7 +816,8 @@ const resources = {
         terms: "Условия",
         privacy: "Поверителност",
         gdpr: "GDPR",
-        cookies: "Бисквитки"
+        cookies: "Бисквитки",
+        cookieSettings: "Настройки за бисквитки"
       }
     }
   }

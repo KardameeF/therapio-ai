@@ -114,6 +114,11 @@ body {
   display: none !important;
 }
 
+/* Скриваме iubenda плаващия бутон глобално */
+.iubenda-tp-btn {
+  display: none !important;
+}
+
 /* Flat design — нула box-shadow */
 [class*="shadow-"] {
   box-shadow: none !important;
