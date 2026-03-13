@@ -1032,7 +1032,7 @@ export function ChatPage() {
 
         {/* INPUT BAR */}
         <div className="shrink-0 px-3 pt-1 pb-[max(0.25rem,env(safe-area-inset-bottom))] md:py-4 border-t border-border">
-          <div className="max-w-2xl mx-auto w-full">
+          <div className="max-w-2xl mx-auto w-full flex flex-col gap-1.5">
 
             {attachedImage && (
               <div className="flex items-center gap-2 mb-2">
@@ -1249,7 +1249,7 @@ export function ChatPage() {
                 </motion.div>
               )}
             </div>
-            <p className="text-center text-xs text-muted-foreground mt-0.5 mb-3 leading-none">
+            <p className="text-center text-xs text-muted-foreground pb-1">
               {t("chat.disclaimer")}
             </p>
             <input
