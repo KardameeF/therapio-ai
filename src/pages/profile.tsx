@@ -37,6 +37,7 @@ export function ProfilePage() {
   const [voiceSaved, setVoiceSaved] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState("");
   const { user, signOut } = useAuth();
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -116,6 +117,7 @@ export function ProfilePage() {
     } finally {
       setIsDeleting(false);
       setShowDeleteDialog(false);
+      setDeleteConfirmText("");
     }
   };
 
@@ -409,38 +411,50 @@ export function ProfilePage() {
             {t("profile.dangerZone.signOut")}
           </Button>
         </div>
-        <div className="flex items-center justify-between py-3 border-t border-border mt-3">
+        <div className="flex items-center justify-between py-3 border-t border-destructive/20 mt-3">
           <div>
             <p className="text-sm font-medium text-destructive">{t("profile.deleteAccount")}</p>
             <p className="text-xs text-muted-foreground">{t("profile.deleteAccountDesc")}</p>
           </div>
-          <Button variant="destructive" onClick={() => setShowDeleteDialog(true)}>
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={() => setShowDeleteDialog(true)}
+            disabled={isDeleting}
+          >
             {t("profile.deleteAccountBtn")}
           </Button>
         </div>
       </div>
 
-      <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+      <Dialog open={showDeleteDialog} onOpenChange={(open) => { setShowDeleteDialog(open); if (!open) setDeleteConfirmText(""); }}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{t("profile.deleteConfirmTitle")}</DialogTitle>
+            <DialogTitle className="text-destructive">{t("profile.deleteConfirmTitle")}</DialogTitle>
             <DialogDescription>{t("profile.deleteConfirmDesc")}</DialogDescription>
           </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowDeleteDialog(false)}>
+          <div className="space-y-3 py-2">
+            <p className="text-sm text-muted-foreground">{t("profile.deleteTypeConfirm")}</p>
+            <input
+              type="text"
+              placeholder={t("profile.deleteTypePlaceholder")}
+              value={deleteConfirmText}
+              onChange={e => setDeleteConfirmText(e.target.value)}
+              className="w-full px-3 py-2 text-sm border border-border rounded-md bg-background text-foreground"
+            />
+          </div>
+          <div className="flex gap-2 justify-end">
+            <Button variant="outline" onClick={() => { setShowDeleteDialog(false); setDeleteConfirmText(""); }}>
               {t("profile.deleteCancel")}
             </Button>
-            <Button variant="destructive" disabled={isDeleting} onClick={handleDeleteAccount}>
-              {isDeleting && (
-                <motion.span
-                  className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full mr-2"
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-                />
-              )}
-              {t("profile.deleteConfirmBtn")}
+            <Button
+              variant="destructive"
+              disabled={deleteConfirmText !== t("profile.deleteTypePlaceholder") || isDeleting}
+              onClick={handleDeleteAccount}
+            >
+              {isDeleting ? t("common.loading") : t("profile.deleteConfirmBtn")}
             </Button>
-          </DialogFooter>
+          </div>
         </DialogContent>
       </Dialog>
     </div>

@@ -319,9 +319,11 @@ const resources = {
         deleteAccount: "Delete account",
         deleteAccountDesc: "All data will be permanently deleted",
         deleteAccountBtn: "Delete account",
-        deleteConfirmTitle: "Are you sure?",
+        deleteConfirmTitle: "⚠️ Delete Account",
         deleteConfirmDesc: "This action is irreversible. All conversations, notes, and data will be permanently deleted.",
-        deleteConfirmBtn: "Yes, delete everything",
+        deleteTypeConfirm: "Type DELETE to confirm:",
+        deleteTypePlaceholder: "DELETE",
+        deleteConfirmBtn: "Delete forever",
         deleteCancel: "Cancel"
       },
       admin: {
@@ -842,11 +844,13 @@ const resources = {
           signOutDesc: "Излез от акаунта на това устройство"
         },
         deleteAccount: "Изтрий акаунта",
-        deleteAccountDesc: "Всички данни ще бъдат изтрити завинаги",
+        deleteAccountDesc: "Изтрива всички данни завинаги",
         deleteAccountBtn: "Изтрий акаунта",
-        deleteConfirmTitle: "Сигурен ли си?",
+        deleteConfirmTitle: "⚠️ Изтриване на акаунт",
         deleteConfirmDesc: "Това действие е необратимо. Всички разговори, бележки и данни ще бъдат изтрити завинаги.",
-        deleteConfirmBtn: "Да, изтрий всичко",
+        deleteTypeConfirm: "Напиши ИЗТРИЙ за да потвърдиш:",
+        deleteTypePlaceholder: "ИЗТРИЙ",
+        deleteConfirmBtn: "Изтрий завинаги",
         deleteCancel: "Отказ"
       },
       security: {
