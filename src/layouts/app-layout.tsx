@@ -4,10 +4,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Header } from "../components/header";
 import { useTranslation } from "react-i18next";
 import { cn } from "../lib/utils";
-import { User, FileText, Shield, PanelLeftOpen, PanelLeftClose, MessageCircle } from "lucide-react";
+import { User, CreditCard, Sparkles, FileText, Shield, PanelLeftOpen, PanelLeftClose, MessageCircle } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 
 const appNav = [
+  { to: "/billing", label: "nav.billing", icon: CreditCard },
+  { to: "/features", label: "nav.features", icon: Sparkles },
   { to: "/profile", label: "nav.profile", icon: User },
 ] as const;
 
@@ -175,6 +177,14 @@ export function AppLayout() {
             <MessageCircle className="w-5 h-5 text-muted-foreground" />
             <span className="text-[10px] text-muted-foreground">{t("nav.backToChat").replace("← ", "")}</span>
           </Link>
+          <NavLink to="/billing" className={({ isActive }) => `flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-colors ${isActive ? "text-primary" : "text-muted-foreground hover:bg-secondary"}`}>
+            <CreditCard className="w-5 h-5" />
+            <span className="text-[10px]">{t("nav.billing")}</span>
+          </NavLink>
+          <NavLink to="/features" className={({ isActive }) => `flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-colors ${isActive ? "text-primary" : "text-muted-foreground hover:bg-secondary"}`}>
+            <Sparkles className="w-5 h-5" />
+            <span className="text-[10px]">{t("nav.features")}</span>
+          </NavLink>
           <NavLink to="/profile" className={({ isActive }) => `flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-colors ${isActive ? "text-primary" : "text-muted-foreground hover:bg-secondary"}`}>
             <User className="w-5 h-5" />
             <span className="text-[10px]">{t("nav.profile")}</span>
