@@ -403,7 +403,7 @@ const resources = {
         greetingSub: "I'm here for you. You can share anything.",
         messagesLeft: "messages left",
         upgradeForMore: "Upgrade for more",
-        limitReached: "You've reached your monthly message limit.",
+        limitReached: "Monthly message limit reached.",
         upgradeNow: "Upgrade now",
         imageUpgradeRequired: "Upgrade for image support",
         imageTooLarge: "Image too large (max 4MB)",
@@ -424,8 +424,8 @@ const resources = {
         voiceModeUpgrade: "Upgrade to Expanded Horizons for voice assistant",
         voiceModeSpeaking: "Speaking...",
         voiceModeListening: "Listening...",
-        warning75: "You've used {{used}} of {{limit}} messages (75%). Consider upgrading your plan.",
-        warning90: "Almost at your limit! {{used}}/{{limit}} messages used. Add credits to continue.",
+        warning75: "You've used {{used}}/{{limit}} messages this month (75%). Consider upgrading.",
+        warning90: "Almost at your limit — {{used}}/{{limit}} messages used. Add credits to continue.",
         upgradePlan: "Upgrade or add credits →"
       },
       featuresPage: {
@@ -911,7 +911,7 @@ const resources = {
         greetingSub: "Тук съм за теб. Можеш да споделиш всичко.",
         messagesLeft: "съобщения остават",
         upgradeForMore: "Надгради за повече",
-        limitReached: "Достигнахте месечния лимит на съобщенията.",
+        limitReached: "Месечният лимит на съобщенията е достигнат.",
         upgradeNow: "Надгради сега",
         imageUpgradeRequired: "Надгради плана за изображения",
         imageTooLarge: "Изображението е твърде голямо (макс. 4MB)",
@@ -932,8 +932,8 @@ const resources = {
         voiceModeUpgrade: "Надгради до Разширени хоризонти за гласов асистент",
         voiceModeSpeaking: "Говори...",
         voiceModeListening: "Слуша...",
-        warning75: "Използвали сте {{used}} от {{limit}} съобщения (75%). Помислете за надграждане.",
-        warning90: "Почти сте достигнали лимита! {{used}}/{{limit}} съобщения. Добавете кредити за да продължите.",
+        warning75: "Използвали сте {{used}}/{{limit}} съобщения този месец (75%). Помислете за надграждане.",
+        warning90: "Почти сте на лимита — {{used}}/{{limit}} съобщения. Добавете кредити за да продължите.",
         upgradePlan: "Надгради или добави кредити →"
       },
       featuresPage: {
