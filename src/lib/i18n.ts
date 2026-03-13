@@ -188,16 +188,16 @@ const resources = {
           title: "How Eterapp works",
           subtitle: "Three steps to better emotional wellbeing",
           step1: {
-            title: "Sign up for free",
-            desc: "No credit card needed. Get 30 free conversations per month instantly."
+            title: "Choose your type of conversation",
+            desc: "Need to vent? Want to understand yourself better? Working through something specific? Eterapp asks — and offers the kind of conversation you need right now."
           },
           step2: {
-            title: "Talk to Eterapp",
-            desc: "AI trained for emotional support — responds in BG and EN, judgment-free."
+            title: "Talk. No judgment, no waiting.",
+            desc: "An AI assistant calibrated specifically for emotional and personal support. It doesn't give ready answers — it asks the right questions."
           },
           step3: {
-            title: "Track your progress",
-            desc: "Session notes, growth tasks and audio therapies — all in one place."
+            title: "See how you grow",
+            desc: "After each session — notes, tasks and audio therapies to keep moving forward. Your progress, visible and measurable."
           }
         },
         features: {
@@ -231,8 +231,7 @@ const resources = {
             features: [
               "30 AI messages/month",
               "Basic AI assistant",
-              "30 days conversation history",
-              "BG/EN support"
+              "30 days conversation history"
             ],
             cta: "Start for Free"
           },
@@ -244,6 +243,8 @@ const resources = {
             features: [
               "500 AI messages/month",
               "More powerful AI assistant",
+              "Session notes 📋",
+              "Growth tasks ✅",
               "90 days conversation history",
               "Priority support"
             ],
@@ -256,7 +257,11 @@ const resources = {
             description: "Full transformation with all features",
             features: [
               "1500 AI messages/month",
-              "Most powerful AI assistant",
+              "Most powerful AI assistant (GPT-4o)",
+              "Audio therapies 🎧",
+              "Voice assistant 🎙️",
+              "Session notes 📋",
+              "Growth tasks ✅",
               "180 days conversation history",
               "Priority support 24/7"
             ],
@@ -747,16 +752,16 @@ const resources = {
           title: "Как работи Eterapp",
           subtitle: "Три стъпки до по-добро емоционално здраве",
           step1: {
-            title: "Регистрирай се безплатно",
-            desc: "Без кредитна карта. Получаваш 30 безплатни разговора месечно веднага."
+            title: "Избери своя тип разговор",
+            desc: "Искаш да разтовариш душата си? Да разбереш себе си по-добре? Да работиш върху конкретна тема? Eterapp те пита — и предлага разговора, от който имаш нужда точно сега."
           },
           step2: {
-            title: "Говори с Eterapp",
-            desc: "AI асистент, обучен за емоционална подкрепа — отговаря на BG и EN, без осъждане."
+            title: "Говори. Без осъждане, без чакане.",
+            desc: "AI асистент, калибриран специално за емоционална и личностна подкрепа. Не дава готови отговори — задава правилните въпроси."
           },
           step3: {
-            title: "Проследявай напредъка си",
-            desc: "Бележки от сесиите, задачи за развитие и аудио терапии — всичко на едно място."
+            title: "Виж как се развиваш",
+            desc: "След всяка сесия — бележки, задачи и аудио терапии за да продължиш напред. Твоят прогрес, видим и измерим."
           }
         },
         features: {
@@ -788,10 +793,9 @@ const resources = {
             period: "/месец",
             description: "Идеален старт без ангажимент",
             features: [
-              "30 AI съобщения на месец",
+              "30 AI съобщения/месец",
               "Основен AI асистент",
-              "30 дни история на разговорите",
-              "BG/EN поддръжка"
+              "30 дни история"
             ],
             cta: "Започни безплатно"
           },
@@ -801,9 +805,11 @@ const resources = {
             period: "/месец",
             description: "За задълбочена емоционална работа",
             features: [
-              "500 AI съобщения на месец",
+              "500 AI съобщения/месец",
               "По-мощен AI асистент",
-              "90 дни история на разговорите",
+              "Бележки от сесии 📋",
+              "Задачи за растеж ✅",
+              "90 дни история",
               "Приоритетна поддръжка"
             ],
             cta: "Избери план"
@@ -814,9 +820,13 @@ const resources = {
             period: "/месец",
             description: "Пълна трансформация с всички функции",
             features: [
-              "1500 AI съобщения на месец",
-              "Най-мощният AI асистент",
-              "180 дни история на разговорите",
+              "1500 AI съобщения/месец",
+              "Най-мощен AI асистент (GPT-4o)",
+              "Аудио терапии 🎧",
+              "Гласов асистент 🎙️",
+              "Бележки от сесии 📋",
+              "Задачи за растеж ✅",
+              "180 дни история",
               "Приоритетна поддръжка 24/7"
             ],
             cta: "Избери план"

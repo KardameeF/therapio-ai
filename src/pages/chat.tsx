@@ -699,6 +699,7 @@ export function ChatPage() {
           {sidebarCollapsed ? (
             <button
               title="Търси"
+              onClick={() => setSidebarCollapsed(false)}
               className="flex justify-center w-full p-2 rounded-lg hover:bg-secondary text-muted-foreground transition-colors"
             >
               <Search className="w-4 h-4" />
@@ -762,24 +763,24 @@ export function ChatPage() {
                       <button
                         onClick={() => openNotesModal(session.id)}
                         title={t("chat.sessionNotes")}
-                        className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded-md hover:bg-secondary transition-colors w-full"
+                        className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground px-2 py-1.5 rounded-md hover:bg-primary/10 transition-colors w-full border border-transparent hover:border-primary/20"
                       >
-                        <ClipboardList className="w-3.5 h-3.5 shrink-0" />
+                        <ClipboardList className="w-3.5 h-3.5 shrink-0 text-primary/70" />
                         <span className="truncate">{t("chat.notes")}</span>
                       </button>
                       <button
                         onClick={() => openTasksModal(session.id)}
                         title={t("chat.sessionTasks")}
-                        className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded-md hover:bg-secondary transition-colors w-full"
+                        className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground px-2 py-1.5 rounded-md hover:bg-primary/10 transition-colors w-full border border-transparent hover:border-primary/20"
                       >
-                        <CheckSquare className="w-3.5 h-3.5 shrink-0" />
+                        <CheckSquare className="w-3.5 h-3.5 shrink-0 text-primary/70" />
                         <span className="truncate">{t("chat.tasks")}</span>
                       </button>
                       {sessionsWithTherapy.has(String(session.id)) && (
                         <button
                           onClick={() => openTherapyModal(session.id)}
                           title={t("chat.therapyAudio")}
-                          className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded-md hover:bg-secondary transition-colors"
+                          className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground px-2 py-1.5 rounded-md hover:bg-primary/10 transition-colors border border-transparent hover:border-primary/20"
                         >
                           <Headphones className="w-3.5 h-3.5 shrink-0" />
                         </button>
@@ -806,7 +807,13 @@ export function ChatPage() {
         <div ref={profilePopupRef} className="p-3 border-t border-border relative">
           <div
             className={`flex items-center rounded-lg hover:bg-secondary transition-colors cursor-pointer ${sidebarCollapsed ? "justify-center p-2" : "gap-3 px-2 py-2"}`}
-            onClick={() => setProfileOpen((o) => !o)}
+            onClick={() => {
+              if (sidebarCollapsed) {
+                navigate("/profile");
+              } else {
+                setProfileOpen((o) => !o);
+              }
+            }}
             title={t("nav.profile")}
           >
             <div className="w-8 h-8 rounded-full bg-secondary border border-border flex items-center justify-center shrink-0">
@@ -1239,7 +1246,7 @@ export function ChatPage() {
                 </motion.div>
               )}
             </div>
-            <p className="text-center text-xs text-muted-foreground mt-0.5 mb-0 leading-none">
+            <p className="text-center text-xs text-muted-foreground mt-0.5 mb-3 leading-none">
               {t("chat.disclaimer")}
             </p>
             <input

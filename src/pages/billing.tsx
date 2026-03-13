@@ -201,9 +201,9 @@ export function BillingPage() {
       </span>
       <button
         onClick={() => setBillingInterval(prev => prev === "month" ? "year" : "month")}
-        className={`relative w-12 h-6 rounded-full transition-colors ${billingInterval === "year" ? "bg-primary" : "bg-muted"}`}
+        className={`relative w-12 h-6 rounded-full transition-colors duration-200 ${billingInterval === "year" ? "bg-primary" : "bg-muted"}`}
       >
-        <span className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${billingInterval === "year" ? "translate-x-7" : "translate-x-1"}`} />
+        <span className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow-sm transition-transform duration-200 ${billingInterval === "year" ? "left-0 translate-x-7" : "left-0 translate-x-1"}`} />
       </button>
       <span className={`text-sm ${billingInterval === "year" ? "text-foreground font-medium" : "text-muted-foreground"}`}>
         {t("billing.yearly")}
@@ -228,7 +228,6 @@ export function BillingPage() {
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.aiMessages30")}</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.basicAi")}</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.history30")}</span></div>
-          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.bgEn")}</span></div>
           {currentPlan !== "first_step" && (
             <Button
               variant="outline"

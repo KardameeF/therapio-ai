@@ -1,1 +1,63 @@
-git log --oneline -5
+You are working on Eterapp — a Bulgarian AI emotional support SaaS.
+
+## Stack
+- Vite + React + TypeScript
+- Tailwind CSS (utility classes only, no custom CSS)
+- Framer Motion (already installed)
+- Supabase (auth + database)
+- Netlify (hosting + serverless functions in netlify/functions/)
+- i18next (BG primary, EN secondary — all strings via t() keys)
+- shadcn/ui components in src/components/ui/
+
+## Critical rules
+
+### Before writing any code
+1. Check if the component/function you want to import actually exists and is exported
+2. Check src/components/ui/ before importing UI components
+3. Never import something you haven't verified exists
+
+### TypeScript
+- Strict mode is ON — no `any` unless absolutely necessary
+- Always cast types explicitly (e.g. Number(), String())
+- Props must match component type definitions exactly
+- Check variant unions before using variant="something"
+
+### Supabase
+- chat_sessions.id is BIGINT — all foreign keys must be BIGINT not UUID
+- Netlify functions use SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY (no VITE_ prefix)
+- Frontend uses VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY
+
+### Netlify functions
+- All functions in netlify/functions/*.ts
+- Always validate auth token at the top
+- Always return { statusCode, body: JSON.stringify({}) }
+- Use try/catch with proper error responses
+
+### i18n
+- Every user-visible string MUST use t("key")
+- Add keys to BOTH bg and en sections in src/lib/i18n.ts
+- Never hardcode Bulgarian or English text directly in JSX
+
+### File structure
+- Pages: src/pages/
+- Components: src/components/
+- UI primitives: src/components/ui/ (shadcn — do not modify unless necessary)
+- Hooks: src/hooks/
+- DB client: src/lib/supabaseClient.ts
+
+### Subscription plans
+- "first_step" — free, 30 messages, gpt-4o-mini
+- "personal_growth" — €19.99/mo, 500 messages, gpt-4o-mini
+- "expanded_horizons" — €39.99/mo, 1500 messages, gpt-4o
+
+### Git commits
+- Always commit with descriptive message
+- Format: "feat: ...", "fix: ...", "chore: ..."
+- One logical change per commit
+
+### Never do
+- Never delete existing functionality when adding new features
+- Never hardcode price IDs (use constants)
+- Never use localStorage (not supported in this setup)
+- Never skip error handling in async functions
+- Never commit broken TypeScript — run tsc check mentally before committing
