@@ -269,6 +269,7 @@ export const handler: Handler = async (event) => {
 
   const model = plan === "expanded_horizons" ? "gpt-4o" : "gpt-4o-mini";
 
+  const wasCompressed = messages.length > 40;
   const contextMessages = await buildCompressedContext(messages);
   const openaiMessages = contextMessages.map((m: { role: string; content: string }, idx: number) => {
     if (idx === contextMessages.length - 1 && m.role === "user" && image && plan !== "first_step") {
@@ -367,7 +368,10 @@ Respond in the same language the user writes in (Bulgarian or English).`,
 
     return {
       statusCode: 200,
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        ...(wasCompressed ? { "x-context-compressed": "true" } : {}),
+      },
       body: JSON.stringify({
         reply,
         used: used + 1,

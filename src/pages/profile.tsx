@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription } from "../components/ui/dialog";
 import { useAuth } from "../providers/AuthProvider";
 import { supabase } from "../lib/supabaseClient";
 import { User, Mail, Eye, EyeOff, Volume2 } from "lucide-react";
@@ -32,8 +35,11 @@ export function ProfilePage() {
   const [forgotPasswordSent, setForgotPasswordSent] = useState(false);
   const [voiceGender, setVoiceGender] = useState<"female" | "male">("female");
   const [voiceSaved, setVoiceSaved] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const { user, signOut } = useAuth();
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const {
     register,
@@ -95,6 +101,22 @@ export function ProfilePage() {
 
   const handleSignOut = async () => {
     await signOut();
+  };
+
+  const handleDeleteAccount = async () => {
+    setIsDeleting(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+      await supabase.from("profiles").delete().eq("id", session.user.id);
+      await supabase.auth.signOut();
+      navigate("/");
+    } catch (err) {
+      console.error("Delete account error:", err);
+    } finally {
+      setIsDeleting(false);
+      setShowDeleteDialog(false);
+    }
   };
 
   const handleForgotPassword = async () => {
@@ -204,7 +226,16 @@ export function ProfilePage() {
             )}
 
             <Button type="submit" disabled={loading} className="w-full">
-              {loading ? t("profile.settings.saving") : t("profile.settings.save")}
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <motion.span
+                    className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full"
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
+                  />
+                  {t("common.saving")}
+                </span>
+              ) : t("profile.settings.save")}
             </Button>
           </form>
         </div>
@@ -348,7 +379,16 @@ export function ProfilePage() {
           {pwSuccess && <p className="text-sm text-green-600">{pwSuccess}</p>}
 
           <Button type="submit" disabled={pwLoading} variant="outline" className="w-full">
-            {pwLoading ? t("security.changing") : t("security.changePassword")}
+            {pwLoading ? (
+              <span className="flex items-center gap-2">
+                <motion.span
+                  className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full"
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
+                />
+                {t("security.changing")}
+              </span>
+            ) : t("security.changePassword")}
           </Button>
         </form>
       </div>
@@ -369,7 +409,40 @@ export function ProfilePage() {
             {t("profile.dangerZone.signOut")}
           </Button>
         </div>
+        <div className="flex items-center justify-between py-3 border-t border-border mt-3">
+          <div>
+            <p className="text-sm font-medium text-destructive">{t("profile.deleteAccount")}</p>
+            <p className="text-xs text-muted-foreground">{t("profile.deleteAccountDesc")}</p>
+          </div>
+          <Button variant="destructive" onClick={() => setShowDeleteDialog(true)}>
+            {t("profile.deleteAccountBtn")}
+          </Button>
+        </div>
       </div>
+
+      <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t("profile.deleteConfirmTitle")}</DialogTitle>
+            <DialogDescription>{t("profile.deleteConfirmDesc")}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowDeleteDialog(false)}>
+              {t("profile.deleteCancel")}
+            </Button>
+            <Button variant="destructive" disabled={isDeleting} onClick={handleDeleteAccount}>
+              {isDeleting && (
+                <motion.span
+                  className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full mr-2"
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
+                />
+              )}
+              {t("profile.deleteConfirmBtn")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -1,0 +1,13 @@
+{
+  "plugins": {
+    "render": {
+      "enabled": true
+    },
+    "supabase": {
+      "enabled": true
+    },
+    "stripe": {
+      "enabled": true
+    }
+  }
+}

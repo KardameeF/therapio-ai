@@ -305,7 +305,14 @@ const resources = {
           subtitle: "Irreversible actions",
           signOut: "Sign out",
           signOutDesc: "Sign out from this device"
-        }
+        },
+        deleteAccount: "Delete account",
+        deleteAccountDesc: "All data will be permanently deleted",
+        deleteAccountBtn: "Delete account",
+        deleteConfirmTitle: "Are you sure?",
+        deleteConfirmDesc: "This action is irreversible. All conversations, notes, and data will be permanently deleted.",
+        deleteConfirmBtn: "Yes, delete everything",
+        deleteCancel: "Cancel"
       },
       admin: {
         title: "Admin Dashboard",
@@ -426,7 +433,11 @@ const resources = {
         voiceModeListening: "Listening...",
         warning75: "You've used {{used}}/{{limit}} messages this month (75%). Consider upgrading.",
         warning90: "Almost at your limit — {{used}}/{{limit}} messages used. Add credits to continue.",
-        upgradePlan: "Upgrade or add credits →"
+        upgradePlan: "Upgrade or add credits →",
+        thinking: "Eterapp is thinking...",
+        historyOptimized: "History optimized for faster response",
+        speaking: "Speaking...",
+        loadingTherapy: "Loading therapy session..."
       },
       featuresPage: {
         hero: {
@@ -503,6 +514,10 @@ const resources = {
         budgetCapReached: "Monthly spending cap reached. Add credits or increase your cap.",
         save: "Save",
         success: "Credits added successfully!"
+      },
+      common: {
+        saving: "Saving...",
+        loading: "Loading..."
       },
       footer: {
         rights: "© 2026 Eterapp. All rights reserved.",
@@ -803,7 +818,14 @@ const resources = {
           subtitle: "Необратими действия",
           signOut: "Изход",
           signOutDesc: "Излез от акаунта на това устройство"
-        }
+        },
+        deleteAccount: "Изтрий акаунта",
+        deleteAccountDesc: "Всички данни ще бъдат изтрити завинаги",
+        deleteAccountBtn: "Изтрий акаунта",
+        deleteConfirmTitle: "Сигурен ли си?",
+        deleteConfirmDesc: "Това действие е необратимо. Всички разговори, бележки и данни ще бъдат изтрити завинаги.",
+        deleteConfirmBtn: "Да, изтрий всичко",
+        deleteCancel: "Отказ"
       },
       security: {
         title: "Сигурност",
@@ -938,7 +960,11 @@ const resources = {
         voiceModeListening: "Слуша...",
         warning75: "Използвали сте {{used}}/{{limit}} съобщения този месец (75%). Помислете за надграждане.",
         warning90: "Почти сте на лимита — {{used}}/{{limit}} съобщения. Добавете кредити за да продължите.",
-        upgradePlan: "Надгради или добави кредити →"
+        upgradePlan: "Надгради или добави кредити →",
+        thinking: "Eterapp мисли...",
+        historyOptimized: "Историята е оптимизирана за по-бърз отговор",
+        speaking: "Говори...",
+        loadingTherapy: "Зарежда терапевтична сесия..."
       },
       featuresPage: {
         hero: {
@@ -1015,6 +1041,10 @@ const resources = {
         budgetCapReached: "Месечният лимит е достигнат. Добавете кредити или увеличете лимита.",
         save: "Запази",
         success: "Кредитите са добавени успешно!"
+      },
+      common: {
+        saving: "Запазва...",
+        loading: "Зарежда..."
       },
       footer: {
         rights: "© 2026 Eterapp. Всички права запазени.",

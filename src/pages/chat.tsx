@@ -88,6 +88,8 @@ export function ChatPage() {
   const [therapyModalSession, setTherapyModalSession] = useState<string | number | null>(null);
   const [therapyAudio, setTherapyAudio] = useState<TherapyAudio | null>(null);
   const [sessionsWithTherapy, setSessionsWithTherapy] = useState<Set<string>>(new Set());
+  const [isLoadingTherapy, setIsLoadingTherapy] = useState(false);
+  const [showCompressionNotice, setShowCompressionNotice] = useState(false);
   const [voiceMode, setVoiceMode] = useState(false);
   const [voiceListening, setVoiceListening] = useState(false);
   const [voiceSpeaking, setVoiceSpeaking] = useState(false);
@@ -257,6 +259,11 @@ export function ChatPage() {
       });
 
       const data = await res.json();
+
+      if (res.headers.get("x-context-compressed") === "true") {
+        setShowCompressionNotice(true);
+        setTimeout(() => setShowCompressionNotice(false), 3000);
+      }
 
       if (!res.ok) {
         const errContent =
@@ -582,24 +589,28 @@ export function ChatPage() {
   const openTherapyModal = async (sessionId: string | number) => {
     setTherapyModalSession(sessionId);
     setTherapyAudio(null);
-    const { data: uts } = await supabase
-      .from("user_therapy_sessions")
-      .select("therapy_audio_id")
-      .eq("chat_session_id", sessionId)
-      .limit(1)
-      .single();
-    if (uts?.therapy_audio_id) {
-      const { data: audio } = await supabase
-        .from("therapy_audio")
-        .select("id, title, description, duration_seconds, storage_path, condition")
-        .eq("id", uts.therapy_audio_id)
-        .single();
-      if (audio) setTherapyAudio(audio as TherapyAudio);
-      // Mark as listened
-      await supabase
+    setIsLoadingTherapy(true);
+    try {
+      const { data: uts } = await supabase
         .from("user_therapy_sessions")
-        .update({ listened_at: new Date().toISOString() })
-        .eq("chat_session_id", sessionId);
+        .select("therapy_audio_id")
+        .eq("chat_session_id", sessionId)
+        .limit(1)
+        .single();
+      if (uts?.therapy_audio_id) {
+        const { data: audio } = await supabase
+          .from("therapy_audio")
+          .select("id, title, description, duration_seconds, storage_path, condition")
+          .eq("id", uts.therapy_audio_id)
+          .single();
+        if (audio) setTherapyAudio(audio as TherapyAudio);
+        await supabase
+          .from("user_therapy_sessions")
+          .update({ listened_at: new Date().toISOString() })
+          .eq("chat_session_id", sessionId);
+      }
+    } finally {
+      setIsLoadingTherapy(false);
     }
   };
 
@@ -941,9 +952,13 @@ export function ChatPage() {
                 );
               })}
 
-              {/* Typing indicator */}
               {isLoading && (
-                <div className="flex gap-3 mt-4">
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  className="flex items-center gap-3 mt-4"
+                >
                   <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center shrink-0 bot-thinking">
                     <svg width="16" height="16" viewBox="0 0 28 28" fill="none" className="text-primary">
                       <circle cx="14" cy="14" r="12" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.25"/>
@@ -952,14 +967,20 @@ export function ChatPage() {
                       <ellipse cx="14" cy="14" rx="12" ry="4.5" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.35" transform="rotate(-30 14 14)" className="icon-orbit"/>
                     </svg>
                   </div>
-                  <div className="px-4 py-3 rounded-2xl rounded-tl-sm bg-muted">
-                    <div className="flex gap-1 items-center h-4">
-                      <span className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                      <span className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                      <span className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                  <div className="px-4 py-3 rounded-2xl rounded-tl-sm bg-muted flex items-center gap-2">
+                    <span className="text-xs text-muted-foreground">{t("chat.thinking")}</span>
+                    <div className="flex items-center gap-1">
+                      {[0, 1, 2].map(i => (
+                        <motion.span
+                          key={i}
+                          className="w-1.5 h-1.5 rounded-full bg-primary"
+                          animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.2, 0.8] }}
+                          transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.2 }}
+                        />
+                      ))}
                     </div>
                   </div>
-                </div>
+                </motion.div>
               )}
 
               <div ref={messagesEndRef} />
@@ -987,6 +1008,19 @@ export function ChatPage() {
             </p>
           </div>
         )}
+
+        <AnimatePresence>
+          {showCompressionNotice && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="text-xs text-muted-foreground text-center py-1 bg-muted/30 rounded-lg mx-4"
+            >
+              {t("chat.historyOptimized")}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* INPUT BAR */}
         <div className="shrink-0 px-3 pt-1 pb-[max(0.25rem,env(safe-area-inset-bottom))] md:py-4 border-t border-border">
@@ -1083,11 +1117,25 @@ export function ChatPage() {
 
               {/* Mic button */}
               <div className="relative group self-center">
+                {voiceListening && (
+                  <>
+                    <motion.div
+                      className="absolute inset-0 rounded-full bg-red-500/20"
+                      animate={{ scale: [1, 1.8, 1], opacity: [0.6, 0, 0.6] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    />
+                    <motion.div
+                      className="absolute inset-0 rounded-full bg-red-500/10"
+                      animate={{ scale: [1, 2.4, 1], opacity: [0.4, 0, 0.4] }}
+                      transition={{ duration: 1.5, repeat: Infinity, delay: 0.3 }}
+                    />
+                  </>
+                )}
                 <button
                   type="button"
                   onClick={isPaidPlan ? handleVoiceToggle : undefined}
                   disabled={isTranscribing || isLoading}
-                  className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200
+                  className={`relative z-10 w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200
                     ${!isPaidPlan
                       ? "text-muted-foreground/30 cursor-not-allowed"
                       : isRecording
@@ -1178,6 +1226,20 @@ export function ChatPage() {
                   transition-colors">
                 <Send className="w-4 h-4 text-primary-foreground" />
               </button>
+              {voiceSpeaking && (
+                <motion.div className="flex items-center gap-0.5 px-2 self-center">
+                  {[0.4, 0.7, 1, 0.7, 0.4].map((h, i) => (
+                    <motion.div
+                      key={i}
+                      className="w-0.5 bg-primary rounded-full"
+                      animate={{ scaleY: [h, 1, h] }}
+                      transition={{ duration: 0.8, repeat: Infinity, delay: i * 0.1 }}
+                      style={{ height: 16 }}
+                    />
+                  ))}
+                  <span className="text-xs text-muted-foreground ml-1">{t("chat.speaking")}</span>
+                </motion.div>
+              )}
             </div>
             <p className="text-center text-xs text-muted-foreground mt-0.5 mb-0 leading-none">
               {t("chat.disclaimer")}
@@ -1278,7 +1340,20 @@ export function ChatPage() {
             <DialogTitle>{t("chat.therapyAudio")}</DialogTitle>
             <DialogDescription className="sr-only">{t("chat.therapyAudio")}</DialogDescription>
           </DialogHeader>
-          {!therapyAudio ? (
+          {isLoadingTherapy ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex items-center gap-2 text-sm text-muted-foreground p-3"
+            >
+              <motion.div
+                className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
+              />
+              {t("chat.loadingTherapy")}
+            </motion.div>
+          ) : !therapyAudio ? (
             <p className="text-sm text-muted-foreground py-4 text-center">
               {t("chat.therapyAudioEmpty")}
             </p>
