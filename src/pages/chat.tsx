@@ -727,12 +727,7 @@ export function ChatPage() {
               </p>
             ) : (
               filteredHistory.map((session) => (
-                <div
-                  key={session.id}
-                  className={`rounded-lg px-2 py-2 transition-colors ${
-                    String(currentSessionId) === String(session.id) ? "bg-secondary" : "hover:bg-secondary/60"
-                  }`}
-                >
+                <div key={session.id} className="group">
                   <div className="flex items-center gap-1">
                     <button
                       onClick={async () => {
@@ -743,60 +738,59 @@ export function ChatPage() {
                           .eq("session_id", session.id)
                           .order("created_at", { ascending: true });
                         if (data) setMessages(data as Message[]);
-                        setSidebarOpen(false);
+                        if (!isDesktop) setSidebarOpen(false);
                       }}
-                      className="flex-1 text-left min-w-0"
+                      className={`flex-1 text-left text-sm truncate px-2 py-1.5 rounded-lg transition-colors min-w-0 ${
+                        String(currentSessionId) === String(session.id)
+                          ? "bg-primary/10 text-foreground font-medium"
+                          : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                      }`}
                     >
-                      <p className="text-sm font-medium text-foreground truncate hover:text-primary transition-colors">
-                        {displayTitle(session.title)}
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-0.5">
-                        {new Date(session.updated_at).toLocaleDateString("bg-BG", { day: "numeric", month: "short" })}
-                      </p>
+                      {!sidebarCollapsed && displayTitle(session.title)}
                     </button>
                     <button
                       onClick={() => deleteSession(session.id)}
-                      className="p-1 rounded hover:bg-destructive/20 text-muted-foreground hover:text-destructive shrink-0"
+                      className="p-1 rounded hover:bg-destructive/20 text-muted-foreground hover:text-destructive shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
                       title={t("chat.deleteSession")}
                     >
                       <X className="h-3.5 w-3.5" />
                     </button>
                   </div>
 
-                  {String(currentSessionId) === String(session.id) && isPaidPlan && (
-                    <div className="flex gap-1 mt-1 pl-0.5">
+                  {String(currentSessionId) === String(session.id) && !sidebarCollapsed && isPaidPlan && (
+                    <div className="flex gap-1 px-1 pb-1">
                       <button
                         onClick={() => openNotesModal(session.id)}
                         title={t("chat.sessionNotes")}
-                        className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground px-1.5 py-0.5 rounded hover:bg-secondary transition-colors"
+                        className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded-md hover:bg-secondary transition-colors w-full"
                       >
-                        <ClipboardList className="w-3 h-3" />
-                        {!sidebarCollapsed && <span>{t("chat.notes")}</span>}
+                        <ClipboardList className="w-3.5 h-3.5 shrink-0" />
+                        <span className="truncate">{t("chat.notes")}</span>
                       </button>
                       <button
                         onClick={() => openTasksModal(session.id)}
                         title={t("chat.sessionTasks")}
-                        className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground px-1.5 py-0.5 rounded hover:bg-secondary transition-colors"
+                        className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded-md hover:bg-secondary transition-colors w-full"
                       >
-                        <CheckSquare className="w-3 h-3" />
-                        {!sidebarCollapsed && <span>{t("chat.tasks")}</span>}
+                        <CheckSquare className="w-3.5 h-3.5 shrink-0" />
+                        <span className="truncate">{t("chat.tasks")}</span>
                       </button>
                       {sessionsWithTherapy.has(String(session.id)) && (
                         <button
                           onClick={() => openTherapyModal(session.id)}
                           title={t("chat.therapyAudio")}
-                          className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground px-1.5 py-0.5 rounded hover:bg-secondary transition-colors"
+                          className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded-md hover:bg-secondary transition-colors"
                         >
-                          <Headphones className="w-3 h-3" />
+                          <Headphones className="w-3.5 h-3.5 shrink-0" />
                         </button>
                       )}
                     </div>
                   )}
-                  {String(currentSessionId) === String(session.id) && !isPaidPlan && (
-                    <div className="flex gap-1 mt-1 pl-0.5">
-                      <span className="flex items-center gap-1 text-xs text-muted-foreground/50 px-1.5 py-0.5">
+                  {String(currentSessionId) === String(session.id) && !sidebarCollapsed && !isPaidPlan && (
+                    <div className="flex gap-1 px-1 pb-1">
+                      <span className="flex items-center gap-1.5 text-xs text-muted-foreground/50 px-2 py-1">
                         <Lock className="w-3 h-3" />
-                        {!sidebarCollapsed && <span>{t("chat.upgradeForInsights")}</span>}
+                        <span>{t("chat.upgradeForInsights")}</span>
                       </span>
                     </div>
                   )}
@@ -826,7 +820,7 @@ export function ChatPage() {
           </div>
 
           {profileOpen && (
-            <div className="absolute bottom-16 left-4 right-4 z-50 rounded-xl border border-border bg-background p-3 space-y-2">
+            <div className="absolute bottom-16 left-4 right-4 z-[100] rounded-xl border border-border bg-background p-3 space-y-2 shadow-lg">
               {userEmail && <p className="text-xs text-muted-foreground truncate px-2">{userEmail}</p>}
               <Link to="/profile" className="block text-sm px-2 py-1.5 rounded-lg hover:bg-secondary" onClick={() => setProfileOpen(false)}>
                 {t("profile.title")}
