@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../providers/AuthProvider";
@@ -12,6 +12,7 @@ import {
   X,
   Coins,
   ArrowRight,
+  ArrowLeft,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabaseClient";
@@ -81,9 +82,20 @@ export function FeaturesPage() {
     return renderCell(value);
   };
 
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-background">
-      <main className="mx-auto max-w-5xl px-4 md:px-6 py-12 md:py-20 space-y-16 md:space-y-24">
+      <div className="mx-auto max-w-5xl px-4 md:px-6 pt-6">
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Назад
+        </button>
+      </div>
+      <main className="mx-auto max-w-5xl px-4 md:px-6 py-8 md:py-14 space-y-16 md:space-y-24">
 
         {/* Hero */}
         <motion.section
