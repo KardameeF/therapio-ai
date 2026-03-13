@@ -450,7 +450,11 @@ const resources = {
           days: "{{count}} days",
           support_basic: "Basic",
           support_priority: "Priority",
-          support_247: "24/7"
+          support_247: "24/7",
+          price: "Price",
+          price_free: "Free",
+          price_pg: "€19.99/mo",
+          price_eh: "€39.99/mo"
         },
         details: {
           title: "How each feature works",
@@ -958,7 +962,11 @@ const resources = {
           days: "{{count}} дни",
           support_basic: "Базова",
           support_priority: "Приоритетна",
-          support_247: "24/7"
+          support_247: "24/7",
+          price: "Цена",
+          price_free: "Безплатно",
+          price_pg: "€19.99/мес",
+          price_eh: "€39.99/мес"
         },
         details: {
           title: "Как работи всяка функция",

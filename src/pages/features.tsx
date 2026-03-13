@@ -31,6 +31,7 @@ const FEATURES_MATRIX: {
   { key: "voiceAssistant", free: false, personal_growth: false, expanded_horizons: true },
   { key: "history", free: "30", personal_growth: "90", expanded_horizons: "180" },
   { key: "support", free: "basic", personal_growth: "priority", expanded_horizons: "247" },
+  { key: "price", free: "price_free", personal_growth: "price_pg", expanded_horizons: "price_eh" },
 ];
 
 const FEATURE_DETAILS = [
@@ -76,6 +77,7 @@ export function FeaturesPage() {
     if (typeof value === "boolean") return renderCell(value);
     if (key === "history") return t("featuresPage.table.days", { count: value });
     if (key === "support") return t(`featuresPage.table.support_${value}`);
+    if (key === "price") return <span className="text-sm font-semibold text-foreground">{t(`featuresPage.table.${value}`)}</span>;
     return renderCell(value);
   };
 
