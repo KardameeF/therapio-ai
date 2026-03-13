@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 export function BillingPage() {
   const [loading, setLoading] = useState(false);
   const [currentPlan, setCurrentPlan] = useState<string>("first_step");
+  const [billingInterval, setBillingInterval] = useState<"month" | "year">("month");
   const [prepaidCredits, setPrepaidCredits] = useState(0);
   const [budgetCap, setBudgetCap] = useState(0);
   const [budgetCapInput, setBudgetCapInput] = useState("");
@@ -87,23 +88,30 @@ export function BillingPage() {
     }
   };
 
-  const handleUpgrade = async (priceId: string) => {
+  const monthlyPrices: Record<string, string> = {
+    personal_growth: "price_1S8qnIDVd6WnP7HIrd5qxgrt",
+    expanded_horizons: "price_1S8qoxDVd6WnP7HI4Vjfan7y",
+  };
+  const yearlyPrices: Record<string, string> = {
+    personal_growth: "price_YEARLY_PG_PLACEHOLDER",
+    expanded_horizons: "price_YEARLY_EH_PLACEHOLDER",
+  };
+
+  const handleUpgrade = async (planKey: string) => {
     if (!user) return;
 
     setLoading(true);
     try {
-      const planTypeMap: Record<string, string> = {
-        "price_1S8qnIDVd6WnP7HIrd5qxgrt": "personal_growth",
-        "price_1S8qoxDVd6WnP7HI4Vjfan7y": "expanded_horizons",
-      };
-      const plan_type = planTypeMap[priceId] || "first_step";
+      const prices = billingInterval === "year" ? yearlyPrices : monthlyPrices;
+      const priceId = prices[planKey];
+      if (!priceId) throw new Error("Unknown plan");
 
       const session = await supabase.auth.getSession();
       const token = session.data.session?.access_token;
       const response = await fetch("/.netlify/functions/create-checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ priceId, user_id: user.id, plan_type }),
+        body: JSON.stringify({ priceId, user_id: user.id, plan_type: planKey, interval: billingInterval }),
       });
       const data = await response.json();
       if (data.url) window.location.href = data.url;
@@ -156,15 +164,31 @@ export function BillingPage() {
 
   return (
     <div className="w-full max-w-5xl mx-auto px-4 sm:px-6">
-    <div className="grid gap-4 md:gap-6" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))' }}>
-      {currentPlan !== "first_step" && (
-        <div className="md:col-span-3 flex justify-end mb-2">
-          <Button variant="outline" onClick={handleManageBilling} disabled={loading} className="w-full sm:w-auto">
-            {loading ? t("billing.loading") : t("billing.manageSub")}
-          </Button>
-        </div>
-      )}
+    {currentPlan !== "first_step" && (
+      <div className="flex justify-end mb-4">
+        <Button variant="outline" onClick={handleManageBilling} disabled={loading} className="w-full sm:w-auto">
+          {loading ? t("billing.loading") : t("billing.manageSub")}
+        </Button>
+      </div>
+    )}
 
+    <div className="flex items-center justify-center gap-3 mb-8">
+      <span className={`text-sm ${billingInterval === "month" ? "text-foreground font-medium" : "text-muted-foreground"}`}>
+        {t("billing.monthly")}
+      </span>
+      <button
+        onClick={() => setBillingInterval(prev => prev === "month" ? "year" : "month")}
+        className={`relative w-12 h-6 rounded-full transition-colors ${billingInterval === "year" ? "bg-primary" : "bg-muted"}`}
+      >
+        <span className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${billingInterval === "year" ? "translate-x-7" : "translate-x-1"}`} />
+      </button>
+      <span className={`text-sm ${billingInterval === "year" ? "text-foreground font-medium" : "text-muted-foreground"}`}>
+        {t("billing.yearly")}
+        <span className="ml-1 text-xs text-green-500 font-medium">{t("billing.yearlyDiscount")}</span>
+      </span>
+    </div>
+
+    <div className="grid gap-4 md:gap-6" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))' }}>
       <motion.div className="rounded-2xl border border-border bg-card p-6" custom={0} initial="hidden" animate="visible" variants={cardVariants}>
         <div className="mb-4">
           <h3 className="text-base font-semibold flex items-center justify-between">
@@ -195,14 +219,21 @@ export function BillingPage() {
               </span>
             )}
           </h3>
-          <p className="text-sm text-muted-foreground mt-1">{formatPrice(19.99)}/{t("billing.month")}</p>
+          <p className="text-sm text-muted-foreground mt-1">
+            {billingInterval === "year" ? formatPrice(16.99) : formatPrice(19.99)}/{t("billing.month")}
+          </p>
+          {billingInterval === "year" && (
+            <span className="text-xs text-green-500 font-medium">{t("billing.saveYearlyPG")}</span>
+          )}
         </div>
         <div className="space-y-3 text-sm text-muted-foreground">
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.aiMessages500")}</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.powerfulAi")}</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.sessionNotes")}</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.tasks")}</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.history90")}</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.prioritySupport")}</span></div>
-          <Button onClick={() => handleUpgrade("price_1S8qnIDVd6WnP7HIrd5qxgrt")} disabled={loading || currentPlan === "personal_growth"} className="w-full mt-4">
+          <Button onClick={() => handleUpgrade("personal_growth")} disabled={loading || currentPlan === "personal_growth"} className="w-full mt-4">
             {loading ? t("billing.loading") : currentPlan === "personal_growth" ? t("billing.currentPlan") : t("billing.choosePlan")}
           </Button>
         </div>
@@ -218,14 +249,23 @@ export function BillingPage() {
               </span>
             )}
           </h3>
-          <p className="text-sm text-muted-foreground mt-1">{formatPrice(39.99)}/{t("billing.month")}</p>
+          <p className="text-sm text-muted-foreground mt-1">
+            {billingInterval === "year" ? formatPrice(33.99) : formatPrice(39.99)}/{t("billing.month")}
+          </p>
+          {billingInterval === "year" && (
+            <span className="text-xs text-green-500 font-medium">{t("billing.saveYearlyEH")}</span>
+          )}
         </div>
         <div className="space-y-3 text-sm text-muted-foreground">
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.aiMessages1500")}</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.mostPowerfulAi")}</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.sessionNotes")}</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.tasks")}</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.audioTherapy")}</span></div>
+          <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.voiceAssistant")}</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.history180")}</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.prioritySupport247")}</span></div>
-          <Button onClick={() => handleUpgrade("price_1S8qoxDVd6WnP7HI4Vjfan7y")} disabled={loading || currentPlan === "expanded_horizons"} className="w-full mt-4">
+          <Button onClick={() => handleUpgrade("expanded_horizons")} disabled={loading || currentPlan === "expanded_horizons"} className="w-full mt-4">
             {loading ? t("billing.loading") : currentPlan === "expanded_horizons" ? t("billing.currentPlan") : t("billing.choosePlan")}
           </Button>
         </div>
@@ -299,6 +339,10 @@ export function BillingPage() {
 
       <p className="text-xs text-muted-foreground mt-4">{t("prepaid.costPerMessage")}</p>
     </motion.div>
+
+    <p className="text-xs text-muted-foreground text-center mt-8 px-4">
+      {t("billing.disclaimer")}
+    </p>
     </div>
   );
 }
