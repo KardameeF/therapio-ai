@@ -124,6 +124,29 @@ export function BillingPage() {
     }
   };
 
+  const handleDowngrade = async (targetPlan: string) => {
+    if (!user) return;
+    setLoading(true);
+    try {
+      const session = await supabase.auth.getSession();
+      const token = session.data.session?.access_token;
+      const response = await fetch("/.netlify/functions/cancel-subscription", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ target_plan: targetPlan, user_id: user.id }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        setCurrentPlan(targetPlan);
+        alert(t("billing.downgradeSuccess"));
+      }
+    } catch (err) {
+      console.error("Downgrade error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleTopUp = async (amount: number) => {
     if (!user) return;
     setPrepaidLoading(amount);
@@ -206,6 +229,17 @@ export function BillingPage() {
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.basicAi")}</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.history30")}</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.bgEn")}</span></div>
+          {currentPlan !== "first_step" && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full mt-2 text-xs"
+              onClick={() => handleDowngrade("first_step")}
+              disabled={loading}
+            >
+              {t("billing.downgrade")}
+            </Button>
+          )}
         </div>
       </motion.div>
 
@@ -236,6 +270,17 @@ export function BillingPage() {
           <Button onClick={() => handleUpgrade("personal_growth")} disabled={loading || currentPlan === "personal_growth"} className="w-full mt-4">
             {loading ? t("billing.loading") : currentPlan === "personal_growth" ? t("billing.currentPlan") : t("billing.choosePlan")}
           </Button>
+          {currentPlan === "expanded_horizons" && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full mt-2 text-xs"
+              onClick={() => handleDowngrade("personal_growth")}
+              disabled={loading}
+            >
+              {t("billing.downgrade")}
+            </Button>
+          )}
         </div>
       </motion.div>
 

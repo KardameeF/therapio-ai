@@ -128,6 +128,8 @@ const resources = {
         saveYearlyPG: "Save €36/year",
         saveYearlyEH: "Save €72/year",
         disclaimer: "Billing is handled through Stripe. Monthly plans are billed once a month. Yearly plans are billed once for the full year. You can cancel anytime from your profile. Prices include VAT.",
+        downgrade: "Downgrade plan",
+        downgradeSuccess: "Your plan will change at the end of the current billing period.",
         choosePlan: "Choose plan",
         startFree: "Start for free",
         manageSub: "Manage subscription",
@@ -180,6 +182,22 @@ const resources = {
             secure: "Secure & Private",
             users: "BG/EN",
             ai: "AI-Powered"
+          }
+        },
+        howItWorks: {
+          title: "How Eterapp works",
+          subtitle: "Three steps to better emotional wellbeing",
+          step1: {
+            title: "Sign up for free",
+            desc: "No credit card needed. Get 30 free conversations per month instantly."
+          },
+          step2: {
+            title: "Talk to Eterapp",
+            desc: "AI trained for emotional support — responds in BG and EN, judgment-free."
+          },
+          step3: {
+            title: "Track your progress",
+            desc: "Session notes, growth tasks and audio therapies — all in one place."
           }
         },
         features: {
@@ -669,6 +687,8 @@ const resources = {
         saveYearlyPG: "Спести €36/год",
         saveYearlyEH: "Спести €72/год",
         disclaimer: "Таксуването се извършва чрез Stripe. При месечен план — таксуването е веднъж месечно. При годишен план — таксуването е еднократно за цялата година. Можеш да отмениш по всяко време от профила си. Цените са с включен ДДС.",
+        downgrade: "Премини на по-нисък план",
+        downgradeSuccess: "Планът ти ще бъде променен в края на текущия период.",
         choosePlan: "Избери план",
         startFree: "Започни безплатно",
         manageSub: "Управление на абонамент",
@@ -721,6 +741,22 @@ const resources = {
             secure: "Сигурно и поверително",
             users: "BG/EN",
             ai: "AI-Задвижвано"
+          }
+        },
+        howItWorks: {
+          title: "Как работи Eterapp",
+          subtitle: "Три стъпки до по-добро емоционално здраве",
+          step1: {
+            title: "Регистрирай се безплатно",
+            desc: "Без кредитна карта. Получаваш 30 безплатни разговора месечно веднага."
+          },
+          step2: {
+            title: "Говори с Eterapp",
+            desc: "AI асистент, обучен за емоционална подкрепа — отговаря на BG и EN, без осъждане."
+          },
+          step3: {
+            title: "Проследявай напредъка си",
+            desc: "Бележки от сесиите, задачи за развитие и аудио терапии — всичко на едно място."
           }
         },
         features: {
