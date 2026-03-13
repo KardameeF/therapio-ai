@@ -75,7 +75,7 @@ export function FeaturesPage() {
 
   const renderCellValue = (key: string, value: string | boolean) => {
     if (typeof value === "boolean") return renderCell(value);
-    if (key === "history") return t("featuresPage.table.days", { count: value });
+    if (key === "history") return t("featuresPage.table.days", { count: Number(value) });
     if (key === "support") return t(`featuresPage.table.support_${value}`);
     if (key === "price") return <span className="text-sm font-semibold text-foreground">{t(`featuresPage.table.${value}`)}</span>;
     return renderCell(value);
