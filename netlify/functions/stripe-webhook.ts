@@ -115,9 +115,43 @@ export const handler: Handler = async (event) => {
   }
 };
 
+// Handle prepaid credit purchase (one-time payment, no subscription)
+async function handlePrepaidCheckout(session: Stripe.Checkout.Session) {
+  const userId = session.metadata?.userId;
+  const credits = parseInt(session.metadata?.credits ?? "0", 10);
+
+  if (!userId || credits <= 0) {
+    console.error("Invalid prepaid metadata:", session.metadata);
+    return;
+  }
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("prepaid_credits")
+    .eq("id", userId)
+    .single();
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({ prepaid_credits: (profile?.prepaid_credits ?? 0) + credits })
+    .eq("id", userId);
+
+  if (error) {
+    console.error("Error adding prepaid credits:", error);
+    throw error;
+  }
+
+  console.log(`Added ${credits} prepaid credits for user ${userId}`);
+}
+
 // Handle checkout.session.completed event
 async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) {
   console.log('Processing checkout.session.completed:', session.id);
+
+  if (session.metadata?.type === "prepaid") {
+    await handlePrepaidCheckout(session);
+    return;
+  }
 
   if (!session.subscription) {
     console.error('No subscription found in checkout session');

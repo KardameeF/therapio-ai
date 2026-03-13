@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "../components/ui/button";
-import { Check } from "lucide-react";
+import { Check, Coins } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 import { useAuth } from "../providers/AuthProvider";
 import { useTranslation } from "react-i18next";
@@ -9,8 +10,23 @@ import { useTranslation } from "react-i18next";
 export function BillingPage() {
   const [loading, setLoading] = useState(false);
   const [currentPlan, setCurrentPlan] = useState<string>("first_step");
+  const [prepaidCredits, setPrepaidCredits] = useState(0);
+  const [budgetCap, setBudgetCap] = useState(0);
+  const [budgetCapInput, setBudgetCapInput] = useState("");
+  const [savingCap, setSavingCap] = useState(false);
+  const [prepaidLoading, setPrepaidLoading] = useState<number | null>(null);
+  const [prepaidSuccess, setPrepaidSuccess] = useState(false);
   const { user } = useAuth();
   const { t } = useTranslation();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get("prepaid_success") === "true") {
+      setPrepaidSuccess(true);
+      setSearchParams({}, { replace: true });
+      setTimeout(() => setPrepaidSuccess(false), 5000);
+    }
+  }, [searchParams, setSearchParams]);
 
   useEffect(() => {
     if (!user) return;
@@ -21,6 +37,19 @@ export function BillingPage() {
       .single()
       .then(({ data }) => {
         if (data?.status === "active") setCurrentPlan(data.plan_type);
+      });
+
+    supabase
+      .from("profiles")
+      .select("prepaid_credits, budget_cap")
+      .eq("id", user.id)
+      .single()
+      .then(({ data }) => {
+        if (data) {
+          setPrepaidCredits(data.prepaid_credits ?? 0);
+          setBudgetCap(data.budget_cap ?? 0);
+          setBudgetCapInput(String((data.budget_cap ?? 0) / 100));
+        }
       });
   }, [user]);
 
@@ -85,6 +114,39 @@ export function BillingPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleTopUp = async (amount: number) => {
+    if (!user) return;
+    setPrepaidLoading(amount);
+    try {
+      const session = await supabase.auth.getSession();
+      const token = session.data.session?.access_token;
+      const res = await fetch("/.netlify/functions/create-prepaid-checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ amount }),
+      });
+      const data = await res.json();
+      if (data.url) window.location.href = data.url;
+      else throw new Error(data.error || "No URL returned");
+    } catch (error) {
+      console.error("Error creating prepaid checkout:", error);
+    } finally {
+      setPrepaidLoading(null);
+    }
+  };
+
+  const handleSaveBudgetCap = async () => {
+    if (!user) return;
+    setSavingCap(true);
+    const capInCredits = Math.max(0, Math.round(parseFloat(budgetCapInput || "0") * 100));
+    const { error } = await supabase
+      .from("profiles")
+      .update({ budget_cap: capInCredits })
+      .eq("id", user.id);
+    if (!error) setBudgetCap(capInCredits);
+    setSavingCap(false);
   };
 
   const cardVariants = {
@@ -169,6 +231,74 @@ export function BillingPage() {
         </div>
       </motion.div>
     </div>
+
+    {/* Prepaid Credits Section */}
+    <motion.div
+      className="mt-6 rounded-2xl border border-border bg-card p-6"
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: "easeOut", delay: 0.3 }}
+    >
+      <div className="flex items-center gap-2 mb-4">
+        <Coins className="w-5 h-5 text-primary" />
+        <h3 className="text-base font-semibold">{t("prepaid.title")}</h3>
+      </div>
+
+      {prepaidSuccess && (
+        <div className="mb-4 rounded-lg bg-green-500/10 border border-green-500/20 px-4 py-2 text-sm text-green-600 dark:text-green-400">
+          {t("prepaid.success")}
+        </div>
+      )}
+
+      <p className="text-sm text-muted-foreground mb-4">
+        {t("prepaid.balance", {
+          credits: prepaidCredits,
+          amount: (prepaidCredits / 100).toFixed(2),
+        })}
+      </p>
+
+      <div className="flex flex-wrap gap-2 mb-6">
+        {([5, 10, 20] as const).map((amount) => (
+          <Button
+            key={amount}
+            variant="outline"
+            onClick={() => handleTopUp(amount)}
+            disabled={prepaidLoading !== null}
+            className="min-w-[120px]"
+          >
+            {prepaidLoading === amount ? t("billing.loading") : t(`prepaid.topUp${amount}`)}
+          </Button>
+        ))}
+      </div>
+
+      <div className="border-t border-border pt-4">
+        <label className="text-sm font-medium text-foreground block mb-1">
+          {t("prepaid.budgetCap")}
+        </label>
+        <p className="text-xs text-muted-foreground mb-2">{t("prepaid.budgetCapHint")}</p>
+        <div className="flex items-center gap-2">
+          <input
+            type="number"
+            min="0"
+            step="0.01"
+            value={budgetCapInput}
+            onChange={(e) => setBudgetCapInput(e.target.value)}
+            className="w-28 px-3 py-2 text-sm rounded-lg border border-border bg-background text-foreground outline-none focus:border-primary/50"
+          />
+          <span className="text-sm text-muted-foreground">BGN</span>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleSaveBudgetCap}
+            disabled={savingCap}
+          >
+            {savingCap ? t("billing.loading") : t("prepaid.save")}
+          </Button>
+        </div>
+      </div>
+
+      <p className="text-xs text-muted-foreground mt-4">{t("prepaid.costPerMessage")}</p>
+    </motion.div>
     </div>
   );
 }

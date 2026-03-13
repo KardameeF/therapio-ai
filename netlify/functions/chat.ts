@@ -173,7 +173,7 @@ export const handler: Handler = async (event) => {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("messages_used, subscription_plan, is_blocked, prepaid_credits, budget_cap_reached")
+    .select("messages_used, subscription_plan, is_blocked, prepaid_credits, prepaid_spent_this_month, budget_cap, credits_per_message")
     .eq("id", user.id)
     .single();
 
@@ -193,11 +193,24 @@ export const handler: Handler = async (event) => {
   const used = profile?.messages_used ?? 0;
   const limit = planLimits[plan] ?? 30;
 
-  if (used >= limit && !((profile?.prepaid_credits ?? 0) > 0)) {
-    return {
-      statusCode: 429,
-      body: JSON.stringify({ error: "message_limit_reached", used, limit, plan }),
-    };
+  const usingPrepaid = used >= limit;
+
+  if (usingPrepaid) {
+    if ((profile?.prepaid_credits ?? 0) <= 0) {
+      return {
+        statusCode: 429,
+        body: JSON.stringify({ error: "message_limit_reached", used, limit, plan }),
+      };
+    }
+    const cap = profile?.budget_cap ?? 0;
+    const spent = profile?.prepaid_spent_this_month ?? 0;
+    const costPerMsg = profile?.credits_per_message ?? 2;
+    if (cap > 0 && spent + costPerMsg > cap) {
+      return {
+        statusCode: 429,
+        body: JSON.stringify({ error: "budget_cap_reached", used, limit, plan }),
+      };
+    }
   }
 
   const { messages, image, sessionId } = JSON.parse(event.body || "{}");
@@ -244,6 +257,17 @@ Respond in the same language the user writes in (Bulgarian or English).`,
       .from("profiles")
       .update({ messages_used: used + 1 })
       .eq("id", user.id);
+
+    if (usingPrepaid && (profile?.prepaid_credits ?? 0) > 0) {
+      const costPerMsg = profile?.credits_per_message ?? 2;
+      await supabase
+        .from("profiles")
+        .update({
+          prepaid_credits: Math.max(0, (profile!.prepaid_credits ?? 0) - costPerMsg),
+          prepaid_spent_this_month: (profile!.prepaid_spent_this_month ?? 0) + costPerMsg,
+        })
+        .eq("id", user.id);
+    }
 
     const reply = completion.choices[0].message.content;
 

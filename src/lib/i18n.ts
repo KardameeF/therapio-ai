@@ -427,6 +427,19 @@ const resources = {
         warning90: "Almost at your limit! {{used}}/{{limit}} messages used. Add credits to continue.",
         upgradePlan: "Upgrade or add credits →"
       },
+      prepaid: {
+        title: "Prepaid Credits",
+        balance: "Balance: {{credits}} credits ({{amount}} BGN)",
+        topUp5: "Add 5 BGN",
+        topUp10: "Add 10 BGN",
+        topUp20: "Add 20 BGN",
+        budgetCap: "Monthly spending cap (BGN):",
+        budgetCapHint: "0 = no limit",
+        costPerMessage: "Extra messages cost 0.02 BGN each",
+        budgetCapReached: "Monthly spending cap reached. Add credits or increase your cap.",
+        save: "Save",
+        success: "Credits added successfully!"
+      },
       footer: {
         rights: "© 2026 Eterapp. All rights reserved.",
         disclaimer: "Eterapp is not a medical service. In case of emergency, call 112 or the Trust Hotline 0800 1 8 400.",
@@ -861,6 +874,19 @@ const resources = {
         warning75: "Използвали сте {{used}} от {{limit}} съобщения (75%). Помислете за надграждане.",
         warning90: "Почти сте достигнали лимита! {{used}}/{{limit}} съобщения. Добавете кредити за да продължите.",
         upgradePlan: "Надгради или добави кредити →"
+      },
+      prepaid: {
+        title: "Предплатени кредити",
+        balance: "Баланс: {{credits}} кредита ({{amount}} лв)",
+        topUp5: "Зареди 5 лв",
+        topUp10: "Зареди 10 лв",
+        topUp20: "Зареди 20 лв",
+        budgetCap: "Месечен лимит за разходи (лв):",
+        budgetCapHint: "0 = без лимит",
+        costPerMessage: "Допълнителните съобщения струват 0.02 лв всяко",
+        budgetCapReached: "Месечният лимит е достигнат. Добавете кредити или увеличете лимита.",
+        save: "Запази",
+        success: "Кредитите са добавени успешно!"
       },
       footer: {
         rights: "© 2026 Eterapp. Всички права запазени.",
