@@ -73,9 +73,9 @@ export const handler: Handler = async (event) => {
       line_items: [
         {
           price_data: {
-            currency: "bgn",
+            currency: "eur",
             product_data: {
-              name: `Eterapp кредити ${amount} лв`,
+              name: `Eterapp кредити ${amount}€`,
               description: `${credits} кредита за съобщения`,
             },
             unit_amount: amount * 100,
