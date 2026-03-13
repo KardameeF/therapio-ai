@@ -835,6 +835,9 @@ export function ChatPage() {
               <Link to="/billing" className="block text-sm px-2 py-1.5 rounded-lg hover:bg-secondary" onClick={() => setProfileOpen(false)}>
                 {t("nav.billing")}
               </Link>
+              <Link to="/features" className="block text-sm px-2 py-1.5 rounded-lg hover:bg-secondary" onClick={() => setProfileOpen(false)}>
+                {t("nav.features")}
+              </Link>
               <div className="h-px bg-border/50 my-1" />
               <p className="text-[10px] text-muted-foreground px-2 pt-1 uppercase tracking-wider">{t("nav.legal")}</p>
               <Link
