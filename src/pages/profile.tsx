@@ -8,7 +8,7 @@ import { Label } from "../components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription } from "../components/ui/dialog";
 import { useAuth } from "../providers/AuthProvider";
 import { supabase } from "../lib/supabaseClient";
-import { User, Mail, Eye, EyeOff, Volume2, Star } from "lucide-react";
+import { User, Mail, Eye, EyeOff, Volume2, Star, CreditCard } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 interface ProfileFormData {
@@ -164,13 +164,22 @@ export function ProfilePage() {
           <h1 className="text-2xl md:text-3xl font-bold">{t("profile.title")}</h1>
           <p className="text-muted-foreground">{t("profile.subtitle")}</p>
         </div>
-        <Link
-          to="/features"
-          className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
-        >
-          <Star className="w-4 h-4" />
-          {t("nav.features")}
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            to="/billing"
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20 transition-colors"
+          >
+            <CreditCard className="w-4 h-4" />
+            {t("nav.billing")}
+          </Link>
+          <Link
+            to="/features"
+            className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+          >
+            <Star className="w-4 h-4" />
+            {t("nav.features")}
+          </Link>
+        </div>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">

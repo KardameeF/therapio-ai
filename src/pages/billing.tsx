@@ -54,16 +54,8 @@ export function BillingPage() {
       });
   }, [user]);
 
-  // Показва EUR като основна, BGN в скоби до 06.01.2026, след това само EUR
-  const formatPrice = (eur: number): string => {
-    const bgn = (eur * 1.95583).toFixed(2);
-    const cutoffDate = new Date("2026-01-06");
-    const today = new Date();
-    if (today < cutoffDate) {
-      return `€${eur.toFixed(2)} (${bgn} лв.)`;
-    }
-    return `€${eur.toFixed(2)}`;
-  };
+  const EUR_TO_BGN = 1.95583;
+  const bgnOf = (eur: number) => `(${(eur * EUR_TO_BGN).toFixed(2)} лв.)`;
 
   const handleManageBilling = async () => {
     if (!user) return;
@@ -222,7 +214,10 @@ export function BillingPage() {
               </span>
             )}
           </h3>
-          <p className="text-sm text-muted-foreground mt-1">{formatPrice(0)}/{t("billing.month")}</p>
+          <div className="mt-1">
+            <p className="text-sm text-muted-foreground">€0.00/{t("billing.month")}</p>
+            <p className="text-xs text-muted-foreground/70">{bgnOf(0)}</p>
+          </div>
         </div>
         <div className="space-y-3 text-sm text-muted-foreground">
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.aiMessages30")}</span></div>
@@ -252,9 +247,14 @@ export function BillingPage() {
               </span>
             )}
           </h3>
-          <p className="text-sm text-muted-foreground mt-1">
-            {billingInterval === "year" ? formatPrice(16.99) : formatPrice(19.99)}/{t("billing.month")}
-          </p>
+          <div className="mt-1">
+            <p className="text-sm text-muted-foreground">
+              €{(billingInterval === "year" ? 16.99 : 19.99).toFixed(2)}/{t("billing.month")}
+            </p>
+            <p className="text-xs text-muted-foreground/70">
+              {bgnOf(billingInterval === "year" ? 16.99 : 19.99)}
+            </p>
+          </div>
           {billingInterval === "year" && (
             <span className="text-xs text-green-500 font-medium">{t("billing.saveYearlyPG")}</span>
           )}
@@ -293,9 +293,14 @@ export function BillingPage() {
               </span>
             )}
           </h3>
-          <p className="text-sm text-muted-foreground mt-1">
-            {billingInterval === "year" ? formatPrice(33.99) : formatPrice(39.99)}/{t("billing.month")}
-          </p>
+          <div className="mt-1">
+            <p className="text-sm text-muted-foreground">
+              €{(billingInterval === "year" ? 33.99 : 39.99).toFixed(2)}/{t("billing.month")}
+            </p>
+            <p className="text-xs text-muted-foreground/70">
+              {bgnOf(billingInterval === "year" ? 33.99 : 39.99)}
+            </p>
+          </div>
           {billingInterval === "year" && (
             <span className="text-xs text-green-500 font-medium">{t("billing.saveYearlyEH")}</span>
           )}
@@ -341,18 +346,23 @@ export function BillingPage() {
         })}
       </p>
 
-      <div className="flex flex-wrap gap-2 mb-6">
-        {([5, 10, 20] as const).map((amount) => (
-          <Button
-            key={amount}
-            variant="outline"
-            onClick={() => handleTopUp(amount)}
-            disabled={prepaidLoading !== null}
-            className="min-w-[120px]"
-          >
-            {prepaidLoading === amount ? t("billing.loading") : t(`prepaid.topUp${amount}`)}
-          </Button>
-        ))}
+      <div className="flex flex-wrap gap-4 mb-6">
+        {([5, 10, 20] as const).map((amount) => {
+          const bgnEquiv: Record<number, string> = { 5: "9.78", 10: "19.56", 20: "39.12" };
+          return (
+            <div key={amount} className="flex flex-col items-center gap-0.5">
+              <Button
+                variant="outline"
+                onClick={() => handleTopUp(amount)}
+                disabled={prepaidLoading !== null}
+                className="min-w-[120px]"
+              >
+                {prepaidLoading === amount ? t("billing.loading") : t(`prepaid.topUp${amount}`)}
+              </Button>
+              <span className="text-xs text-muted-foreground">({bgnEquiv[amount]} лв.)</span>
+            </div>
+          );
+        })}
       </div>
 
       <div className="border-t border-border pt-4">
@@ -369,7 +379,7 @@ export function BillingPage() {
             onChange={(e) => setBudgetCapInput(e.target.value)}
             className="w-28 px-3 py-2 text-sm rounded-lg border border-border bg-background text-foreground outline-none focus:border-primary/50"
           />
-          <span className="text-sm text-muted-foreground">BGN</span>
+          <span className="text-sm text-muted-foreground">EUR</span>
           <Button
             variant="outline"
             size="sm"
