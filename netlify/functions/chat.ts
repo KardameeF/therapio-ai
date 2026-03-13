@@ -173,7 +173,7 @@ export const handler: Handler = async (event) => {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("messages_used, subscription_plan, is_blocked")
+    .select("messages_used, subscription_plan, is_blocked, prepaid_credits, budget_cap_reached")
     .eq("id", user.id)
     .single();
 
@@ -184,19 +184,19 @@ export const handler: Handler = async (event) => {
     };
   }
 
-  const limits: Record<string, number> = {
+  const planLimits: Record<string, number> = {
     first_step: 30,
     personal_growth: 500,
     expanded_horizons: 1500,
   };
-  const plan = profile?.subscription_plan || "first_step";
-  const used = profile?.messages_used || 0;
-  const limit = limits[plan] || 30;
+  const plan = profile?.subscription_plan ?? "first_step";
+  const used = profile?.messages_used ?? 0;
+  const limit = planLimits[plan] ?? 30;
 
-  if (used >= limit) {
+  if (used >= limit && !((profile?.prepaid_credits ?? 0) > 0)) {
     return {
       statusCode: 429,
-      body: JSON.stringify({ error: "Message limit reached", used, limit }),
+      body: JSON.stringify({ error: "message_limit_reached", used, limit, plan }),
     };
   }
 
@@ -214,14 +214,14 @@ export const handler: Handler = async (event) => {
   const openaiMessages = messages.map((m: { role: string; content: string }, idx: number) => {
     if (idx === messages.length - 1 && m.role === "user" && image && plan !== "first_step") {
       return {
-        role: "user",
+        role: "user" as const,
         content: [
-          { type: "text", text: m.content },
-          { type: "image_url", image_url: { url: image, detail: "low" } },
+          { type: "text" as const, text: m.content },
+          { type: "image_url" as const, image_url: { url: image, detail: "low" as const } },
         ],
       };
     }
-    return { role: m.role, content: m.content };
+    return { role: m.role as "user" | "assistant", content: m.content };
   });
 
   try {

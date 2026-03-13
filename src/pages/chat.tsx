@@ -617,6 +617,11 @@ export function ChatPage() {
       )
     : chatHistory;
 
+  const messageUsagePercent = messagesLimit > 0 ? (messagesUsed / messagesLimit) * 100 : 0;
+  const showWarning75 = messageUsagePercent >= 75 && messageUsagePercent < 90;
+  const showWarning90 = messageUsagePercent >= 90 && messageUsagePercent < 100;
+  const showLimitReached = messagesUsed >= messagesLimit;
+
   return (
     <div className="flex bg-background overflow-hidden" style={{ height: '100dvh' }}>
 
@@ -735,7 +740,7 @@ export function ChatPage() {
                     </p>
                   </button>
                   <div className="absolute right-1 top-1/2 -translate-y-1/2
-                    opacity-0 group-hover:opacity-100 transition-opacity
+                    transition-opacity
                     flex items-center gap-0.5">
                     {isPaidPlan ? (
                       <>
@@ -961,6 +966,31 @@ export function ChatPage() {
             </div>
           )}
         </div>
+
+        {showLimitReached && (
+          <div className="shrink-0 px-4 py-2 bg-destructive/10 border-t border-destructive/20 text-center">
+            <p className="text-xs text-destructive font-medium">
+              {t("chat.limitReached")}
+            </p>
+            <Link to="/billing" className="text-xs text-destructive underline hover:no-underline">
+              {t("chat.upgradePlan")}
+            </Link>
+          </div>
+        )}
+        {showWarning90 && !showLimitReached && (
+          <div className="shrink-0 px-4 py-2 bg-orange-500/10 border-t border-orange-500/20 text-center">
+            <p className="text-xs text-orange-600 dark:text-orange-400">
+              {t("chat.warning90", { used: messagesUsed, limit: messagesLimit })}
+            </p>
+          </div>
+        )}
+        {showWarning75 && (
+          <div className="shrink-0 px-4 py-2 bg-yellow-500/10 border-t border-yellow-500/20 text-center">
+            <p className="text-xs text-yellow-600 dark:text-yellow-400">
+              {t("chat.warning75", { used: messagesUsed, limit: messagesLimit })}
+            </p>
+          </div>
+        )}
 
         {/* INPUT BAR */}
         <div className="shrink-0 px-3 pt-1 pb-[max(0.25rem,env(safe-area-inset-bottom))] md:py-4 border-t border-border">
