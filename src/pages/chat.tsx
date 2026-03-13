@@ -727,75 +727,79 @@ export function ChatPage() {
               </p>
             ) : (
               filteredHistory.map((session) => (
-                <div key={session.id} className="relative group">
-                  <button
-                    onClick={async () => {
-                      setCurrentSessionId(session.id);
-                      const { data } = await supabase
-                        .from("chat_messages")
-                        .select("id, role, content")
-                        .eq("session_id", session.id)
-                        .order("created_at", { ascending: true });
-                      if (data) setMessages(data as Message[]);
-                      setSidebarOpen(false);
-                    }}
-                    className={`w-full text-left px-2 py-2 rounded-lg transition-colors ${
-                      String(currentSessionId) === String(session.id) ? "bg-secondary" : "hover:bg-secondary/60"
-                    }`}
-                  >
-                    <p className="text-sm font-medium text-foreground truncate group-hover:text-primary transition-colors pr-6">
-                      {displayTitle(session.title)}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {new Date(session.updated_at).toLocaleDateString("bg-BG", { day: "numeric", month: "short" })}
-                    </p>
-                  </button>
-                  <div className="absolute right-1 top-1/2 -translate-y-1/2
-                    transition-opacity
-                    flex items-center gap-0.5">
-                    {isPaidPlan ? (
-                      <>
-                        <button
-                          onClick={(e) => { e.stopPropagation(); openNotesModal(session.id); }}
-                          className="p-1 rounded hover:bg-secondary text-muted-foreground hover:text-primary"
-                          title={t("chat.sessionNotes")}
-                        >
-                          <ClipboardList className="h-3 w-3" />
-                        </button>
-                        <button
-                          onClick={(e) => { e.stopPropagation(); openTasksModal(session.id); }}
-                          className="p-1 rounded hover:bg-secondary text-muted-foreground hover:text-primary"
-                          title={t("chat.sessionTasks")}
-                        >
-                          <CheckSquare className="h-3 w-3" />
-                        </button>
-                        {sessionsWithTherapy.has(String(session.id)) && (
-                          <button
-                            onClick={(e) => { e.stopPropagation(); openTherapyModal(session.id); }}
-                            className="p-1 rounded hover:bg-secondary text-muted-foreground hover:text-primary"
-                            title={t("chat.therapyAudio")}
-                          >
-                            <Headphones className="h-3 w-3" />
-                          </button>
-                        )}
-                      </>
-                    ) : (
-                      <button
-                        onClick={(e) => e.stopPropagation()}
-                        className="p-1 rounded text-muted-foreground/50 cursor-not-allowed"
-                        title={t("chat.upgradeForInsights")}
-                      >
-                        <Lock className="h-3 w-3" />
-                      </button>
-                    )}
+                <div
+                  key={session.id}
+                  className={`rounded-lg px-2 py-2 transition-colors ${
+                    String(currentSessionId) === String(session.id) ? "bg-secondary" : "hover:bg-secondary/60"
+                  }`}
+                >
+                  <div className="flex items-center gap-1">
                     <button
-                      onClick={(e) => { e.stopPropagation(); deleteSession(session.id); }}
-                      className="p-1 rounded hover:bg-destructive/20 text-muted-foreground hover:text-destructive"
+                      onClick={async () => {
+                        setCurrentSessionId(session.id);
+                        const { data } = await supabase
+                          .from("chat_messages")
+                          .select("id, role, content")
+                          .eq("session_id", session.id)
+                          .order("created_at", { ascending: true });
+                        if (data) setMessages(data as Message[]);
+                        setSidebarOpen(false);
+                      }}
+                      className="flex-1 text-left min-w-0"
+                    >
+                      <p className="text-sm font-medium text-foreground truncate hover:text-primary transition-colors">
+                        {displayTitle(session.title)}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        {new Date(session.updated_at).toLocaleDateString("bg-BG", { day: "numeric", month: "short" })}
+                      </p>
+                    </button>
+                    <button
+                      onClick={() => deleteSession(session.id)}
+                      className="p-1 rounded hover:bg-destructive/20 text-muted-foreground hover:text-destructive shrink-0"
                       title={t("chat.deleteSession")}
                     >
                       <X className="h-3.5 w-3.5" />
                     </button>
                   </div>
+
+                  {String(currentSessionId) === String(session.id) && isPaidPlan && (
+                    <div className="flex gap-1 mt-1 pl-0.5">
+                      <button
+                        onClick={() => openNotesModal(session.id)}
+                        title={t("chat.sessionNotes")}
+                        className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground px-1.5 py-0.5 rounded hover:bg-secondary transition-colors"
+                      >
+                        <ClipboardList className="w-3 h-3" />
+                        {!sidebarCollapsed && <span>{t("chat.notes")}</span>}
+                      </button>
+                      <button
+                        onClick={() => openTasksModal(session.id)}
+                        title={t("chat.sessionTasks")}
+                        className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground px-1.5 py-0.5 rounded hover:bg-secondary transition-colors"
+                      >
+                        <CheckSquare className="w-3 h-3" />
+                        {!sidebarCollapsed && <span>{t("chat.tasks")}</span>}
+                      </button>
+                      {sessionsWithTherapy.has(String(session.id)) && (
+                        <button
+                          onClick={() => openTherapyModal(session.id)}
+                          title={t("chat.therapyAudio")}
+                          className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground px-1.5 py-0.5 rounded hover:bg-secondary transition-colors"
+                        >
+                          <Headphones className="w-3 h-3" />
+                        </button>
+                      )}
+                    </div>
+                  )}
+                  {String(currentSessionId) === String(session.id) && !isPaidPlan && (
+                    <div className="flex gap-1 mt-1 pl-0.5">
+                      <span className="flex items-center gap-1 text-xs text-muted-foreground/50 px-1.5 py-0.5">
+                        <Lock className="w-3 h-3" />
+                        {!sidebarCollapsed && <span>{t("chat.upgradeForInsights")}</span>}
+                      </span>
+                    </div>
+                  )}
                 </div>
               ))
             )}
