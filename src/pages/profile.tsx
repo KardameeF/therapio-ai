@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -8,7 +8,7 @@ import { Label } from "../components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription } from "../components/ui/dialog";
 import { useAuth } from "../providers/AuthProvider";
 import { supabase } from "../lib/supabaseClient";
-import { User, Mail, Eye, EyeOff, Volume2 } from "lucide-react";
+import { User, Mail, Eye, EyeOff, Volume2, Star } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 interface ProfileFormData {
@@ -159,9 +159,18 @@ export function ProfilePage() {
 
   return (
     <div className="space-y-4 md:space-y-6">
-      <div>
-        <h1 className="text-2xl md:text-3xl font-bold">{t("profile.title")}</h1>
-        <p className="text-muted-foreground">{t("profile.subtitle")}</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold">{t("profile.title")}</h1>
+          <p className="text-muted-foreground">{t("profile.subtitle")}</p>
+        </div>
+        <Link
+          to="/features"
+          className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+        >
+          <Star className="w-4 h-4" />
+          {t("nav.features")}
+        </Link>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
