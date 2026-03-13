@@ -155,6 +155,51 @@ Respond ONLY with valid JSON: {"condition":"..."}`,
   return picked.id;
 }
 
+async function buildCompressedContext(
+  msgs: Array<{ role: string; content: string }>
+): Promise<Array<{ role: string; content: string }>> {
+  const RECENT_KEEP = 20;
+  const COMPRESS_THRESHOLD = 40;
+  const SIMPLE_LIMIT = 30;
+
+  if (msgs.length <= SIMPLE_LIMIT) return msgs;
+  if (msgs.length <= COMPRESS_THRESHOLD) return msgs.slice(-SIMPLE_LIMIT);
+
+  const oldHistory = msgs.slice(0, msgs.length - RECENT_KEEP);
+  const recentMessages = msgs.slice(-RECENT_KEEP);
+
+  const historyText = oldHistory
+    .map((m) => `${m.role === "user" ? "Потребител" : "Eterapp"}: ${
+      typeof m.content === "string" ? m.content : "[медия]"
+    }`)
+    .join("\n");
+
+  try {
+    const compressionResponse = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      max_tokens: 300,
+      messages: [
+        {
+          role: "system",
+          content: `Summarize the following therapy conversation history in 2-3 sentences.
+Focus on: main emotional themes, key concerns mentioned, progress made.
+Write in the same language as the conversation (BG or EN). Max 250 words.`,
+        },
+        { role: "user", content: historyText },
+      ],
+    });
+
+    const summary = compressionResponse.choices[0].message.content || "";
+    return [
+      { role: "user", content: `[Контекст от по-ранен разговор]: ${summary}` },
+      { role: "assistant", content: "Разбрах контекста от нашия по-ранен разговор." },
+      ...recentMessages,
+    ];
+  } catch {
+    return msgs.slice(-SIMPLE_LIMIT);
+  }
+}
+
 export const handler: Handler = async (event) => {
   if (event.httpMethod !== "POST") {
     return { statusCode: 405, body: "Method Not Allowed" };
@@ -222,10 +267,11 @@ export const handler: Handler = async (event) => {
     return { statusCode: 400, body: JSON.stringify({ error: "Image too large" }) };
   }
 
-  const model = plan === "first_step" ? "gpt-4o-mini" : "gpt-4o";
+  const model = plan === "expanded_horizons" ? "gpt-4o" : "gpt-4o-mini";
 
-  const openaiMessages = messages.map((m: { role: string; content: string }, idx: number) => {
-    if (idx === messages.length - 1 && m.role === "user" && image && plan !== "first_step") {
+  const contextMessages = await buildCompressedContext(messages);
+  const openaiMessages = contextMessages.map((m: { role: string; content: string }, idx: number) => {
+    if (idx === contextMessages.length - 1 && m.role === "user" && image && plan !== "first_step") {
       return {
         role: "user" as const,
         content: [
