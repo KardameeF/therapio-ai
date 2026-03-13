@@ -211,3 +211,8 @@ body {
 .pb-safe {
   padding-bottom: max(1rem, env(safe-area-inset-bottom));
 }
+
+/* Hide iubenda floating consent button */
+.iubenda-tp-btn {
+  display: none !important;
+}
