@@ -391,7 +391,6 @@ export function BillingPage() {
         </div>
       </div>
 
-      <p className="text-xs text-muted-foreground mt-4">{t("prepaid.costPerMessage")}</p>
     </motion.div>
 
     <p className="text-xs text-muted-foreground text-center mt-8 px-4">
