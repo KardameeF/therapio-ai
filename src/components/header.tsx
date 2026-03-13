@@ -34,8 +34,24 @@ export function Header() {
           <EtheraLogo />
         </Link>
 
+        {/* Center nav */}
+        <nav className="hidden md:flex items-center gap-1">
+          <Link
+            to="/features"
+            className="px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors"
+          >
+            {t("nav.features")}
+          </Link>
+        </nav>
+
         {/* Right side */}
         <div className="flex items-center gap-2 md:gap-3">
+          <Link
+            to="/features"
+            className="md:hidden text-xs text-muted-foreground hover:text-foreground transition-colors"
+          >
+            {t("nav.features")}
+          </Link>
           <LocaleSwitch />
           <ThemeToggle />
           {user ? (

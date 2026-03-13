@@ -23,6 +23,7 @@ import { CookiesPage } from "./pages/legal/cookies";
 import { SuccessPage } from "./pages/success";
 import { CancelPage } from "./pages/cancel";
 import { ResetPasswordPage } from "./pages/reset-password";
+import { FeaturesPage } from "./pages/features";
 
 // Initialize Sentry
 initSentry();
@@ -44,6 +45,16 @@ export default function App() {
               } 
             />
             
+            <Route 
+              path="/features" 
+              element={
+                <>
+                  <Header />
+                  <FeaturesPage />
+                </>
+              } 
+            />
+
             <Route 
               path="/login" 
               element={

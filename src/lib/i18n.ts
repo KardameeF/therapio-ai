@@ -23,7 +23,8 @@ const resources = {
         terms: "Terms",
         privacy: "Privacy",
         gdpr: "GDPR",
-        cookies: "Cookies"
+        cookies: "Cookies",
+        features: "Features"
       },
       header: {
         loginOrSignup: "Login or Sign Up"
@@ -427,6 +428,65 @@ const resources = {
         warning90: "Almost at your limit! {{used}}/{{limit}} messages used. Add credits to continue.",
         upgradePlan: "Upgrade or add credits →"
       },
+      featuresPage: {
+        hero: {
+          title: "Everything Eterapp offers",
+          subtitle: "Choose the plan that fits your needs"
+        },
+        plans: {
+          free: "Free",
+          personal_growth: "Personal Growth",
+          expanded_horizons: "Expanded Horizons"
+        },
+        table: {
+          feature: "Feature",
+          aiMessages: "AI messages / month",
+          sessionNotes: "Session notes",
+          tasks: "Tasks",
+          audioTherapy: "Audio therapies",
+          voiceAssistant: "Voice assistant",
+          history: "History",
+          support: "Support",
+          days: "{{count}} days",
+          support_basic: "Basic",
+          support_priority: "Priority",
+          support_247: "24/7"
+        },
+        details: {
+          title: "How each feature works",
+          sessionNotes: {
+            title: "Session Notes",
+            description: "AI automatically generates a summary after each session — emotional state, main topics, what to watch going forward. Access them from the clipboard icon in the sidebar."
+          },
+          tasks: {
+            title: "Tasks",
+            description: "AI suggests practical, actionable steps after your conversation. Small goals to work on over the next few days. Access them from the checkmark icon in the sidebar."
+          },
+          audioTherapy: {
+            title: "Audio Therapies",
+            description: "Curated therapeutic audio sessions matched to your mood and emotional needs. Available from the headphones icon in the sidebar after qualifying sessions."
+          },
+          voiceAssistant: {
+            title: "Voice Assistant",
+            description: "Speak with Eterapp using your voice. The assistant listens, responds with text-to-speech, and continues the conversation hands-free. Access it from the headphones icon in the chat input."
+          }
+        },
+        payg: {
+          title: "Over your limit? Don't stop.",
+          description: "Top up with prepaid credits and keep chatting beyond your plan's monthly limit.",
+          packages: "Credit packages: 5, 10, or 20 BGN",
+          costPerMessage: "1 extra message = 0.02 BGN from your prepaid balance",
+          budgetCap: "Set a monthly spending cap — we stop automatically when you reach it",
+          cta: "Add credits"
+        },
+        cta: {
+          title: "Ready to feel better?",
+          subtitle: "Start your journey with Eterapp today.",
+          startFree: "Start for free",
+          upgrade: "Upgrade your plan",
+          manage: "Manage subscription"
+        }
+      },
       prepaid: {
         title: "Prepaid Credits",
         balance: "Balance: {{credits}} credits ({{amount}} BGN)",
@@ -471,7 +531,8 @@ const resources = {
         terms: "Условия",
         privacy: "Поверителност",
         gdpr: "GDPR",
-        cookies: "Бисквитки"
+        cookies: "Бисквитки",
+        features: "Функции"
       },
       header: {
         loginOrSignup: "Влезте или се регистрирайте"
@@ -874,6 +935,65 @@ const resources = {
         warning75: "Използвали сте {{used}} от {{limit}} съобщения (75%). Помислете за надграждане.",
         warning90: "Почти сте достигнали лимита! {{used}}/{{limit}} съобщения. Добавете кредити за да продължите.",
         upgradePlan: "Надгради или добави кредити →"
+      },
+      featuresPage: {
+        hero: {
+          title: "Всичко което Eterapp предлага",
+          subtitle: "Изберете плана, който отговаря на вашите нужди"
+        },
+        plans: {
+          free: "Безплатен",
+          personal_growth: "Личен Растеж",
+          expanded_horizons: "Разширени Хоризонти"
+        },
+        table: {
+          feature: "Функция",
+          aiMessages: "AI съобщения / месец",
+          sessionNotes: "Сесийни бележки",
+          tasks: "Задачи",
+          audioTherapy: "Аудио терапии",
+          voiceAssistant: "Гласов асистент",
+          history: "История",
+          support: "Поддръжка",
+          days: "{{count}} дни",
+          support_basic: "Базова",
+          support_priority: "Приоритетна",
+          support_247: "24/7"
+        },
+        details: {
+          title: "Как работи всяка функция",
+          sessionNotes: {
+            title: "Сесийни бележки",
+            description: "AI автоматично генерира обобщение след сесията — емоционално състояние, основни теми, какво да се наблюдава. Достъпно от иконата с клипборд в сайдбара."
+          },
+          tasks: {
+            title: "Задачи",
+            description: "AI предлага практически стъпки след разговора. Малки цели за следващите дни. Достъпно от иконата с отметка в сайдбара."
+          },
+          audioTherapy: {
+            title: "Аудио терапии",
+            description: "Подбрани терапевтични аудио сесии, съобразени с настроението ти. Достъпно от иконата със слушалки в сайдбара след подходяща сесия."
+          },
+          voiceAssistant: {
+            title: "Гласов асистент",
+            description: "Говори с Eterapp на глас. Асистентът слуша, отговаря чрез синтез на реч и продължава разговора без ръце. Достъпно от иконата със слушалки в чат полето."
+          }
+        },
+        payg: {
+          title: "Излезли извън лимита? Не спирай.",
+          description: "Заредете с предплатени кредити и продължете да чатите отвъд месечния лимит на плана.",
+          packages: "Пакети кредити: 5, 10 или 20 лв",
+          costPerMessage: "1 допълнително съобщение = 0.02 лв от предплатения баланс",
+          budgetCap: "Задайте месечен лимит за допълнителни разходи — ние спираме автоматично",
+          cta: "Зареди кредити"
+        },
+        cta: {
+          title: "Готови ли сте да се почувствате по-добре?",
+          subtitle: "Започнете пътуването си с Eterapp днес.",
+          startFree: "Започни безплатно",
+          upgrade: "Надгради плана си",
+          manage: "Управлявай абонамента"
+        }
       },
       prepaid: {
         title: "Предплатени кредити",
