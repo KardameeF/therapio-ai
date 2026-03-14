@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
-import { Plus, Send, User, Menu, X, PanelLeftOpen, PanelLeftClose, LogOut, Search, Mic, MicOff, Loader2, ImageIcon, ClipboardList, CheckSquare, Lock, Headphones } from "lucide-react";
+import { Plus, Send, User, Menu, X, PanelLeftOpen, PanelLeftClose, LogOut, Search, Mic, MicOff, Loader2, ImageIcon, ClipboardList, CheckSquare, Lock, Headphones, CreditCard, FileText } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 import { LegalModal } from "../components/LegalModal";
 import { useLegalModal } from "../hooks/useLegalModal";
@@ -802,6 +802,75 @@ export function ChatPage() {
               ))
             )}
           </div>
+            </>
+          )}
+        </div>
+
+        {/* Navigation */}
+        <div className={`shrink-0 ${sidebarCollapsed ? "px-1 py-2" : "px-3 py-2"}`}>
+          <div className="h-px bg-border/50 mb-2" />
+          <div className="space-y-1">
+            <Link
+              to="/billing"
+              title={sidebarCollapsed ? t("nav.billing") : undefined}
+              onClick={() => setSidebarOpen(false)}
+              className={`flex items-center rounded-lg text-xs font-medium transition-all duration-200 ${
+                sidebarCollapsed
+                  ? "justify-center w-10 h-10 mx-auto text-muted-foreground hover:bg-secondary hover:text-foreground"
+                  : "gap-3 px-2 py-2 text-muted-foreground hover:text-primary hover:bg-primary/5"
+              }`}
+            >
+              <CreditCard className="h-4 w-4 shrink-0" />
+              {!sidebarCollapsed && t("nav.billing")}
+            </Link>
+            <Link
+              to="/profile"
+              title={sidebarCollapsed ? t("nav.profile") : undefined}
+              onClick={() => setSidebarOpen(false)}
+              className={`flex items-center rounded-lg text-xs font-medium transition-all duration-200 ${
+                sidebarCollapsed
+                  ? "justify-center w-10 h-10 mx-auto text-muted-foreground hover:bg-secondary hover:text-foreground"
+                  : "gap-3 px-2 py-2 text-muted-foreground hover:text-primary hover:bg-primary/5"
+              }`}
+            >
+              <User className="h-4 w-4 shrink-0" />
+              {!sidebarCollapsed && t("nav.profile")}
+            </Link>
+          </div>
+          {!sidebarCollapsed && (
+            <>
+              <div className="h-px bg-border/50 my-2" />
+              <p className="px-2 py-1 text-[10px] text-muted-foreground uppercase tracking-wider">{t("nav.legal")}</p>
+              <div className="space-y-0.5">
+                <button
+                  onClick={() => openLegal("terms")}
+                  className="flex items-center gap-3 px-2 py-1.5 text-xs text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-lg transition-colors w-full text-left"
+                >
+                  <FileText className="h-3.5 w-3.5 shrink-0" />
+                  {t("nav.terms")}
+                </button>
+                <button
+                  onClick={() => openLegal("privacy")}
+                  className="flex items-center gap-3 px-2 py-1.5 text-xs text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-lg transition-colors w-full text-left"
+                >
+                  <FileText className="h-3.5 w-3.5 shrink-0" />
+                  {t("nav.privacy")}
+                </button>
+                <button
+                  onClick={() => openLegal("gdpr")}
+                  className="flex items-center gap-3 px-2 py-1.5 text-xs text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-lg transition-colors w-full text-left"
+                >
+                  <FileText className="h-3.5 w-3.5 shrink-0" />
+                  {t("nav.gdpr")}
+                </button>
+                <button
+                  onClick={() => openLegal("cookies")}
+                  className="flex items-center gap-3 px-2 py-1.5 text-xs text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-lg transition-colors w-full text-left"
+                >
+                  <FileText className="h-3.5 w-3.5 shrink-0" />
+                  {t("nav.cookies")}
+                </button>
+              </div>
             </>
           )}
         </div>
