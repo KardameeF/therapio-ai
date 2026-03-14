@@ -101,23 +101,6 @@ body {
   @apply outline-none ring-2 ring-primary ring-offset-2;
 }
 
-/* iubenda cookie button — скрит визуално */
-#iubenda-cs-banner {
-  display: none !important;
-}
-
-/* Скриване на iubenda floating privacy widget бутони */
-.iub__us-widget,
-.iubenda-tp-btn,
-.iubenda-cs-uspr-link,
-.iub__us-widget__link--privacy-choices {
-  display: none !important;
-}
-
-/* Скриваме iubenda плаващия бутон глобално */
-.iubenda-tp-btn {
-  display: none !important;
-}
 
 /* Flat design — нула box-shadow */
 [class*="shadow-"] {
@@ -210,9 +193,4 @@ body {
 /* Safe area за iPhone notch */
 .pb-safe {
   padding-bottom: max(1rem, env(safe-area-inset-bottom));
-}
-
-/* Hide iubenda floating consent button */
-.iubenda-tp-btn {
-  display: none !important;
 }

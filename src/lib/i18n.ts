@@ -782,6 +782,12 @@ const resources = {
         saving: "Saving...",
         loading: "Loading..."
       },
+      cookieBanner: {
+        message: "We use cookies to ensure core functionality and remember your preferences.",
+        learnMore: "Learn more",
+        accept: "Accept",
+        decline: "Decline"
+      },
       footer: {
         rights: "© 2026 Eterapp. All rights reserved.",
         disclaimer: "Eterapp is not a medical service. In case of emergency, call 112 or the Trust Hotline 0800 1 8 400.",
@@ -1571,6 +1577,12 @@ const resources = {
       common: {
         saving: "Запазва...",
         loading: "Зарежда..."
+      },
+      cookieBanner: {
+        message: "Използваме бисквитки за основна функционалност и запомняне на предпочитанията ви.",
+        learnMore: "Научете повече",
+        accept: "Приемам",
+        decline: "Отказвам"
       },
       footer: {
         rights: "© 2026 Eterapp. Всички права запазени.",

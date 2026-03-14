@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { useTheme } from "../providers/theme-provider";
 import { useAuth } from "../providers/AuthProvider";
 import { AuthModal } from "../components/auth-modal";
 import { Button } from "../components/ui/button";
@@ -26,14 +25,6 @@ export function LandingPage() {
   const [authTab, setAuthTab] = useState<"login" | "register">("register");
   const { user } = useAuth();
   const { t } = useTranslation();
-  const { theme } = useTheme();
-  const resolvedTheme =
-    theme === "system"
-      ? window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light"
-      : theme;
-
   useSEO({
     title: "Eterapp — Твоят асистент за емоционална подкрепа",
     description: "Eterapp е твоят асистент за емоционална подкрепа, наличен 24/7.",
@@ -296,15 +287,12 @@ export function LandingPage() {
             {t("footer.terms")}
           </Link>
 
-          <a
-            href="https://www.iubenda.com/privacy-policy/83536904"
-            className={`iubenda-noiframe iubenda-embed text-sm ${
-              resolvedTheme === "dark" ? "iubenda-white" : "iubenda-black"
-            }`}
-            title="Политика за поверителност"
+          <Link
+            to="/legal/privacy"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             {t("footer.privacy")}
-          </a>
+          </Link>
 
           <Link
             to="/legal/gdpr"
@@ -313,18 +301,12 @@ export function LandingPage() {
             {t("footer.gdpr")}
           </Link>
 
-          <a
-            href="https://www.iubenda.com/privacy-policy/83536904/cookie-policy"
-            className={`iubenda-noiframe iubenda-embed text-sm ${
-              resolvedTheme === "dark" ? "iubenda-white" : "iubenda-black"
-            }`}
-            title="Политика за Бисквитки"
+          <Link
+            to="/legal/cookies"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             {t("footer.cookies")}
-          </a>
-          <button className="iubenda-cs-preferences-link text-sm text-muted-foreground hover:text-foreground transition-colors bg-transparent border-none cursor-pointer p-0">
-            {t("footer.cookieSettings")}
-          </button>
+          </Link>
         </div>
         <p className="text-xs text-muted-foreground/70 mt-2">
           Защитено от reCAPTCHA —{" "}

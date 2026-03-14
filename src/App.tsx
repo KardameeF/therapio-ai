@@ -24,6 +24,7 @@ import { SuccessPage } from "./pages/success";
 import { CancelPage } from "./pages/cancel";
 import { ResetPasswordPage } from "./pages/reset-password";
 import { FeaturesPage } from "./pages/features";
+import { CookieBanner } from "./components/CookieBanner";
 
 // Initialize Sentry
 initSentry();
@@ -152,6 +153,7 @@ export default function App() {
               } 
             />
           </Routes>
+          <CookieBanner />
         </RecaptchaWrapper>
       </AuthProvider>
     </ThemeProvider>
