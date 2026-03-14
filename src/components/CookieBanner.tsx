@@ -1,45 +1,105 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "./ui/button";
+import { Switch } from "./ui/switch";
 
 export function CookieBanner() {
   const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
+  const [functional, setFunctional] = useState(true);
 
   useEffect(() => {
     const consent = localStorage.getItem("cookie_consent");
     if (!consent) setVisible(true);
   }, []);
 
-  const handleAccept = () => {
-    localStorage.setItem("cookie_consent", "accepted");
-    setVisible(false);
-  };
-
-  const handleDecline = () => {
-    localStorage.setItem("cookie_consent", "declined");
+  const saveConsent = (functionalValue: boolean) => {
+    localStorage.setItem(
+      "cookie_consent",
+      JSON.stringify({
+        necessary: true,
+        functional: functionalValue,
+        timestamp: new Date().toISOString(),
+      })
+    );
     setVisible(false);
   };
 
   if (!visible) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/95 backdrop-blur-sm p-4">
-      <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-        <p className="text-sm text-muted-foreground text-center sm:text-left">
-          {t("cookieBanner.message")}{" "}
-          <a href="/legal/cookies" className="underline hover:text-foreground">
-            {t("cookieBanner.learnMore")}
-          </a>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+      <div className="bg-background border border-border rounded-xl shadow-xl w-full max-w-md p-6 space-y-4">
+
+        <div className="flex items-center gap-2">
+          <span className="text-2xl">🍪</span>
+          <h2 className="text-lg font-semibold">{t("cookieBanner.title")}</h2>
+        </div>
+
+        <p className="text-sm text-muted-foreground">
+          {t("cookieBanner.description")}
         </p>
-        <div className="flex gap-2 shrink-0">
-          <Button variant="outline" size="sm" onClick={handleDecline}>
-            {t("cookieBanner.decline")}
+
+        <div className="space-y-2">
+          <div className="bg-muted/50 rounded-lg p-3">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-sm font-medium">{t("cookieBanner.strictlyTitle")}</span>
+              <div className="flex items-center gap-2">
+                <span className="text-xs bg-muted px-2 py-0.5 rounded text-muted-foreground">
+                  {t("cookieBanner.alwaysActive")}
+                </span>
+                <Switch checked disabled />
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground">{t("cookieBanner.strictlyDesc")}</p>
+          </div>
+
+          <div className="bg-muted/50 rounded-lg p-3">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-sm font-medium">{t("cookieBanner.functionalTitle")}</span>
+              <Switch checked={functional} onCheckedChange={setFunctional} />
+            </div>
+            <p className="text-xs text-muted-foreground">{t("cookieBanner.functionalDesc")}</p>
+          </div>
+
+          <div className="bg-muted/50 rounded-lg p-3">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-sm font-medium">{t("cookieBanner.securityTitle")}</span>
+              <div className="flex items-center gap-2">
+                <span className="text-xs bg-muted px-2 py-0.5 rounded text-muted-foreground">
+                  {t("cookieBanner.alwaysActive")}
+                </span>
+                <Switch checked disabled />
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground">{t("cookieBanner.securityDesc")}</p>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap gap-x-3 gap-y-1">
+          <a href="/legal/privacy" className="text-xs underline hover:text-foreground text-muted-foreground">
+            {t("cookieBanner.privacyPolicy")}
+          </a>
+          <a href="/legal/cookies" className="text-xs underline hover:text-foreground text-muted-foreground">
+            {t("cookieBanner.cookiePolicy")}
+          </a>
+          <a href="/legal/terms" className="text-xs underline hover:text-foreground text-muted-foreground">
+            {t("cookieBanner.termsOfService")}
+          </a>
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-2 pt-1">
+          <Button variant="ghost" className="flex-1 text-muted-foreground" onClick={() => saveConsent(false)}>
+            {t("cookieBanner.declineAll")}
           </Button>
-          <Button size="sm" onClick={handleAccept}>
-            {t("cookieBanner.accept")}
+          <Button variant="outline" className="flex-1" onClick={() => saveConsent(functional)}>
+            {t("cookieBanner.savePreferences")}
+          </Button>
+          <Button className="flex-1" onClick={() => saveConsent(true)}>
+            {t("cookieBanner.acceptAll")}
           </Button>
         </div>
+
       </div>
     </div>
   );

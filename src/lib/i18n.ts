@@ -783,10 +783,21 @@ const resources = {
         loading: "Loading..."
       },
       cookieBanner: {
-        message: "We use cookies to ensure core functionality and remember your preferences.",
-        learnMore: "Learn more",
-        accept: "Accept",
-        decline: "Decline"
+        title: "Cookie Preferences",
+        description: "We use cookies to keep Eterapp running, protect against abuse, and remember your preferences. Choose which categories you accept below.",
+        strictlyTitle: "Strictly Necessary",
+        strictlyDesc: "Required for authentication, payments, and core functionality. Cannot be disabled.",
+        functionalTitle: "Functional",
+        functionalDesc: "Remember your language and theme preferences across sessions.",
+        securityTitle: "Security",
+        securityDesc: "Protect the service from automated abuse and fraud (reCAPTCHA). Cannot be disabled.",
+        alwaysActive: "Always on",
+        privacyPolicy: "Privacy Policy",
+        cookiePolicy: "Cookie Policy",
+        termsOfService: "Terms of Service",
+        declineAll: "Decline all",
+        savePreferences: "Save preferences",
+        acceptAll: "Accept all"
       },
       footer: {
         rights: "© 2026 Eterapp. All rights reserved.",
@@ -1579,10 +1590,21 @@ const resources = {
         loading: "Зарежда..."
       },
       cookieBanner: {
-        message: "Използваме бисквитки за основна функционалност и запомняне на предпочитанията ви.",
-        learnMore: "Научете повече",
-        accept: "Приемам",
-        decline: "Отказвам"
+        title: "Предпочитания за бисквитки",
+        description: "Използваме бисквитки за работата на Eterapp, защита срещу злоупотреби и запомняне на предпочитанията ви. Изберете кои категории приемате по-долу.",
+        strictlyTitle: "Строго необходими",
+        strictlyDesc: "Необходими за удостоверяване, плащания и основна функционалност. Не могат да бъдат изключени.",
+        functionalTitle: "Функционални",
+        functionalDesc: "Запомнят предпочитанията ви за език и тема между сесиите.",
+        securityTitle: "Сигурност",
+        securityDesc: "Защитават услугата от автоматизирани злоупотреби и измами (reCAPTCHA). Не могат да бъдат изключени.",
+        alwaysActive: "Винаги включени",
+        privacyPolicy: "Политика за поверителност",
+        cookiePolicy: "Политика за бисквитки",
+        termsOfService: "Общи условия",
+        declineAll: "Откажи всички",
+        savePreferences: "Запази избора",
+        acceptAll: "Приеми всички"
       },
       footer: {
         rights: "© 2026 Eterapp. Всички права запазени.",
