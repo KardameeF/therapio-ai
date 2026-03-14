@@ -16,6 +16,7 @@ export function LocaleSwitch() {
       variant="outline" 
       size="sm" 
       onClick={toggleLocale}
+      aria-label={currentLocale === 'en' ? 'Превключи на български' : 'Switch to English'}
       className="h-10 px-4 rounded-lg border-2 border-border hover:border-primary transition-colors font-medium min-w-[60px]"
     >
       {currentLocale === 'en' ? 'BG' : 'EN'}

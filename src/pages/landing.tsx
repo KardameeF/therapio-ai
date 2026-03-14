@@ -85,6 +85,7 @@ export function LandingPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
+      <main>
 
       {/* ── HERO ── */}
       <section className="px-4 py-16 md:py-28">
@@ -277,6 +278,7 @@ export function LandingPage() {
           </div>
         </div>
       </section>
+      </main>
 
       {/* ── FOOTER ── */}
       <footer className="border-t border-border bg-muted py-10 px-4 text-center text-sm text-muted-foreground space-y-3">

@@ -875,7 +875,7 @@ export function ChatPage() {
       )}
 
       {/* MAIN */}
-      <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+      <main className="flex flex-col flex-1 min-w-0 overflow-hidden">
 
         {/* TOPBAR */}
         <header className="flex items-center justify-between px-4 h-14
@@ -1253,7 +1253,7 @@ export function ChatPage() {
           </div>
         </div>
 
-      </div>
+      </main>
 
       <DisplayNamePrompt />
       <DisclaimerModal />

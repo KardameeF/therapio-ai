@@ -266,7 +266,8 @@ const resources = {
         }
       },
       header: {
-        loginOrSignup: "Login or Sign Up"
+        loginOrSignup: "Login or Sign Up",
+        toggleTheme: "Toggle theme"
       },
       auth: {
         login: "Login",
@@ -1094,7 +1095,8 @@ const resources = {
         }
       },
       header: {
-        loginOrSignup: "Влезте или се регистрирайте"
+        loginOrSignup: "Влезте или се регистрирайте",
+        toggleTheme: "Смяна на тема"
       },
       auth: {
         login: "Вход",
