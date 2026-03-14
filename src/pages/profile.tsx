@@ -8,7 +8,7 @@ import { Label } from "../components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription } from "../components/ui/dialog";
 import { useAuth } from "../providers/AuthProvider";
 import { supabase } from "../lib/supabaseClient";
-import { User, Mail, Eye, EyeOff, Volume2 } from "lucide-react";
+import { User, Mail, Eye, EyeOff, Volume2, Settings } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 interface ProfileFormData {
@@ -157,6 +157,11 @@ export function ProfilePage() {
     }
   };
 
+  const handleResetCookies = () => {
+    localStorage.removeItem("cookie_consent");
+    window.location.reload();
+  };
+
   return (
     <div className="space-y-4 md:space-y-6">
       <div>
@@ -281,6 +286,22 @@ export function ProfilePage() {
         {voiceSaved && (
           <p className="text-xs text-green-600 mt-2">{t("profile.voicePreference.saved")}</p>
         )}
+      </div>
+
+      {/* Cookie Preferences */}
+      <div className="rounded-2xl border border-border bg-card p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-0 sm:justify-between">
+          <div>
+            <h3 className="text-base font-semibold flex items-center gap-2">
+              <Settings className="h-4 w-4 text-primary" />
+              {t("profile.cookiePreferences")}
+            </h3>
+            <p className="text-sm text-muted-foreground mt-1">{t("profile.cookiePreferencesDesc")}</p>
+          </div>
+          <Button variant="outline" onClick={handleResetCookies} className="w-full sm:w-auto shrink-0">
+            {t("profile.cookiePreferences")}
+          </Button>
+        </div>
       </div>
 
       {/* Security — password change */}

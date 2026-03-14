@@ -545,8 +545,8 @@ const resources = {
           subtitle: "Update profile information",
           displayName: "Display name",
           displayNamePlaceholder: "Enter display name",
-          bio: "Short bio",
-          bioPlaceholder: "Write something about yourself",
+          bio: "About me",
+          bioPlaceholder: "A few words about yourself...",
           save: "Save changes",
           saving: "Saving...",
           successMsg: "Profile updated successfully!",
@@ -559,6 +559,8 @@ const resources = {
           male: "Male",
           saved: "Saved!"
         },
+        cookiePreferences: "Cookie Preferences",
+        cookiePreferencesDesc: "Reset your cookie consent choice. The cookie banner will appear again on reload.",
         dangerZone: {
           title: "Danger zone",
           subtitle: "Irreversible actions",
@@ -1339,8 +1341,8 @@ const resources = {
           subtitle: "Обнови профилната информация",
           displayName: "Показвано име",
           displayNamePlaceholder: "Въведи показвано име",
-          bio: "Кратко описание",
-          bioPlaceholder: "Напиши нещо за себе си",
+          bio: "За мен",
+          bioPlaceholder: "Няколко думи за теб...",
           save: "Запази промените",
           saving: "Запазване...",
           successMsg: "Профилът е обновен успешно!",
@@ -1353,6 +1355,8 @@ const resources = {
           male: "Мъжки",
           saved: "Запазено!"
         },
+        cookiePreferences: "Предпочитания за бисквитки",
+        cookiePreferencesDesc: "Нулирай избора си за бисквитки. Банерът ще се покаже отново при презареждане.",
         dangerZone: {
           title: "Опасна зона",
           subtitle: "Необратими действия",
