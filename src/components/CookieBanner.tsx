@@ -2,16 +2,31 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "./ui/button";
 import { Switch } from "./ui/switch";
+import { useAuth } from "../providers/AuthProvider";
 
 export function CookieBanner() {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const [visible, setVisible] = useState(false);
   const [functional, setFunctional] = useState(true);
 
   useEffect(() => {
     const consent = localStorage.getItem("cookie_consent");
-    if (!consent) setVisible(true);
-  }, []);
+    if (!consent) {
+      if (user) {
+        localStorage.setItem(
+          "cookie_consent",
+          JSON.stringify({
+            necessary: true,
+            functional: true,
+            timestamp: new Date().toISOString(),
+          })
+        );
+      } else {
+        setVisible(true);
+      }
+    }
+  }, [user]);
 
   const saveConsent = (functionalValue: boolean) => {
     localStorage.setItem(

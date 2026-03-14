@@ -367,9 +367,19 @@ export function LoginForm({ onSuccess, defaultTab = "login" }: { onSuccess?: () 
 }
 
 export function LoginPage() {
+  const { t } = useTranslation();
   return (
     <GoogleReCaptchaProvider reCaptchaKey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}>
-      <div className="min-h-screen flex items-center justify-center px-4 bg-background">
+      <div className="relative min-h-screen flex items-center justify-center px-4 bg-background">
+        <div className="absolute top-4 left-4">
+          <Link
+            to="/"
+            className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            {t("auth.backToHome")}
+          </Link>
+        </div>
         <LoginFormInner />
       </div>
     </GoogleReCaptchaProvider>
