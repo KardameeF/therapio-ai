@@ -24,9 +24,8 @@ export function GDPRPage() {
           <CardTitle>Your Rights Under GDPR</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
-          <p>
-            As a data subject under GDPR, you have the following rights:
-          </p>
+          <p>As a data subject under GDPR, you have the following rights:</p>
+
           <h4>Right of Access (Article 15)</h4>
           <p>You have the right to obtain confirmation as to whether personal data concerning you is being processed, and to access that data along with information about how it is used.</p>
 
@@ -68,14 +67,15 @@ export function GDPRPage() {
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
           <p>
-            Chat messages exchanged with the AI assistant may contain health-related or emotional information, which constitutes special category data under Article 9 of GDPR.
+            Chat messages exchanged with the AI assistant may contain emotional or health-related information. This constitutes special category data under Article 9 of GDPR.
           </p>
           <p>We process this data under the following conditions:</p>
           <ul>
             <li><strong>Legal basis:</strong> Explicit consent (Article 9(2)(a)). You provide this consent each time you use the chat feature.</li>
             <li><strong>Encryption:</strong> All chat data is encrypted in transit (TLS) and at rest.</li>
             <li><strong>Access restrictions:</strong> Chat data is accessible only to you and is processed by OpenAI solely for generating AI responses.</li>
-            <li><strong>No sharing:</strong> Your chat content is never shared with third parties other than OpenAI for the purpose of providing the service. OpenAI does not use your data for model training.</li>
+            <li><strong>No sharing:</strong> Your chat content is not shared with any third party other than OpenAI for the purpose of providing the service.</li>
+            <li><strong>No training:</strong> OpenAI does not use data submitted via the API to train its models.</li>
           </ul>
         </CardContent>
       </Card>
@@ -86,7 +86,7 @@ export function GDPRPage() {
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
           <p>
-            We do not currently have a formally appointed Data Protection Officer (DPO) as we do not meet the thresholds requiring mandatory appointment under Article 37 GDPR.
+            We do not currently have a formally appointed Data Protection Officer (DPO) as we do not meet the mandatory appointment thresholds under Article 37 GDPR.
           </p>
           <p>
             For all data protection enquiries, please contact: <strong>dpo@eterapp.io</strong>
@@ -113,8 +113,6 @@ export function GDPRPage() {
           <CardTitle>International Transfers</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
-          <p>Your data is processed by the following services:</p>
-
           <h4>Within the EEA (no transfer outside the EEA)</h4>
           <ul>
             <li><strong>Netlify Inc.</strong> — Application hosting, servers in Rotterdam, EU.</li>
@@ -123,9 +121,11 @@ export function GDPRPage() {
 
           <h4>Outside the EEA — protected by Standard Contractual Clauses (Article 46(2)(c) GDPR)</h4>
           <ul>
-            <li><strong>OpenAI Inc.</strong> (USA) — AI processing of chat messages. Covered by SCCs; your data is not used for model training.</li>
-            <li><strong>Stripe Inc.</strong> (USA) — Payment processing. Covered by SCCs.</li>
-            <li><strong>Google LLC</strong> (USA) — reCAPTCHA v3 and OAuth sign-in. Covered by SCCs.</li>
+            <li><strong>OpenAI Inc.</strong> (USA) — AI processing of chat messages.</li>
+            <li><strong>Stripe Inc.</strong> (USA) — Payment processing.</li>
+            <li><strong>Google LLC</strong> (USA) — reCAPTCHA v3 and OAuth sign-in.</li>
+            <li><strong>Resend Inc.</strong> (USA) — Transactional email delivery.</li>
+            <li><strong>Cloudflare Inc.</strong> (USA) — DNS and network services.</li>
           </ul>
         </CardContent>
       </Card>
@@ -135,9 +135,7 @@ export function GDPRPage() {
           <CardTitle>Supervisory Authority</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
-          <p>
-            You have the right to lodge a complaint with the Bulgarian supervisory authority:
-          </p>
+          <p>You have the right to lodge a complaint with the Bulgarian supervisory authority:</p>
           <p>
             <strong>Commission for Personal Data Protection (CPDP / КЗЛД)</strong><br />
             Address: 2 Prof. Tsvetan Lazarov Blvd., Sofia 1592, Bulgaria<br />
@@ -152,16 +150,14 @@ export function GDPRPage() {
           <CardTitle>Exercising Your Rights</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
-          <p>
-            To exercise any of your GDPR rights, please contact us at:
-          </p>
+          <p>To exercise any of your GDPR rights, please contact us at:</p>
           <p>
             Email: privacy@eterapp.io<br />
             Subject line: "GDPR Rights Request"<br />
             Please include your full name and the email address associated with your account.
           </p>
           <p>
-            We will respond to your request within one month of receipt. In complex cases, we may extend this period by up to two additional months, in which case we will inform you of the delay within the first month.
+            We will respond to your request within one month of receipt. In complex cases, we may extend this period by up to two additional months, in which case we will inform you within the first month.
           </p>
         </CardContent>
       </Card>

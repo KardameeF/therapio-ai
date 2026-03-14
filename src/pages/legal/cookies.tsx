@@ -30,19 +30,19 @@ export function CookiesPage() {
           <CardTitle>2. Categories of Cookies</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
-          <h4>Strictly Necessary Cookies</h4>
+          <h4>Strictly Necessary</h4>
           <p>
-            These cookies are essential for the website to function. They enable core functionality such as authentication and security. These cookies do not require your consent under the ePrivacy Directive.
+            Essential for the website to function. They enable core functionality such as authentication, payment processing, and storing your cookie preference. These cookies do not require your consent under the ePrivacy Directive.
           </p>
 
-          <h4>Functional Cookies</h4>
+          <h4>Functional</h4>
           <p>
-            These cookies remember your preferences (such as language and theme) to provide a personalised experience. These cookies require your consent.
+            Remember your preferences (such as language and theme) to provide a personalised experience. These cookies require your consent.
           </p>
 
-          <h4>Security Cookies</h4>
+          <h4>Security</h4>
           <p>
-            These cookies protect the service from automated abuse and fraud. They are considered strictly necessary and do not require separate consent.
+            Protect the service from automated abuse and fraud. They are considered strictly necessary and do not require separate consent.
           </p>
         </CardContent>
       </Card>
@@ -74,7 +74,7 @@ export function CookiesPage() {
                 <tr>
                   <td className="border border-border p-2 font-mono text-sm">sb-[ref]-auth-token-code-verifier</td>
                   <td className="border border-border p-2">Supabase</td>
-                  <td className="border border-border p-2">OAuth PKCE flow verification</td>
+                  <td className="border border-border p-2">OAuth PKCE security</td>
                   <td className="border border-border p-2">Session</td>
                   <td className="border border-border p-2">Strictly necessary</td>
                 </tr>
@@ -95,14 +95,14 @@ export function CookiesPage() {
                 <tr>
                   <td className="border border-border p-2 font-mono text-sm">_grecaptcha</td>
                   <td className="border border-border p-2">Google</td>
-                  <td className="border border-border p-2">reCAPTCHA v3 bot detection</td>
+                  <td className="border border-border p-2">Bot detection (reCAPTCHA v3)</td>
                   <td className="border border-border p-2">6 months</td>
                   <td className="border border-border p-2">Security</td>
                 </tr>
                 <tr>
                   <td className="border border-border p-2 font-mono text-sm">cookie_consent</td>
                   <td className="border border-border p-2">Eterapp</td>
-                  <td className="border border-border p-2">Stores user cookie preference</td>
+                  <td className="border border-border p-2">Stores cookie preference</td>
                   <td className="border border-border p-2">1 year</td>
                   <td className="border border-border p-2">Strictly necessary</td>
                 </tr>
@@ -131,7 +131,7 @@ export function CookiesPage() {
           <CardTitle>4. Third-Party Cookie Policies</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
-          <p>The following third-party services may set cookies on your device:</p>
+          <p>The following third-party services may set cookies on your device. You can review their privacy policies here:</p>
           <ul>
             <li>
               <strong>Supabase</strong> —{" "}
@@ -154,15 +154,12 @@ export function CookiesPage() {
           <CardTitle>5. Managing Cookies</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
-          <p>
-            You can control and manage cookies through your browser settings. Most browsers allow you to:
-          </p>
+          <p>You can control and manage cookies through your browser settings:</p>
           <ul>
-            <li>View what cookies are stored and delete them individually</li>
-            <li>Block third-party cookies</li>
-            <li>Block cookies from specific sites</li>
-            <li>Block all cookies</li>
-            <li>Delete all cookies when you close the browser</li>
+            <li><strong>Chrome:</strong> Settings → Privacy and security → Cookies and other site data</li>
+            <li><strong>Firefox:</strong> Settings → Privacy & Security → Cookies and Site Data</li>
+            <li><strong>Safari:</strong> Preferences → Privacy → Manage Website Data</li>
+            <li><strong>Edge:</strong> Settings → Cookies and site permissions → Manage and delete cookies and site data</li>
           </ul>
           <p>
             Please note that blocking strictly necessary cookies may prevent Eterapp from functioning correctly.

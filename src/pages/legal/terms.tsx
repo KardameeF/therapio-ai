@@ -34,7 +34,7 @@ export function TermsPage() {
             <strong>Eterapp is NOT a medical service.</strong> It is not psychotherapy, psychological counselling, or psychiatric treatment. Eterapp does not diagnose, treat, or cure any medical or mental health condition.
           </p>
           <p>
-            Eterapp does not replace professional psychological, psychiatric, or medical help. If you are experiencing a mental health crisis, please contact a qualified professional immediately.
+            Eterapp does not replace professional psychological, psychiatric, or medical help. If you are experiencing a mental health crisis, please contact a qualified professional immediately (see Section 6).
           </p>
         </CardContent>
       </Card>
@@ -73,19 +73,17 @@ export function TermsPage() {
           <CardTitle>5. Subscription and Payments</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
-          <p>
-            Eterapp offers subscription plans with varying features and message limits:
-          </p>
+          <p>Eterapp offers subscription plans with varying features and message limits:</p>
           <ul>
             <li><strong>First Step (Free):</strong> Limited messages per month with basic AI functionality.</li>
             <li><strong>Personal Growth:</strong> Expanded message limits, session notes, tasks, and priority support.</li>
-            <li><strong>Expanded Horizons:</strong> Full access including audio therapies, voice assistant, and the most powerful AI model.</li>
+            <li><strong>Expanded Horizons:</strong> Full access including audio therapies, voice assistant, and the most advanced AI model.</li>
           </ul>
           <p>
             All payments are processed securely by <strong>Stripe Inc.</strong> Eterapp does not store your credit card details.
           </p>
           <p>
-            You may cancel your subscription at any time from your account settings. Cancellation takes effect at the end of the current billing period. No partial refunds are provided for unused portions of a billing period.
+            You may cancel your subscription at any time from your account settings. Cancellation takes effect at the end of the current billing period.
           </p>
           <p>
             Refunds are handled in accordance with the Bulgarian Consumer Protection Act (Закон за защита на потребителите). For digital content and services, you have the right to withdraw within 14 days of purchase, unless you have explicitly consented to immediate provision of the service and acknowledged that you waive your right of withdrawal.
@@ -105,12 +103,11 @@ export function TermsPage() {
             <strong>If you are in a crisis situation or experiencing thoughts of self-harm, please immediately contact:</strong>
           </p>
           <ul>
-            <li><strong>National Child Helpline:</strong> 116 111</li>
             <li><strong>Emergency Services:</strong> 112</li>
-            <li><strong>National Mental Health Helpline:</strong> 0035 42 981 76 86</li>
+            <li><strong>National Child Helpline:</strong> 116 111</li>
           </ul>
           <p>
-            Never disregard professional medical advice or delay seeking treatment because of something you read or experienced in Eterapp.
+            Eterapp is not a substitute for emergency psychiatric help. Never disregard professional medical advice or delay seeking treatment because of something you read or experienced in Eterapp.
           </p>
         </CardContent>
       </Card>

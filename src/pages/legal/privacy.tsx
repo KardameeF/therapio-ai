@@ -16,9 +16,7 @@ export function PrivacyPage() {
           <CardTitle>1. Data Controller</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
-          <p>
-            The data controller responsible for your personal data is:
-          </p>
+          <p>The data controller responsible for your personal data is:</p>
           <p>
             [COMPANY NAME], UIC: [UIC NUMBER]<br />
             Sofia, Bulgaria<br />
@@ -45,13 +43,13 @@ export function PrivacyPage() {
             <li>Session notes and tasks generated from conversations</li>
           </ul>
           <p>
-            <strong>Important:</strong> Chat messages may contain emotional or health-related information, which constitutes special category data under Article 9 of GDPR. We process this data only with your explicit consent.
+            <strong>Important:</strong> Chat messages may contain emotional or health-related information. This constitutes special category data under Article 9 of GDPR. We process this data only with your explicit consent.
           </p>
 
           <h4>Subscription and payment data</h4>
           <ul>
             <li>Current subscription plan</li>
-            <li>Payment history and billing information (processed and stored by Stripe)</li>
+            <li>Payment history and billing information (processed and stored by Stripe — we do not store your card details)</li>
             <li>Prepaid credit balance</li>
           </ul>
 
@@ -60,7 +58,7 @@ export function PrivacyPage() {
             <li>IP address</li>
             <li>Browser type and version</li>
             <li>Device information</li>
-            <li>Usage patterns and preferences (language, theme)</li>
+            <li>Usage preferences (language, theme)</li>
           </ul>
         </CardContent>
       </Card>
@@ -73,19 +71,13 @@ export function PrivacyPage() {
           <p>We process your personal data under the following legal bases as defined by the General Data Protection Regulation (GDPR):</p>
 
           <h4>Performance of a contract — Article 6(1)(b)</h4>
-          <p>
-            Processing necessary to provide the Eterapp service, including account authentication, subscription management, and delivering core functionality.
-          </p>
+          <p>Processing necessary to provide the Eterapp service, including account authentication, subscription management, and delivering core functionality.</p>
 
           <h4>Explicit consent — Article 6(1)(a) and Article 9(2)(a)</h4>
-          <p>
-            Processing of chat content and emotional/health-related data. You provide this consent when you use the chat feature. You may withdraw consent at any time by deleting your chat history or your account.
-          </p>
+          <p>Processing of chat content and any emotional or health-related data it may contain. You provide this consent when you use the chat feature. You may withdraw consent at any time (see Section 7 below).</p>
 
           <h4>Legitimate interest — Article 6(1)(f)</h4>
-          <p>
-            Processing necessary for security measures, fraud prevention, and service improvement. Our legitimate interest does not override your fundamental rights and freedoms.
-          </p>
+          <p>Processing necessary for security measures, fraud prevention, and service reliability. Our legitimate interest does not override your fundamental rights and freedoms.</p>
         </CardContent>
       </Card>
 
@@ -94,36 +86,91 @@ export function PrivacyPage() {
           <CardTitle>4. Third-Party Processors</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
-          <p>We share your data with the following third-party processors, each bound by data processing agreements:</p>
+          <p>We share your data with the following categories of third-party processors, each bound by data processing agreements:</p>
 
-          <ul>
-            <li>
-              <strong>Supabase Inc.</strong> — Authentication and database services.
-              Servers located in Stockholm, EU. No data transfer outside the EEA.
-            </li>
-            <li>
-              <strong>Stripe Inc.</strong> — Payment processing.
-              Protected by Standard Contractual Clauses (SCCs) for any data transferred outside the EEA.
-            </li>
-            <li>
-              <strong>OpenAI Inc.</strong> — AI processing of chat messages.
-              Protected by Standard Contractual Clauses (SCCs). Your data is not used to train OpenAI's models.
-            </li>
-            <li>
-              <strong>Google LLC</strong> — reCAPTCHA v3 (bot protection) and OAuth sign-in.
-              Protected by Standard Contractual Clauses (SCCs).
-            </li>
-            <li>
-              <strong>Netlify Inc.</strong> — Application hosting.
-              Servers located in Rotterdam, EU. No data transfer outside the EEA.
-            </li>
-          </ul>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse border border-border">
+              <thead>
+                <tr className="bg-muted">
+                  <th className="border border-border p-2 text-left">Category</th>
+                  <th className="border border-border p-2 text-left">Company</th>
+                  <th className="border border-border p-2 text-left">Region</th>
+                  <th className="border border-border p-2 text-left">Legal basis</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="border border-border p-2">Authentication & Database</td>
+                  <td className="border border-border p-2">Supabase Inc.</td>
+                  <td className="border border-border p-2">Stockholm, EU</td>
+                  <td className="border border-border p-2">Necessary for contract</td>
+                </tr>
+                <tr>
+                  <td className="border border-border p-2">Payment processing</td>
+                  <td className="border border-border p-2">Stripe Inc.</td>
+                  <td className="border border-border p-2">USA</td>
+                  <td className="border border-border p-2">Standard Contractual Clauses</td>
+                </tr>
+                <tr>
+                  <td className="border border-border p-2">AI processing</td>
+                  <td className="border border-border p-2">OpenAI Inc.</td>
+                  <td className="border border-border p-2">USA</td>
+                  <td className="border border-border p-2">Standard Contractual Clauses</td>
+                </tr>
+                <tr>
+                  <td className="border border-border p-2">Bot protection & Login</td>
+                  <td className="border border-border p-2">Google LLC</td>
+                  <td className="border border-border p-2">USA</td>
+                  <td className="border border-border p-2">Standard Contractual Clauses</td>
+                </tr>
+                <tr>
+                  <td className="border border-border p-2">Hosting & CDN</td>
+                  <td className="border border-border p-2">Netlify Inc.</td>
+                  <td className="border border-border p-2">Rotterdam, EU</td>
+                  <td className="border border-border p-2">Necessary for contract</td>
+                </tr>
+                <tr>
+                  <td className="border border-border p-2">Transactional email</td>
+                  <td className="border border-border p-2">Resend Inc.</td>
+                  <td className="border border-border p-2">USA</td>
+                  <td className="border border-border p-2">Standard Contractual Clauses</td>
+                </tr>
+                <tr>
+                  <td className="border border-border p-2">DNS & Network</td>
+                  <td className="border border-border p-2">Cloudflare Inc.</td>
+                  <td className="border border-border p-2">USA</td>
+                  <td className="border border-border p-2">Standard Contractual Clauses</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p className="mt-4">
+            For detailed privacy policies of each processor, see the links in our <a href="/legal/cookies">Cookie Policy</a> and <a href="/legal/gdpr">GDPR Compliance</a> pages.
+          </p>
+          <p>
+            <strong>Note:</strong> OpenAI does not use data submitted via the API to train its models.
+          </p>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>5. Data Retention</CardTitle>
+          <CardTitle>5. Automated Decision-Making</CardTitle>
+        </CardHeader>
+        <CardContent className="prose dark:prose-invert">
+          <p>
+            Eterapp uses artificial intelligence to generate conversational responses, session notes, and tasks based on your chat messages.
+          </p>
+          <p>
+            This AI processing does <strong>not</strong> constitute automated decision-making that produces legal effects or similarly significantly affects you within the meaning of Article 22 GDPR. No profiling is carried out.
+          </p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>6. Data Retention</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
           <ul>
@@ -131,23 +178,6 @@ export function PrivacyPage() {
             <li><strong>Chat history:</strong> Retained until deleted by you or upon account deletion.</li>
             <li><strong>Payment and billing data:</strong> Retained for 5 years to comply with tax and accounting obligations under Bulgarian law.</li>
             <li><strong>Technical logs:</strong> Retained for 90 days, then automatically deleted.</li>
-          </ul>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>6. Data Security</CardTitle>
-        </CardHeader>
-        <CardContent className="prose dark:prose-invert">
-          <p>
-            We implement appropriate technical and organisational measures to protect your personal data, including:
-          </p>
-          <ul>
-            <li>Encryption of data in transit (TLS) and at rest</li>
-            <li>Access controls and role-based authentication</li>
-            <li>Secure hosting within the European Union</li>
-            <li>Regular review of security practices</li>
           </ul>
         </CardContent>
       </Card>
@@ -167,12 +197,17 @@ export function PrivacyPage() {
             <li><strong>Object</strong> — Object to processing based on legitimate interest (Art. 21)</li>
             <li><strong>Withdraw consent</strong> — Withdraw your consent at any time without affecting the lawfulness of prior processing</li>
           </ul>
-          <p>
-            To exercise any of these rights, contact us at privacy@eterapp.io. We will respond within one month of your request.
-          </p>
-          <p>
-            <strong>Right to lodge a complaint:</strong> You have the right to lodge a complaint with the Commission for Personal Data Protection (CPDP/КЗЛД):
-          </p>
+
+          <h4>How to withdraw consent or delete your data</h4>
+          <ul>
+            <li>In the app: Settings → Delete account</li>
+            <li>By email: send a request to privacy@eterapp.io</li>
+          </ul>
+
+          <p>We will respond to your request within one month of receipt (GDPR Article 12(3)).</p>
+
+          <h4>Right to lodge a complaint</h4>
+          <p>You have the right to lodge a complaint with the Commission for Personal Data Protection (CPDP/КЗЛД):</p>
           <ul>
             <li>Website: <a href="https://www.cpdp.bg" target="_blank" rel="noopener noreferrer">cpdp.bg</a></li>
             <li>Phone: +359 2 915 3518</li>
@@ -196,11 +231,26 @@ export function PrivacyPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>9. Changes to This Policy</CardTitle>
+          <CardTitle>9. Crisis Situations</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
           <p>
-            We may update this Privacy Policy from time to time. We will notify you of any material changes by posting the updated policy on this page and updating the "Last updated" date. For significant changes, we may also notify you via email.
+            Eterapp is not a crisis service and does not replace professional emergency help. If you or someone you know is in a crisis situation or experiencing thoughts of self-harm, please contact:
+          </p>
+          <ul>
+            <li><strong>Emergency Services:</strong> 112</li>
+            <li><strong>National Child Helpline:</strong> 116 111</li>
+          </ul>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>10. Changes to This Policy</CardTitle>
+        </CardHeader>
+        <CardContent className="prose dark:prose-invert">
+          <p>
+            We may update this Privacy Policy from time to time. We will notify you of material changes by posting the updated policy on this page and updating the "Last updated" date. For significant changes, we may also notify you via email.
           </p>
           <p>
             Your continued use of Eterapp after changes take effect constitutes acceptance of the revised policy.
@@ -210,15 +260,11 @@ export function PrivacyPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>10. Contact Us</CardTitle>
+          <CardTitle>11. Contact</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
-          <p>
-            If you have any questions about this Privacy Policy or our data practices, please contact us at:
-          </p>
-          <p>
-            Email: privacy@eterapp.io
-          </p>
+          <p>For any questions about this Privacy Policy or our data practices:</p>
+          <p>Email: dpo@eterapp.io</p>
         </CardContent>
       </Card>
     </div>
