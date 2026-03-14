@@ -8,50 +8,48 @@ export function CookiesPage() {
     <div className="max-w-4xl mx-auto space-y-6">
       <div>
         <h1 className="text-3xl font-bold">Cookie Policy</h1>
-        <p className="text-muted-foreground">How we use cookies and similar technologies</p>
+        <p className="text-muted-foreground">Last updated: 14 March 2026</p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>What Are Cookies?</CardTitle>
+          <CardTitle>1. What Are Cookies</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
           <p>
-            Cookies are small text files that are placed on your device when you visit our website. They help us provide you with a better experience by remembering your preferences and understanding how you use our service.
+            Cookies are small text files stored on your device when you visit a website. They allow the website to recognise your device and remember information about your visit, such as your preferences or login status.
+          </p>
+          <p>
+            This Cookie Policy is issued in accordance with the Bulgarian Electronic Communications Act (ЗЗЕС) and the EU ePrivacy Directive (2002/58/EC).
           </p>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>Types of Cookies We Use</CardTitle>
+          <CardTitle>2. Categories of Cookies</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
-          <h4>Essential Cookies</h4>
+          <h4>Strictly Necessary Cookies</h4>
           <p>
-            These cookies are necessary for the website to function properly. They enable basic functions like page navigation and access to secure areas of the website.
+            These cookies are essential for the website to function. They enable core functionality such as authentication and security. These cookies do not require your consent under the ePrivacy Directive.
           </p>
-          
+
           <h4>Functional Cookies</h4>
           <p>
-            These cookies enable the website to provide enhanced functionality and personalization, such as remembering your language preference or theme setting.
+            These cookies remember your preferences (such as language and theme) to provide a personalised experience. These cookies require your consent.
           </p>
-          
-          <h4>Analytics Cookies</h4>
+
+          <h4>Security Cookies</h4>
           <p>
-            These cookies help us understand how visitors interact with our website by collecting and reporting information anonymously.
-          </p>
-          
-          <h4>Marketing Cookies</h4>
-          <p>
-            These cookies are used to track visitors across websites to display relevant and engaging advertisements.
+            These cookies protect the service from automated abuse and fraud. They are considered strictly necessary and do not require separate consent.
           </p>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>Cookies We Use</CardTitle>
+          <CardTitle>3. Cookies We Use</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
           <div className="overflow-x-auto">
@@ -59,35 +57,68 @@ export function CookiesPage() {
               <thead>
                 <tr className="bg-muted">
                   <th className="border border-border p-2 text-left">Cookie Name</th>
+                  <th className="border border-border p-2 text-left">Provider</th>
                   <th className="border border-border p-2 text-left">Purpose</th>
                   <th className="border border-border p-2 text-left">Duration</th>
-                  <th className="border border-border p-2 text-left">Type</th>
+                  <th className="border border-border p-2 text-left">Category</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td className="border border-border p-2 font-mono">session_id</td>
-                  <td className="border border-border p-2">Maintain user session</td>
+                  <td className="border border-border p-2 font-mono text-sm">sb-[ref]-auth-token</td>
+                  <td className="border border-border p-2">Supabase</td>
+                  <td className="border border-border p-2">Authentication session</td>
                   <td className="border border-border p-2">Session</td>
-                  <td className="border border-border p-2">Essential</td>
+                  <td className="border border-border p-2">Strictly necessary</td>
                 </tr>
                 <tr>
-                  <td className="border border-border p-2 font-mono">theme</td>
-                  <td className="border border-border p-2">Remember theme preference</td>
+                  <td className="border border-border p-2 font-mono text-sm">sb-[ref]-auth-token-code-verifier</td>
+                  <td className="border border-border p-2">Supabase</td>
+                  <td className="border border-border p-2">OAuth PKCE flow verification</td>
+                  <td className="border border-border p-2">Session</td>
+                  <td className="border border-border p-2">Strictly necessary</td>
+                </tr>
+                <tr>
+                  <td className="border border-border p-2 font-mono text-sm">stripe.mid</td>
+                  <td className="border border-border p-2">Stripe</td>
+                  <td className="border border-border p-2">Fraud prevention</td>
+                  <td className="border border-border p-2">1 year</td>
+                  <td className="border border-border p-2">Strictly necessary</td>
+                </tr>
+                <tr>
+                  <td className="border border-border p-2 font-mono text-sm">stripe.sid</td>
+                  <td className="border border-border p-2">Stripe</td>
+                  <td className="border border-border p-2">Payment session</td>
+                  <td className="border border-border p-2">Session</td>
+                  <td className="border border-border p-2">Strictly necessary</td>
+                </tr>
+                <tr>
+                  <td className="border border-border p-2 font-mono text-sm">_grecaptcha</td>
+                  <td className="border border-border p-2">Google</td>
+                  <td className="border border-border p-2">reCAPTCHA v3 bot detection</td>
+                  <td className="border border-border p-2">6 months</td>
+                  <td className="border border-border p-2">Security</td>
+                </tr>
+                <tr>
+                  <td className="border border-border p-2 font-mono text-sm">cookie_consent</td>
+                  <td className="border border-border p-2">Eterapp</td>
+                  <td className="border border-border p-2">Stores user cookie preference</td>
+                  <td className="border border-border p-2">1 year</td>
+                  <td className="border border-border p-2">Strictly necessary</td>
+                </tr>
+                <tr>
+                  <td className="border border-border p-2 font-mono text-sm">i18n_lang</td>
+                  <td className="border border-border p-2">Eterapp</td>
+                  <td className="border border-border p-2">Language preference</td>
                   <td className="border border-border p-2">1 year</td>
                   <td className="border border-border p-2">Functional</td>
                 </tr>
                 <tr>
-                  <td className="border border-border p-2 font-mono">language</td>
-                  <td className="border border-border p-2">Remember language preference</td>
+                  <td className="border border-border p-2 font-mono text-sm">theme</td>
+                  <td className="border border-border p-2">Eterapp</td>
+                  <td className="border border-border p-2">Theme preference (light/dark)</td>
                   <td className="border border-border p-2">1 year</td>
                   <td className="border border-border p-2">Functional</td>
-                </tr>
-                <tr>
-                  <td className="border border-border p-2 font-mono">_ga</td>
-                  <td className="border border-border p-2">Google Analytics</td>
-                  <td className="border border-border p-2">2 years</td>
-                  <td className="border border-border p-2">Analytics</td>
                 </tr>
               </tbody>
             </table>
@@ -97,58 +128,64 @@ export function CookiesPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Managing Cookies</CardTitle>
+          <CardTitle>4. Third-Party Cookie Policies</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
-          <p>
-            You can control and manage cookies in several ways:
-          </p>
-          <h4>Browser Settings</h4>
-          <p>
-            Most browsers allow you to refuse cookies or delete them. You can usually find these settings in the "Privacy" or "Security" section of your browser's settings.
-          </p>
-          
-          <h4>Cookie Consent</h4>
-          <p>
-            When you first visit our website, you'll see a cookie consent banner. You can choose which types of cookies to accept.
-          </p>
-          
-          <h4>Opt-Out Links</h4>
+          <p>The following third-party services may set cookies on your device:</p>
           <ul>
-            <li><a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer">Google Analytics Opt-out</a></li>
-            <li><a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer">Digital Advertising Alliance Opt-out</a></li>
+            <li>
+              <strong>Supabase</strong> —{" "}
+              <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer">supabase.com/privacy</a>
+            </li>
+            <li>
+              <strong>Stripe</strong> —{" "}
+              <a href="https://stripe.com/privacy" target="_blank" rel="noopener noreferrer">stripe.com/privacy</a>
+            </li>
+            <li>
+              <strong>Google</strong> —{" "}
+              <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">policies.google.com/privacy</a>
+            </li>
           </ul>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>Third-Party Cookies</CardTitle>
+          <CardTitle>5. Managing Cookies</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
           <p>
-            Some cookies on our website are set by third-party services:
+            You can control and manage cookies through your browser settings. Most browsers allow you to:
           </p>
           <ul>
-            <li><strong>Google Analytics:</strong> To analyze website traffic and usage</li>
-            <li><strong>Stripe:</strong> To process payments securely</li>
-            <li><strong>Supabase:</strong> To provide authentication and database services</li>
-            <li><strong>Sentry:</strong> To monitor application errors and performance</li>
+            <li>View what cookies are stored and delete them individually</li>
+            <li>Block third-party cookies</li>
+            <li>Block cookies from specific sites</li>
+            <li>Block all cookies</li>
+            <li>Delete all cookies when you close the browser</li>
           </ul>
           <p>
-            These third parties have their own privacy policies and cookie policies.
+            Please note that blocking strictly necessary cookies may prevent Eterapp from functioning correctly.
           </p>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>Updates to This Policy</CardTitle>
+          <CardTitle>6. Changes to This Policy</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
           <p>
-            We may update this Cookie Policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the "Last updated" date.
+            We may update this Cookie Policy from time to time. Changes will be posted on this page with an updated date.
           </p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>7. Contact</CardTitle>
+        </CardHeader>
+        <CardContent className="prose dark:prose-invert">
           <p>
             If you have any questions about this Cookie Policy, please contact us at privacy@eterapp.io
           </p>

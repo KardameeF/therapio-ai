@@ -8,8 +8,16 @@ export function GDPRPage() {
     <div className="max-w-4xl mx-auto space-y-6">
       <div>
         <h1 className="text-3xl font-bold">GDPR Compliance</h1>
-        <p className="text-muted-foreground">General Data Protection Regulation Information</p>
+        <p className="text-muted-foreground">Last updated: 14 March 2026</p>
       </div>
+
+      <Card>
+        <CardContent className="prose dark:prose-invert pt-6">
+          <p>
+            This page supplements our <a href="/legal/privacy">Privacy Policy</a> with specific information about your rights under the General Data Protection Regulation (EU) 2016/679 (GDPR) and the Bulgarian Personal Data Protection Act (PDPA/ЗЗЛД).
+          </p>
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>
@@ -17,25 +25,25 @@ export function GDPRPage() {
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
           <p>
-            As a data subject under the General Data Protection Regulation (GDPR), you have the following rights:
+            As a data subject under GDPR, you have the following rights:
           </p>
           <h4>Right of Access (Article 15)</h4>
-          <p>You have the right to obtain confirmation as to whether or not personal data concerning you is being processed.</p>
-          
+          <p>You have the right to obtain confirmation as to whether personal data concerning you is being processed, and to access that data along with information about how it is used.</p>
+
           <h4>Right to Rectification (Article 16)</h4>
           <p>You have the right to have inaccurate personal data corrected and incomplete personal data completed.</p>
-          
+
           <h4>Right to Erasure (Article 17)</h4>
-          <p>You have the right to request the deletion of your personal data under certain circumstances.</p>
-          
+          <p>You have the right to request the deletion of your personal data ("right to be forgotten") where the data is no longer necessary, you withdraw consent, or there is no overriding legitimate ground for processing.</p>
+
           <h4>Right to Restrict Processing (Article 18)</h4>
-          <p>You have the right to request the restriction of processing of your personal data.</p>
-          
+          <p>You have the right to request the restriction of processing of your personal data in certain circumstances, such as when you contest its accuracy.</p>
+
           <h4>Right to Data Portability (Article 20)</h4>
-          <p>You have the right to receive your personal data in a structured, commonly used format.</p>
-          
+          <p>You have the right to receive your personal data in a structured, commonly used, and machine-readable format, and to transmit that data to another controller.</p>
+
           <h4>Right to Object (Article 21)</h4>
-          <p>You have the right to object to the processing of your personal data.</p>
+          <p>You have the right to object to the processing of your personal data where the processing is based on legitimate interests.</p>
         </CardContent>
       </Card>
 
@@ -46,25 +54,42 @@ export function GDPRPage() {
         <CardContent className="prose dark:prose-invert">
           <p>We process your personal data under the following lawful bases:</p>
           <ul>
-            <li><strong>Consent:</strong> You have given clear consent for processing your personal data</li>
-            <li><strong>Contract:</strong> Processing is necessary for the performance of a contract</li>
-            <li><strong>Legitimate Interest:</strong> Processing is necessary for our legitimate interests</li>
-            <li><strong>Legal Obligation:</strong> Processing is necessary for compliance with a legal obligation</li>
+            <li><strong>Performance of a contract (Art. 6(1)(b)):</strong> Account creation, authentication, and subscription management.</li>
+            <li><strong>Explicit consent (Art. 6(1)(a) and Art. 9(2)(a)):</strong> Processing of chat content, including emotional and health-related data (special category data).</li>
+            <li><strong>Legitimate interest (Art. 6(1)(f)):</strong> Security measures, fraud prevention, and service reliability.</li>
+            <li><strong>Legal obligation (Art. 6(1)(c)):</strong> Retention of billing records as required by tax and accounting law.</li>
           </ul>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>Data Protection Officer</CardTitle>
+          <CardTitle>Special Category Data</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
           <p>
-            We have appointed a Data Protection Officer (DPO) to ensure compliance with GDPR and to act as your point of contact for data protection matters.
+            Chat messages exchanged with the AI assistant may contain health-related or emotional information, which constitutes special category data under Article 9 of GDPR.
+          </p>
+          <p>We process this data under the following conditions:</p>
+          <ul>
+            <li><strong>Legal basis:</strong> Explicit consent (Article 9(2)(a)). You provide this consent each time you use the chat feature.</li>
+            <li><strong>Encryption:</strong> All chat data is encrypted in transit (TLS) and at rest.</li>
+            <li><strong>Access restrictions:</strong> Chat data is accessible only to you and is processed by OpenAI solely for generating AI responses.</li>
+            <li><strong>No sharing:</strong> Your chat content is never shared with third parties other than OpenAI for the purpose of providing the service. OpenAI does not use your data for model training.</li>
+          </ul>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Data Protection Contact</CardTitle>
+        </CardHeader>
+        <CardContent className="prose dark:prose-invert">
+          <p>
+            We do not currently have a formally appointed Data Protection Officer (DPO) as we do not meet the thresholds requiring mandatory appointment under Article 37 GDPR.
           </p>
           <p>
-            <strong>Contact Information:</strong><br />
-            Email: dpo@eterapp.io
+            For all data protection enquiries, please contact: <strong>dpo@eterapp.io</strong>
           </p>
         </CardContent>
       </Card>
@@ -75,10 +100,10 @@ export function GDPRPage() {
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
           <p>
-            In the event of a personal data breach that is likely to result in a high risk to your rights and freedoms, we will notify you without undue delay and within 72 hours where feasible.
+            In the event of a personal data breach that is likely to result in a high risk to your rights and freedoms, we will notify you without undue delay.
           </p>
           <p>
-            We will also notify the relevant supervisory authority within 72 hours of becoming aware of the breach.
+            We will also notify the relevant supervisory authority (КЗЛД) within 72 hours of becoming aware of the breach, as required by Article 33 GDPR.
           </p>
         </CardContent>
       </Card>
@@ -88,15 +113,37 @@ export function GDPRPage() {
           <CardTitle>International Transfers</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
-          <p>
-            If we transfer your personal data outside the European Economic Area (EEA), we will ensure appropriate safeguards are in place, such as:
-          </p>
+          <p>Your data is processed by the following services:</p>
+
+          <h4>Within the EEA (no transfer outside the EEA)</h4>
           <ul>
-            <li>Adequacy decisions by the European Commission</li>
-            <li>Standard Contractual Clauses (SCCs)</li>
-            <li>Binding Corporate Rules</li>
-            <li>Certification schemes and codes of conduct</li>
+            <li><strong>Netlify Inc.</strong> — Application hosting, servers in Rotterdam, EU.</li>
+            <li><strong>Supabase Inc.</strong> — Authentication and database, servers in Stockholm, EU.</li>
           </ul>
+
+          <h4>Outside the EEA — protected by Standard Contractual Clauses (Article 46(2)(c) GDPR)</h4>
+          <ul>
+            <li><strong>OpenAI Inc.</strong> (USA) — AI processing of chat messages. Covered by SCCs; your data is not used for model training.</li>
+            <li><strong>Stripe Inc.</strong> (USA) — Payment processing. Covered by SCCs.</li>
+            <li><strong>Google LLC</strong> (USA) — reCAPTCHA v3 and OAuth sign-in. Covered by SCCs.</li>
+          </ul>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Supervisory Authority</CardTitle>
+        </CardHeader>
+        <CardContent className="prose dark:prose-invert">
+          <p>
+            You have the right to lodge a complaint with the Bulgarian supervisory authority:
+          </p>
+          <p>
+            <strong>Commission for Personal Data Protection (CPDP / КЗЛД)</strong><br />
+            Address: 2 Prof. Tsvetan Lazarov Blvd., Sofia 1592, Bulgaria<br />
+            Website: <a href="https://www.cpdp.bg" target="_blank" rel="noopener noreferrer">cpdp.bg</a><br />
+            Phone: +359 2 915 3518
+          </p>
         </CardContent>
       </Card>
 
@@ -110,11 +157,11 @@ export function GDPRPage() {
           </p>
           <p>
             Email: privacy@eterapp.io<br />
-            Subject Line: "GDPR Rights Request"<br />
-            Please include your full name and email address associated with your account.
+            Subject line: "GDPR Rights Request"<br />
+            Please include your full name and the email address associated with your account.
           </p>
           <p>
-            We will respond to your request within one month of receipt.
+            We will respond to your request within one month of receipt. In complex cases, we may extend this period by up to two additional months, in which case we will inform you of the delay within the first month.
           </p>
         </CardContent>
       </Card>
