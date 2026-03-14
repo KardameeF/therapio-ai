@@ -55,7 +55,14 @@ export function CookieBanner() {
 
         <div className="flex-1 overflow-y-auto p-6 space-y-4">
           <div className="flex items-center gap-2">
-            <span className="text-2xl">🍪</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary shrink-0">
+              <path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5" />
+              <path d="M8.5 8.5v.01" />
+              <path d="M16 15.5v.01" />
+              <path d="M12 12v.01" />
+              <path d="M11 17v.01" />
+              <path d="M7 14v.01" />
+            </svg>
             <h2 className="text-lg font-semibold">{t("cookieBanner.title")}</h2>
           </div>
 
@@ -112,14 +119,14 @@ export function CookieBanner() {
           </div>
         </div>
 
-        <div className="shrink-0 p-4 pt-3 border-t border-border bg-background flex flex-col sm:flex-row gap-2">
-          <Button variant="ghost" className="flex-1 text-muted-foreground" onClick={() => saveConsent(false)}>
+        <div className="shrink-0 p-4 border-t border-border bg-background grid grid-cols-3 gap-2">
+          <Button variant="ghost" size="sm" className="text-muted-foreground text-xs px-2" onClick={() => saveConsent(false)}>
             {t("cookieBanner.declineAll")}
           </Button>
-          <Button variant="outline" className="flex-1" onClick={() => saveConsent(functional)}>
+          <Button variant="outline" size="sm" className="text-xs px-2" onClick={() => saveConsent(functional)}>
             {t("cookieBanner.savePreferences")}
           </Button>
-          <Button className="flex-1" onClick={() => saveConsent(true)}>
+          <Button size="sm" className="text-xs px-2" onClick={() => saveConsent(true)}>
             {t("cookieBanner.acceptAll")}
           </Button>
         </div>
