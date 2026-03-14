@@ -77,13 +77,13 @@ export function CookieBanner() {
         </div>
 
         <div className="flex flex-wrap gap-x-3 gap-y-1">
-          <a href="/legal/privacy" className="text-xs underline hover:text-foreground text-muted-foreground">
+          <a href="/legal/privacy" target="_blank" rel="noopener noreferrer" className="text-xs underline hover:text-foreground text-muted-foreground">
             {t("cookieBanner.privacyPolicy")}
           </a>
-          <a href="/legal/cookies" className="text-xs underline hover:text-foreground text-muted-foreground">
+          <a href="/legal/cookies" target="_blank" rel="noopener noreferrer" className="text-xs underline hover:text-foreground text-muted-foreground">
             {t("cookieBanner.cookiePolicy")}
           </a>
-          <a href="/legal/terms" className="text-xs underline hover:text-foreground text-muted-foreground">
+          <a href="/legal/terms" target="_blank" rel="noopener noreferrer" className="text-xs underline hover:text-foreground text-muted-foreground">
             {t("cookieBanner.termsOfService")}
           </a>
         </div>

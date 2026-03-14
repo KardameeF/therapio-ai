@@ -5,6 +5,8 @@ import { useTranslation } from "react-i18next";
 import { Eye, EyeOff, Loader2, ArrowLeft } from "lucide-react";
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { supabase } from "../lib/supabaseClient";
+import { LegalModal } from "../components/LegalModal";
+import { useLegalModal } from "../hooks/useLegalModal";
 
 const getStrength = (pw: string) => {
   let s = 0;
@@ -49,6 +51,7 @@ function LoginFormInner({ defaultTab = "login" }: { defaultTab?: "login" | "regi
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
+  const { legalModal, openLegal, closeLegal } = useLegalModal();
   const { executeRecaptcha } = useGoogleReCaptcha();
   const emailRef = useRef<HTMLInputElement>(null);
   const from = (location.state as any)?.from?.pathname || "/app";
@@ -159,6 +162,7 @@ function LoginFormInner({ defaultTab = "login" }: { defaultTab?: "login" | "regi
   const btnPrimaryCls = "w-full py-2.5 rounded-xl bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2";
 
   return (
+    <>
     <div className="w-full max-w-md rounded-2xl border border-border bg-card p-8">
 
         {/* Logo */}
@@ -311,9 +315,9 @@ function LoginFormInner({ defaultTab = "login" }: { defaultTab?: "login" | "regi
                   <input type="checkbox" checked={agreedToTerms} onChange={(e) => setAgreedToTerms(e.target.checked)} className="mt-0.5 accent-primary" />
                   <span className="text-xs text-muted-foreground leading-relaxed">
                     {t("auth.agreeToTermsBefore")}
-                    <Link to="/legal/terms" className="text-primary hover:underline mx-1">{t("auth.termsOfService")}</Link>
+                    <button type="button" onClick={() => openLegal("terms")} className="text-primary hover:underline mx-1">{t("auth.termsOfService")}</button>
                     {t("auth.agreeToTermsAnd")}
-                    <Link to="/legal/privacy" className="text-primary hover:underline mx-1">{t("auth.privacyPolicy")}</Link>
+                    <button type="button" onClick={() => openLegal("privacy")} className="text-primary hover:underline mx-1">{t("auth.privacyPolicy")}</button>
                     {t("auth.agreeToTermsAfter")}
                   </span>
                 </label>
@@ -353,6 +357,8 @@ function LoginFormInner({ defaultTab = "login" }: { defaultTab?: "login" | "regi
           </>
         )}
       </div>
+      <LegalModal open={legalModal} onClose={closeLegal} />
+    </>
   );
 }
 

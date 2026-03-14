@@ -6,6 +6,8 @@ import { useTranslation } from "react-i18next";
 import { cn } from "../lib/utils";
 import { User, CreditCard, Sparkles, FileText, Shield, PanelLeftOpen, PanelLeftClose, MessageCircle } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
+import { LegalModal } from "../components/LegalModal";
+import { useLegalModal } from "../hooks/useLegalModal";
 
 const appNav = [
   { to: "/billing", label: "nav.billing", icon: CreditCard },
@@ -15,6 +17,7 @@ const appNav = [
 
 export function AppLayout() {
   const { t } = useTranslation();
+  const { legalModal, openLegal, closeLegal } = useLegalModal();
   const location = useLocation();
   const [isAdmin, setIsAdmin] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -120,34 +123,34 @@ export function AppLayout() {
                   {t("nav.legal")}
                 </div>
                 <div className="space-y-1">
-                  <Link
-                    to="/legal/terms"
-                    className="flex items-center gap-3 px-4 py-2 text-xs text-foreground-muted hover:text-primary hover:bg-primary/5 rounded-lg transition-colors"
+                  <button
+                    onClick={() => openLegal("terms")}
+                    className="flex items-center gap-3 px-4 py-2 text-xs text-foreground-muted hover:text-primary hover:bg-primary/5 rounded-lg transition-colors w-full text-left"
                   >
                     <FileText className="h-4 w-4" />
                     {t("nav.terms")}
-                  </Link>
-                  <Link
-                    to="/legal/privacy"
-                    className="flex items-center gap-3 px-4 py-2 text-xs text-foreground-muted hover:text-primary hover:bg-primary/5 rounded-lg transition-colors"
+                  </button>
+                  <button
+                    onClick={() => openLegal("privacy")}
+                    className="flex items-center gap-3 px-4 py-2 text-xs text-foreground-muted hover:text-primary hover:bg-primary/5 rounded-lg transition-colors w-full text-left"
                   >
                     <FileText className="h-4 w-4" />
                     {t("nav.privacy")}
-                  </Link>
-                  <Link
-                    to="/legal/gdpr"
-                    className="flex items-center gap-3 px-4 py-2 text-xs text-foreground-muted hover:text-primary hover:bg-primary/5 rounded-lg transition-colors"
+                  </button>
+                  <button
+                    onClick={() => openLegal("gdpr")}
+                    className="flex items-center gap-3 px-4 py-2 text-xs text-foreground-muted hover:text-primary hover:bg-primary/5 rounded-lg transition-colors w-full text-left"
                   >
                     <FileText className="h-4 w-4" />
                     {t("nav.gdpr")}
-                  </Link>
-                  <Link
-                    to="/legal/cookies"
-                    className="flex items-center gap-3 px-4 py-2 text-xs text-foreground-muted hover:text-primary hover:bg-primary/5 rounded-lg transition-colors"
+                  </button>
+                  <button
+                    onClick={() => openLegal("cookies")}
+                    className="flex items-center gap-3 px-4 py-2 text-xs text-foreground-muted hover:text-primary hover:bg-primary/5 rounded-lg transition-colors w-full text-left"
                   >
                     <FileText className="h-4 w-4" />
                     {t("nav.cookies")}
-                  </Link>
+                  </button>
                 </div>
               </div>
             )}
@@ -197,6 +200,7 @@ export function AppLayout() {
           )}
         </div>
       </nav>
+      <LegalModal open={legalModal} onClose={closeLegal} />
     </div>
   );
 }

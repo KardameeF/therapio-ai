@@ -7,6 +7,8 @@ import { AuthModal } from "../components/auth-modal";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../components/ui/card";
 import { useSEO } from "../hooks/use-seo";
+import { LegalModal } from "../components/LegalModal";
+import { useLegalModal } from "../hooks/useLegalModal";
 import {
   Shield,
   Globe,
@@ -25,6 +27,7 @@ export function LandingPage() {
   const [authTab, setAuthTab] = useState<"login" | "register">("register");
   const { user } = useAuth();
   const { t } = useTranslation();
+  const { legalModal, openLegal, closeLegal } = useLegalModal();
   useSEO({
     title: "Eterapp — Твоят асистент за емоционална подкрепа",
     description: "Eterapp е твоят асистент за емоционална подкрепа, наличен 24/7.",
@@ -280,33 +283,33 @@ export function LandingPage() {
         <p>{t("footer.rights")}</p>
         <p className="max-w-xl mx-auto leading-relaxed">{t("footer.disclaimer")}</p>
         <div className="flex justify-center gap-4 flex-wrap pt-1">
-          <Link
-            to="/legal/terms"
+          <button
+            onClick={() => openLegal("terms")}
             className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             {t("footer.terms")}
-          </Link>
+          </button>
 
-          <Link
-            to="/legal/privacy"
+          <button
+            onClick={() => openLegal("privacy")}
             className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             {t("footer.privacy")}
-          </Link>
+          </button>
 
-          <Link
-            to="/legal/gdpr"
+          <button
+            onClick={() => openLegal("gdpr")}
             className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             {t("footer.gdpr")}
-          </Link>
+          </button>
 
-          <Link
-            to="/legal/cookies"
+          <button
+            onClick={() => openLegal("cookies")}
             className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             {t("footer.cookies")}
-          </Link>
+          </button>
         </div>
         <p className="text-xs text-muted-foreground/70 mt-2">
           Защитено от reCAPTCHA —{" "}
@@ -321,6 +324,7 @@ export function LandingPage() {
         onClose={() => setAuthOpen(false)}
         defaultTab={authTab}
       />
+      <LegalModal open={legalModal} onClose={closeLegal} />
     </div>
   );
 }

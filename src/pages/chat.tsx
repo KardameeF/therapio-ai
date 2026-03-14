@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { Plus, Send, User, Menu, X, PanelLeftOpen, PanelLeftClose, LogOut, Search, Mic, MicOff, Loader2, ImageIcon, ClipboardList, CheckSquare, Lock, Headphones } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
+import { LegalModal } from "../components/LegalModal";
+import { useLegalModal } from "../hooks/useLegalModal";
 import { ThemeToggle } from "../components/theme-toggle";
 import { DisplayNamePrompt } from "../components/display-name-prompt";
 import { DisclaimerModal } from "../components/disclaimer-modal";
@@ -57,6 +59,7 @@ const PLACEHOLDER_PHRASES = [
 export function ChatPage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { legalModal, openLegal, closeLegal } = useLegalModal();
   const [isDesktop, setIsDesktop] = useState(() => typeof window !== "undefined" && window.innerWidth >= 768);
 
   useEffect(() => {
@@ -840,27 +843,24 @@ export function ChatPage() {
               </Link>
               <div className="h-px bg-border/50 my-1" />
               <p className="text-[10px] text-muted-foreground px-2 pt-1 uppercase tracking-wider">{t("nav.legal")}</p>
-              <Link
-                to="/legal/privacy"
-                className="block text-xs px-2 py-1 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground"
-                onClick={() => setProfileOpen(false)}
+              <button
+                className="block text-xs px-2 py-1 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground w-full text-left"
+                onClick={() => { setProfileOpen(false); openLegal("privacy"); }}
               >
                 {t("nav.privacy")}
-              </Link>
-              <Link
-                to="/legal/cookies"
-                className="block text-xs px-2 py-1 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground"
-                onClick={() => setProfileOpen(false)}
+              </button>
+              <button
+                className="block text-xs px-2 py-1 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground w-full text-left"
+                onClick={() => { setProfileOpen(false); openLegal("cookies"); }}
               >
                 {t("nav.cookies")}
-              </Link>
-              <Link
-                to="/legal/terms"
-                className="block text-xs px-2 py-1 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground"
-                onClick={() => setProfileOpen(false)}
+              </button>
+              <button
+                className="block text-xs px-2 py-1 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground w-full text-left"
+                onClick={() => { setProfileOpen(false); openLegal("terms"); }}
               >
                 {t("nav.terms")}
-              </Link>
+              </button>
               <div className="h-px bg-border my-1" />
               <button
                 className="w-full flex items-center gap-2 text-sm px-2 py-1.5 rounded-lg hover:bg-destructive/10 text-destructive"
@@ -1385,6 +1385,7 @@ export function ChatPage() {
           )}
         </DialogContent>
       </Dialog>
+      <LegalModal open={legalModal} onClose={closeLegal} />
     </div>
   );
 }

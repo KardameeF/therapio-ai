@@ -780,7 +780,8 @@ const resources = {
       },
       common: {
         saving: "Saving...",
-        loading: "Loading..."
+        loading: "Loading...",
+        close: "Close"
       },
       cookieBanner: {
         title: "Cookie Preferences",
@@ -1587,7 +1588,8 @@ const resources = {
       },
       common: {
         saving: "Запазва...",
-        loading: "Зарежда..."
+        loading: "Зарежда...",
+        close: "Затвори"
       },
       cookieBanner: {
         title: "Предпочитания за бисквитки",
