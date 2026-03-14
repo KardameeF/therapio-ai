@@ -156,7 +156,20 @@ const resources = {
           changesTitle: "6. Changes to This Policy",
           changesP1: "We may update this Cookie Policy from time to time. Changes will be posted on this page with an updated date.",
           contactTitle: "7. Contact",
-          contactP1: "If you have any questions about this Cookie Policy, please contact us at privacy@eterapp.io"
+          contactP1: "If you have any questions about this Cookie Policy, please contact us at privacy@eterapp.io",
+          table: {
+            purposeAuthSession: "Authentication session",
+            purposeOAuthPKCE: "OAuth PKCE security",
+            purposeFraudPrevention: "Fraud prevention",
+            purposePaymentSession: "Payment session",
+            purposeBotDetection: "Bot detection (reCAPTCHA v3)",
+            purposeCookieConsent: "Stores cookie preference",
+            purposeLanguage: "Language preference",
+            purposeTheme: "Theme preference (light/dark)",
+            durationSession: "Session",
+            durationYear: "1 year",
+            duration6Months: "6 months"
+          }
         },
         gdpr: {
           pageTitle: "GDPR Compliance",
@@ -971,7 +984,20 @@ const resources = {
           changesTitle: "6. Промени в тази политика",
           changesP1: "Можем периодично да актуализираме тази Политика за бисквитки. Промените ще бъдат публикувани на тази страница с актуализирана дата.",
           contactTitle: "7. Контакт",
-          contactP1: "Ако имате въпроси относно тази Политика за бисквитки, моля свържете се с нас на privacy@eterapp.io"
+          contactP1: "Ако имате въпроси относно тази Политика за бисквитки, моля свържете се с нас на privacy@eterapp.io",
+          table: {
+            purposeAuthSession: "Сесия за удостоверяване",
+            purposeOAuthPKCE: "Сигурност при OAuth влизане",
+            purposeFraudPrevention: "Предотвратяване на измами",
+            purposePaymentSession: "Платежна сесия",
+            purposeBotDetection: "Засичане на ботове (reCAPTCHA v3)",
+            purposeCookieConsent: "Запазва предпочитанията за бисквитки",
+            purposeLanguage: "Предпочитание за език",
+            purposeTheme: "Предпочитание за тема (светла/тъмна)",
+            durationSession: "Сесия",
+            durationYear: "1 година",
+            duration6Months: "6 месеца"
+          }
         },
         gdpr: {
           pageTitle: "Съответствие с GDPR",

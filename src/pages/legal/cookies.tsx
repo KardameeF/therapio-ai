@@ -57,57 +57,57 @@ export function CookiesPage() {
                 <tr>
                   <td className="border border-border p-2 font-mono text-sm">sb-[ref]-auth-token</td>
                   <td className="border border-border p-2">Supabase</td>
-                  <td className="border border-border p-2">Authentication session</td>
-                  <td className="border border-border p-2">Session</td>
+                  <td className="border border-border p-2">{t("legal.cookies.table.purposeAuthSession")}</td>
+                  <td className="border border-border p-2">{t("legal.cookies.table.durationSession")}</td>
                   <td className="border border-border p-2">{t("legal.cookies.strictlyTitle")}</td>
                 </tr>
                 <tr>
                   <td className="border border-border p-2 font-mono text-sm">sb-[ref]-auth-token-code-verifier</td>
                   <td className="border border-border p-2">Supabase</td>
-                  <td className="border border-border p-2">OAuth PKCE security</td>
-                  <td className="border border-border p-2">Session</td>
+                  <td className="border border-border p-2">{t("legal.cookies.table.purposeOAuthPKCE")}</td>
+                  <td className="border border-border p-2">{t("legal.cookies.table.durationSession")}</td>
                   <td className="border border-border p-2">{t("legal.cookies.strictlyTitle")}</td>
                 </tr>
                 <tr>
                   <td className="border border-border p-2 font-mono text-sm">stripe.mid</td>
                   <td className="border border-border p-2">Stripe</td>
-                  <td className="border border-border p-2">Fraud prevention</td>
-                  <td className="border border-border p-2">1 year</td>
+                  <td className="border border-border p-2">{t("legal.cookies.table.purposeFraudPrevention")}</td>
+                  <td className="border border-border p-2">{t("legal.cookies.table.durationYear")}</td>
                   <td className="border border-border p-2">{t("legal.cookies.strictlyTitle")}</td>
                 </tr>
                 <tr>
                   <td className="border border-border p-2 font-mono text-sm">stripe.sid</td>
                   <td className="border border-border p-2">Stripe</td>
-                  <td className="border border-border p-2">Payment session</td>
-                  <td className="border border-border p-2">Session</td>
+                  <td className="border border-border p-2">{t("legal.cookies.table.purposePaymentSession")}</td>
+                  <td className="border border-border p-2">{t("legal.cookies.table.durationSession")}</td>
                   <td className="border border-border p-2">{t("legal.cookies.strictlyTitle")}</td>
                 </tr>
                 <tr>
                   <td className="border border-border p-2 font-mono text-sm">_grecaptcha</td>
                   <td className="border border-border p-2">Google</td>
-                  <td className="border border-border p-2">Bot detection (reCAPTCHA v3)</td>
-                  <td className="border border-border p-2">6 months</td>
+                  <td className="border border-border p-2">{t("legal.cookies.table.purposeBotDetection")}</td>
+                  <td className="border border-border p-2">{t("legal.cookies.table.duration6Months")}</td>
                   <td className="border border-border p-2">{t("legal.cookies.securityTitle")}</td>
                 </tr>
                 <tr>
                   <td className="border border-border p-2 font-mono text-sm">cookie_consent</td>
                   <td className="border border-border p-2">Eterapp</td>
-                  <td className="border border-border p-2">Stores cookie preference</td>
-                  <td className="border border-border p-2">1 year</td>
+                  <td className="border border-border p-2">{t("legal.cookies.table.purposeCookieConsent")}</td>
+                  <td className="border border-border p-2">{t("legal.cookies.table.durationYear")}</td>
                   <td className="border border-border p-2">{t("legal.cookies.strictlyTitle")}</td>
                 </tr>
                 <tr>
                   <td className="border border-border p-2 font-mono text-sm">i18n_lang</td>
                   <td className="border border-border p-2">Eterapp</td>
-                  <td className="border border-border p-2">Language preference</td>
-                  <td className="border border-border p-2">1 year</td>
+                  <td className="border border-border p-2">{t("legal.cookies.table.purposeLanguage")}</td>
+                  <td className="border border-border p-2">{t("legal.cookies.table.durationYear")}</td>
                   <td className="border border-border p-2">{t("legal.cookies.functionalTitle")}</td>
                 </tr>
                 <tr>
                   <td className="border border-border p-2 font-mono text-sm">theme</td>
                   <td className="border border-border p-2">Eterapp</td>
-                  <td className="border border-border p-2">Theme preference (light/dark)</td>
-                  <td className="border border-border p-2">1 year</td>
+                  <td className="border border-border p-2">{t("legal.cookies.table.purposeTheme")}</td>
+                  <td className="border border-border p-2">{t("legal.cookies.table.durationYear")}</td>
                   <td className="border border-border p-2">{t("legal.cookies.functionalTitle")}</td>
                 </tr>
               </tbody>
