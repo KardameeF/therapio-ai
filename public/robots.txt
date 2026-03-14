@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Allow: /features
+Disallow: /app
+Disallow: /billing
+Disallow: /profile
+Disallow: /admin
+Disallow: /auth/
+Disallow: /reset-password
+Disallow: /success
+Disallow: /cancel
+Sitemap: https://www.eterapp.io/sitemap.xml
