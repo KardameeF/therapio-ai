@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "../components/ui/button";
-import { Check, Coins } from "lucide-react";
+import { Check, Coins, CheckCircle2 } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription } from "../components/ui/dialog";
 import { supabase } from "../lib/supabaseClient";
 import { useAuth } from "../providers/AuthProvider";
 import { useTranslation } from "react-i18next";
@@ -17,6 +18,8 @@ export function BillingPage() {
   const [savingCap, setSavingCap] = useState(false);
   const [prepaidLoading, setPrepaidLoading] = useState<number | null>(null);
   const [prepaidSuccess, setPrepaidSuccess] = useState(false);
+  const [showDowngradeDialog, setShowDowngradeDialog] = useState(false);
+  const [downgradeTarget, setDowngradeTarget] = useState<string | null>(null);
   const { user } = useAuth();
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -139,6 +142,20 @@ export function BillingPage() {
     }
   };
 
+  const promptDowngrade = (targetPlan: string) => {
+    setDowngradeTarget(targetPlan);
+    setShowDowngradeDialog(true);
+  };
+
+  const confirmDowngrade = () => {
+    if (downgradeTarget) handleDowngrade(downgradeTarget);
+    setShowDowngradeDialog(false);
+    setDowngradeTarget(null);
+  };
+
+  const PLAN_ORDER = ["first_step", "personal_growth", "expanded_horizons"] as const;
+  const currentIdx = PLAN_ORDER.indexOf(currentPlan as typeof PLAN_ORDER[number]);
+
   const handleTopUp = async (amount: number) => {
     if (!user) return;
     setPrepaidLoading(amount);
@@ -204,12 +221,13 @@ export function BillingPage() {
     </div>
 
     <div className="grid gap-4 md:gap-6" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))' }}>
-      <motion.div className="rounded-2xl border border-border bg-card p-6" custom={0} initial="hidden" animate="visible" variants={cardVariants}>
+      <motion.div className={`rounded-2xl p-6 ${currentPlan === "first_step" ? "border-2 border-primary bg-card" : "border border-border bg-card"}`} custom={0} initial="hidden" animate="visible" variants={cardVariants}>
         <div className="mb-4">
           <h3 className="text-base font-semibold flex items-center justify-between">
             <span>{t("billing.plans.first_step.name")}</span>
             {currentPlan === "first_step" && (
-              <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+              <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
+                <CheckCircle2 className="w-3.5 h-3.5" />
                 {t("billing.currentPlan")}
               </span>
             )}
@@ -223,12 +241,15 @@ export function BillingPage() {
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.aiMessages30")}</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.basicAi")}</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.history30")}</span></div>
-          {currentPlan !== "first_step" && (
+          {currentPlan === "first_step" ? (
+            <Button variant="outline" className="w-full mt-4" onClick={handleManageBilling} disabled={loading}>
+              {loading ? t("billing.loading") : t("billing.manage")}
+            </Button>
+          ) : currentIdx > 0 && (
             <Button
               variant="outline"
-              size="sm"
-              className="w-full mt-2 text-xs"
-              onClick={() => handleDowngrade("first_step")}
+              className="w-full mt-4 text-orange-500 border-orange-400/50 hover:bg-orange-500/10 hover:text-orange-500"
+              onClick={() => promptDowngrade("first_step")}
               disabled={loading}
             >
               {t("billing.downgrade")}
@@ -237,12 +258,13 @@ export function BillingPage() {
         </div>
       </motion.div>
 
-      <motion.div className="rounded-2xl border-2 border-primary bg-card p-6" custom={1} initial="hidden" animate="visible" variants={cardVariants}>
+      <motion.div className={`rounded-2xl p-6 ${currentPlan === "personal_growth" ? "border-2 border-primary bg-card" : "border border-border bg-card"}`} custom={1} initial="hidden" animate="visible" variants={cardVariants}>
         <div className="mb-4">
           <h3 className="text-base font-semibold flex items-center justify-between">
             <span>{t("billing.plans.personal_growth.name")}</span>
             {currentPlan === "personal_growth" && (
-              <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+              <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
+                <CheckCircle2 className="w-3.5 h-3.5" />
                 {t("billing.currentPlan")}
               </span>
             )}
@@ -266,15 +288,19 @@ export function BillingPage() {
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.tasks")}</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.history90")}</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.prioritySupport")}</span></div>
-          <Button onClick={() => handleUpgrade("personal_growth")} disabled={loading || currentPlan === "personal_growth"} className="w-full mt-4">
-            {loading ? t("billing.loading") : currentPlan === "personal_growth" ? t("billing.currentPlan") : t("billing.choosePlan")}
-          </Button>
-          {currentPlan === "expanded_horizons" && (
+          {currentPlan === "personal_growth" ? (
+            <Button variant="outline" className="w-full mt-4" onClick={handleManageBilling} disabled={loading}>
+              {loading ? t("billing.loading") : t("billing.manage")}
+            </Button>
+          ) : currentIdx < 1 ? (
+            <Button onClick={() => handleUpgrade("personal_growth")} disabled={loading} className="w-full mt-4">
+              {loading ? t("billing.loading") : t("billing.upgrade")}
+            </Button>
+          ) : (
             <Button
               variant="outline"
-              size="sm"
-              className="w-full mt-2 text-xs"
-              onClick={() => handleDowngrade("personal_growth")}
+              className="w-full mt-4 text-orange-500 border-orange-400/50 hover:bg-orange-500/10 hover:text-orange-500"
+              onClick={() => promptDowngrade("personal_growth")}
               disabled={loading}
             >
               {t("billing.downgrade")}
@@ -283,12 +309,13 @@ export function BillingPage() {
         </div>
       </motion.div>
 
-      <motion.div className="rounded-2xl border border-border bg-card p-6" custom={2} initial="hidden" animate="visible" variants={cardVariants}>
+      <motion.div className={`rounded-2xl p-6 ${currentPlan === "expanded_horizons" ? "border-2 border-primary bg-card" : "border border-border bg-card"}`} custom={2} initial="hidden" animate="visible" variants={cardVariants}>
         <div className="mb-4">
           <h3 className="text-base font-semibold flex items-center justify-between">
             <span>{t("billing.plans.expanded_horizons.name")}</span>
             {currentPlan === "expanded_horizons" && (
-              <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+              <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
+                <CheckCircle2 className="w-3.5 h-3.5" />
                 {t("billing.currentPlan")}
               </span>
             )}
@@ -314,9 +341,15 @@ export function BillingPage() {
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.voiceAssistant")}</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.history180")}</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.prioritySupport247")}</span></div>
-          <Button onClick={() => handleUpgrade("expanded_horizons")} disabled={loading || currentPlan === "expanded_horizons"} className="w-full mt-4">
-            {loading ? t("billing.loading") : currentPlan === "expanded_horizons" ? t("billing.currentPlan") : t("billing.choosePlan")}
-          </Button>
+          {currentPlan === "expanded_horizons" ? (
+            <Button variant="outline" className="w-full mt-4" onClick={handleManageBilling} disabled={loading}>
+              {loading ? t("billing.loading") : t("billing.manage")}
+            </Button>
+          ) : (
+            <Button onClick={() => handleUpgrade("expanded_horizons")} disabled={loading} className="w-full mt-4">
+              {loading ? t("billing.loading") : t("billing.upgrade")}
+            </Button>
+          )}
         </div>
       </motion.div>
     </div>
@@ -396,6 +429,23 @@ export function BillingPage() {
     <p className="text-xs text-muted-foreground text-center mt-8 px-4">
       {t("billing.disclaimer")}
     </p>
+
+    <Dialog open={showDowngradeDialog} onOpenChange={setShowDowngradeDialog}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{t("billing.downgradeTitle")}</DialogTitle>
+          <DialogDescription>{t("billing.downgradeWarning")}</DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => setShowDowngradeDialog(false)}>
+            {t("billing.cancel")}
+          </Button>
+          <Button variant="destructive" onClick={confirmDowngrade}>
+            {t("billing.confirmDowngrade")}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
     </div>
   );
 }
