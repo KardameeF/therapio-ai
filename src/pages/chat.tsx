@@ -70,7 +70,6 @@ export function ChatPage() {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [profileOpen, setProfileOpen] = useState(false);
   const [userEmail, setUserEmail] = useState<string>("");
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
@@ -100,7 +99,6 @@ export function ChatPage() {
   const voiceRecognitionRef = useRef<SpeechRecognition | null>(null);
   const voiceAudioRef = useRef<HTMLAudioElement | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const profilePopupRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -152,16 +150,6 @@ export function ChatPage() {
     }, 3500);
     return () => clearInterval(interval);
   }, []);
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (profileOpen && profilePopupRef.current && !profilePopupRef.current.contains(e.target as Node)) {
-        setProfileOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [profileOpen]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -806,143 +794,77 @@ export function ChatPage() {
           )}
         </div>
 
-        {/* Navigation */}
-        <div className={`shrink-0 ${sidebarCollapsed ? "px-1 py-2" : "px-3 py-2"}`}>
-          <div className="h-px bg-border/50 mb-2" />
-          <div className="space-y-1">
-            <Link
-              to="/billing"
-              title={sidebarCollapsed ? t("nav.billing") : undefined}
-              onClick={() => setSidebarOpen(false)}
-              className={`flex items-center rounded-lg text-xs font-medium transition-all duration-200 ${
-                sidebarCollapsed
-                  ? "justify-center w-10 h-10 mx-auto text-muted-foreground hover:bg-secondary hover:text-foreground"
-                  : "gap-3 px-2 py-2 text-muted-foreground hover:text-primary hover:bg-primary/5"
-              }`}
-            >
-              <CreditCard className="h-4 w-4 shrink-0" />
-              {!sidebarCollapsed && t("nav.billing")}
-            </Link>
-            <Link
-              to="/profile"
-              title={sidebarCollapsed ? t("nav.profile") : undefined}
-              onClick={() => setSidebarOpen(false)}
-              className={`flex items-center rounded-lg text-xs font-medium transition-all duration-200 ${
-                sidebarCollapsed
-                  ? "justify-center w-10 h-10 mx-auto text-muted-foreground hover:bg-secondary hover:text-foreground"
-                  : "gap-3 px-2 py-2 text-muted-foreground hover:text-primary hover:bg-primary/5"
-              }`}
-            >
-              <User className="h-4 w-4 shrink-0" />
-              {!sidebarCollapsed && t("nav.profile")}
-            </Link>
-          </div>
-          {!sidebarCollapsed && (
-            <>
-              <div className="h-px bg-border/50 my-2" />
-              <p className="px-2 py-1 text-[10px] text-muted-foreground uppercase tracking-wider">{t("nav.legal")}</p>
-              <div className="space-y-0.5">
-                <button
-                  onClick={() => openLegal("terms")}
-                  className="flex items-center gap-3 px-2 py-1.5 text-xs text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-lg transition-colors w-full text-left"
-                >
-                  <FileText className="h-3.5 w-3.5 shrink-0" />
-                  {t("nav.terms")}
-                </button>
-                <button
-                  onClick={() => openLegal("privacy")}
-                  className="flex items-center gap-3 px-2 py-1.5 text-xs text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-lg transition-colors w-full text-left"
-                >
-                  <FileText className="h-3.5 w-3.5 shrink-0" />
-                  {t("nav.privacy")}
-                </button>
-                <button
-                  onClick={() => openLegal("gdpr")}
-                  className="flex items-center gap-3 px-2 py-1.5 text-xs text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-lg transition-colors w-full text-left"
-                >
-                  <FileText className="h-3.5 w-3.5 shrink-0" />
-                  {t("nav.gdpr")}
-                </button>
-                <button
-                  onClick={() => openLegal("cookies")}
-                  className="flex items-center gap-3 px-2 py-1.5 text-xs text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-lg transition-colors w-full text-left"
-                >
-                  <FileText className="h-3.5 w-3.5 shrink-0" />
-                  {t("nav.cookies")}
-                </button>
-              </div>
-            </>
-          )}
-        </div>
-
-        {/* User */}
-        <div ref={profilePopupRef} className="p-3 border-t border-border relative">
-          <div
-            className={`flex items-center rounded-lg hover:bg-secondary transition-colors cursor-pointer ${sidebarCollapsed ? "justify-center p-2" : "gap-3 px-2 py-2"}`}
-            onClick={() => {
-              if (sidebarCollapsed) {
-                navigate("/profile");
-              } else {
-                setProfileOpen((o) => !o);
-              }
-            }}
-            title={t("nav.profile")}
-          >
-            <div className="w-8 h-8 rounded-full bg-secondary border border-border flex items-center justify-center shrink-0">
-              <User className="w-4 h-4 text-muted-foreground" />
-            </div>
-            {!sidebarCollapsed && (
-              <div className="flex-1 min-w-0">
-                <p className="text-xs text-muted-foreground truncate">{t("nav.profile")}</p>
-              </div>
-            )}
-          </div>
-
-          {profileOpen && (
-            <div className="absolute bottom-16 left-4 right-4 z-[100] rounded-xl border border-border bg-background p-3 space-y-2 shadow-lg">
-              {userEmail && <p className="text-xs text-muted-foreground truncate px-2">{userEmail}</p>}
-              <Link to="/profile" className="block text-sm px-2 py-1.5 rounded-lg hover:bg-secondary" onClick={() => setProfileOpen(false)}>
-                {t("profile.title")}
-              </Link>
-              <Link to="/billing" className="block text-sm px-2 py-1.5 rounded-lg hover:bg-secondary" onClick={() => setProfileOpen(false)}>
-                {t("nav.billing")}
-              </Link>
-              <Link to="/features" className="block text-sm px-2 py-1.5 rounded-lg hover:bg-secondary" onClick={() => setProfileOpen(false)}>
-                {t("nav.features")}
-              </Link>
-              <div className="h-px bg-border/50 my-1" />
-              <p className="text-[10px] text-muted-foreground px-2 pt-1 uppercase tracking-wider">{t("nav.legal")}</p>
+        {/* Legal */}
+        {!sidebarCollapsed && (
+          <div className="shrink-0 px-3 pt-2">
+            <div className="h-px bg-border/50 mb-2" />
+            <p className="px-2 py-1 text-[10px] text-muted-foreground uppercase tracking-wider">{t("nav.legal")}</p>
+            <div className="space-y-0.5">
               <button
-                className="block text-xs px-2 py-1 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground w-full text-left"
-                onClick={() => { setProfileOpen(false); openLegal("privacy"); }}
+                onClick={() => openLegal("terms")}
+                className="flex items-center gap-3 px-2 py-1.5 text-xs text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-lg transition-colors w-full text-left"
               >
+                <FileText className="h-3.5 w-3.5 shrink-0" />
+                {t("nav.terms")}
+              </button>
+              <button
+                onClick={() => openLegal("privacy")}
+                className="flex items-center gap-3 px-2 py-1.5 text-xs text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-lg transition-colors w-full text-left"
+              >
+                <FileText className="h-3.5 w-3.5 shrink-0" />
                 {t("nav.privacy")}
               </button>
               <button
-                className="block text-xs px-2 py-1 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground w-full text-left"
-                onClick={() => { setProfileOpen(false); openLegal("cookies"); }}
+                onClick={() => openLegal("gdpr")}
+                className="flex items-center gap-3 px-2 py-1.5 text-xs text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-lg transition-colors w-full text-left"
               >
+                <FileText className="h-3.5 w-3.5 shrink-0" />
+                {t("nav.gdpr")}
+              </button>
+              <button
+                onClick={() => openLegal("cookies")}
+                className="flex items-center gap-3 px-2 py-1.5 text-xs text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-lg transition-colors w-full text-left"
+              >
+                <FileText className="h-3.5 w-3.5 shrink-0" />
                 {t("nav.cookies")}
               </button>
-              <button
-                className="block text-xs px-2 py-1 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground w-full text-left"
-                onClick={() => { setProfileOpen(false); openLegal("terms"); }}
-              >
-                {t("nav.terms")}
-              </button>
-              <div className="h-px bg-border my-1" />
-              <button
-                className="w-full flex items-center gap-2 text-sm px-2 py-1.5 rounded-lg hover:bg-destructive/10 text-destructive"
-                onClick={async () => {
-                  await supabase.auth.signOut();
-                  navigate("/");
-                }}
-              >
-                <LogOut className="w-4 h-4" />
-                {t("auth.logout")}
-              </button>
             </div>
+          </div>
+        )}
+
+        {/* Bottom nav */}
+        <div className="shrink-0 p-3 border-t border-border">
+          {!sidebarCollapsed && userEmail && (
+            <p className="text-[10px] text-muted-foreground truncate px-2 mb-2">{userEmail}</p>
           )}
+          <div className={`flex ${sidebarCollapsed ? "flex-col items-center gap-1" : "items-center gap-1"}`}>
+            <Link
+              to="/billing"
+              title={t("nav.billing")}
+              onClick={() => setSidebarOpen(false)}
+              className="flex items-center justify-center w-8 h-8 rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
+            >
+              <CreditCard className="h-4 w-4" />
+            </Link>
+            <Link
+              to="/profile"
+              title={t("nav.profile")}
+              onClick={() => setSidebarOpen(false)}
+              className="flex items-center justify-center w-8 h-8 rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
+            >
+              <User className="h-4 w-4" />
+            </Link>
+            <button
+              title={t("auth.logout")}
+              onClick={async () => {
+                await supabase.auth.signOut();
+                navigate("/");
+              }}
+              className="flex items-center justify-center w-8 h-8 rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
+            >
+              <LogOut className="h-4 w-4" />
+            </button>
+          </div>
         </div>
       </motion.aside>
 
