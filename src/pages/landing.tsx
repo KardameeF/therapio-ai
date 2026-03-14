@@ -269,7 +269,7 @@ export function LandingPage() {
             ].map(({ step, titleKey, descKey }) => (
               <div key={step} className="text-center space-y-3">
                 <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
-                  <span className="text-primary font-bold text-sm">{step}</span>
+                  <span className="text-foreground font-bold text-sm">{step}</span>
                 </div>
                 <h3 className="font-semibold">{t(titleKey)}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{t(descKey)}</p>
@@ -313,11 +313,11 @@ export function LandingPage() {
             {t("footer.cookies")}
           </button>
         </div>
-        <p className="text-xs text-muted-foreground/70 mt-2">
+        <p className="text-xs text-muted-foreground mt-2">
           Защитено от reCAPTCHA —{" "}
-          <a href="https://policies.google.com/privacy" className="underline hover:text-muted-foreground transition-colors">Поверителност</a>
+          <a href="https://policies.google.com/privacy" className="underline text-muted-foreground hover:text-foreground transition-colors">Поверителност</a>
           {" "}и{" "}
-          <a href="https://policies.google.com/terms" className="underline hover:text-muted-foreground transition-colors">Условия</a>
+          <a href="https://policies.google.com/terms" className="underline text-muted-foreground hover:text-foreground transition-colors">Условия</a>
         </p>
       </footer>
 
