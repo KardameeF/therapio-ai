@@ -204,20 +204,22 @@ export function BillingPage() {
       </div>
     )}
 
-    <div className="flex items-center justify-center gap-3 mb-8">
-      <span className={`text-sm ${billingInterval === "month" ? "text-foreground font-medium" : "text-muted-foreground"}`}>
-        {t("billing.monthly")}
-      </span>
+    <div className="flex items-center justify-center gap-2 mb-8">
       <button
-        onClick={() => setBillingInterval(prev => prev === "month" ? "year" : "month")}
-        className={`relative w-12 h-6 rounded-full transition-colors duration-200 ${billingInterval === "year" ? "bg-primary" : "bg-muted"}`}
+        onClick={() => setBillingInterval("month")}
+        className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors duration-200 ${billingInterval === "month" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80"}`}
       >
-        <span className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow-sm transition-transform duration-200 ${billingInterval === "year" ? "left-0 translate-x-7" : "left-0 translate-x-1"}`} />
+        {t("billing.monthly")}
       </button>
-      <span className={`text-sm ${billingInterval === "year" ? "text-foreground font-medium" : "text-muted-foreground"}`}>
+      <button
+        onClick={() => setBillingInterval("year")}
+        className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors duration-200 flex items-center gap-1.5 ${billingInterval === "year" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80"}`}
+      >
         {t("billing.yearly")}
-        <span className="ml-1 text-xs text-green-500 font-medium">{t("billing.yearlyDiscount")}</span>
-      </span>
+        <span className="text-xs font-semibold text-green-500 bg-green-500/10 px-1.5 py-0.5 rounded-full">
+          {t("billing.yearlyDiscount")}
+        </span>
+      </button>
     </div>
 
     <div className="grid gap-4 md:gap-6" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))' }}>
