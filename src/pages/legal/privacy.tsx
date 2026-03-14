@@ -7,95 +7,95 @@ export function PrivacyPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Privacy Policy</h1>
-        <p className="text-muted-foreground">Last updated: 14 March 2026</p>
+        <h1 className="text-3xl font-bold">{t("legal.pageTitle")}</h1>
+        <p className="text-muted-foreground">{t("legal.lastUpdated")}: {t("legal.lastUpdatedDate")}</p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>1. Data Controller</CardTitle>
+          <CardTitle>{t("legal.dataController.title")}</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
-          <p>The data controller responsible for your personal data is:</p>
+          <p>{t("legal.dataController.intro")}</p>
           <p>
             [COMPANY NAME], UIC: [UIC NUMBER]<br />
-            Sofia, Bulgaria<br />
-            Email: privacy@eterapp.io
+            {t("legal.dataController.address")}<br />
+            {t("legal.dataController.email")}: privacy@eterapp.io
           </p>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>2. What Data We Collect</CardTitle>
+          <CardTitle>{t("legal.whatWeCollect.title")}</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
-          <h4>Account data</h4>
+          <h4>{t("legal.whatWeCollect.accountData")}</h4>
           <ul>
-            <li>Email address</li>
-            <li>Password (stored in hashed form only — we never see or store your plaintext password)</li>
-            <li>Display name (optional)</li>
+            <li>{t("legal.whatWeCollect.email")}</li>
+            <li>{t("legal.whatWeCollect.password")}</li>
+            <li>{t("legal.whatWeCollect.displayName")}</li>
           </ul>
 
-          <h4>Chat content</h4>
+          <h4>{t("legal.whatWeCollect.chatContent")}</h4>
           <ul>
-            <li>Messages exchanged with the AI assistant</li>
-            <li>Session notes and tasks generated from conversations</li>
+            <li>{t("legal.whatWeCollect.chatMessages")}</li>
+            <li>{t("legal.whatWeCollect.sessionNotes")}</li>
           </ul>
           <p>
-            <strong>Important:</strong> Chat messages may contain emotional or health-related information. This constitutes special category data under Article 9 of GDPR. We process this data only with your explicit consent.
+            <strong>Important:</strong> {t("legal.whatWeCollect.chatWarning")}
           </p>
 
-          <h4>Subscription and payment data</h4>
+          <h4>{t("legal.whatWeCollect.subscriptionData")}</h4>
           <ul>
-            <li>Current subscription plan</li>
-            <li>Payment history and billing information (processed and stored by Stripe — we do not store your card details)</li>
-            <li>Prepaid credit balance</li>
+            <li>{t("legal.whatWeCollect.currentPlan")}</li>
+            <li>{t("legal.whatWeCollect.paymentHistory")}</li>
+            <li>{t("legal.whatWeCollect.creditBalance")}</li>
           </ul>
 
-          <h4>Technical data</h4>
+          <h4>{t("legal.whatWeCollect.technicalData")}</h4>
           <ul>
-            <li>IP address</li>
-            <li>Browser type and version</li>
-            <li>Device information</li>
-            <li>Usage preferences (language, theme)</li>
+            <li>{t("legal.whatWeCollect.ipAddress")}</li>
+            <li>{t("legal.whatWeCollect.browserInfo")}</li>
+            <li>{t("legal.whatWeCollect.deviceInfo")}</li>
+            <li>{t("legal.whatWeCollect.usagePrefs")}</li>
           </ul>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>3. Legal Basis for Processing</CardTitle>
+          <CardTitle>{t("legal.legalBasis.title")}</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
-          <p>We process your personal data under the following legal bases as defined by the General Data Protection Regulation (GDPR):</p>
+          <p>{t("legal.legalBasis.intro")}</p>
 
-          <h4>Performance of a contract — Article 6(1)(b)</h4>
-          <p>Processing necessary to provide the Eterapp service, including account authentication, subscription management, and delivering core functionality.</p>
+          <h4>{t("legal.legalBasis.contractTitle")}</h4>
+          <p>{t("legal.legalBasis.contractDesc")}</p>
 
-          <h4>Explicit consent — Article 6(1)(a) and Article 9(2)(a)</h4>
-          <p>Processing of chat content and any emotional or health-related data it may contain. You provide this consent when you use the chat feature. You may withdraw consent at any time (see Section 7 below).</p>
+          <h4>{t("legal.legalBasis.consentTitle")}</h4>
+          <p>{t("legal.legalBasis.consentDesc")}</p>
 
-          <h4>Legitimate interest — Article 6(1)(f)</h4>
-          <p>Processing necessary for security measures, fraud prevention, and service reliability. Our legitimate interest does not override your fundamental rights and freedoms.</p>
+          <h4>{t("legal.legalBasis.legitimateTitle")}</h4>
+          <p>{t("legal.legalBasis.legitimateDesc")}</p>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>4. Third-Party Processors</CardTitle>
+          <CardTitle>{t("legal.processors.title")}</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
-          <p>We share your data with the following categories of third-party processors, each bound by data processing agreements:</p>
+          <p>{t("legal.processors.intro")}</p>
 
           <div className="overflow-x-auto">
             <table className="w-full border-collapse border border-border">
               <thead>
                 <tr className="bg-muted">
-                  <th className="border border-border p-2 text-left">Category</th>
-                  <th className="border border-border p-2 text-left">Company</th>
-                  <th className="border border-border p-2 text-left">Region</th>
-                  <th className="border border-border p-2 text-left">Legal basis</th>
+                  <th className="border border-border p-2 text-left">{t("legal.processors.category")}</th>
+                  <th className="border border-border p-2 text-left">{t("legal.processors.company")}</th>
+                  <th className="border border-border p-2 text-left">{t("legal.processors.region")}</th>
+                  <th className="border border-border p-2 text-left">{t("legal.processors.legalBasis")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -146,68 +146,65 @@ export function PrivacyPage() {
           </div>
 
           <p className="mt-4">
-            For detailed privacy policies of each processor, see the links in our <a href="/legal/cookies">Cookie Policy</a> and <a href="/legal/gdpr">GDPR Compliance</a> pages.
+            {t("legal.processors.moreInfo")}{" "}
+            <a href="/legal/cookies">Cookie Policy</a> / <a href="/legal/gdpr">GDPR Compliance</a>.
           </p>
           <p>
-            <strong>Note:</strong> OpenAI does not use data submitted via the API to train its models.
+            <strong>Note:</strong> {t("legal.processors.openAiNote")}
           </p>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>5. Automated Decision-Making</CardTitle>
+          <CardTitle>{t("legal.automatedDecisions.title")}</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
-          <p>
-            Eterapp uses artificial intelligence to generate conversational responses, session notes, and tasks based on your chat messages.
-          </p>
-          <p>
-            This AI processing does <strong>not</strong> constitute automated decision-making that produces legal effects or similarly significantly affects you within the meaning of Article 22 GDPR. No profiling is carried out.
-          </p>
+          <p>{t("legal.automatedDecisions.p1")}</p>
+          <p>{t("legal.automatedDecisions.p2")}</p>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>6. Data Retention</CardTitle>
+          <CardTitle>{t("legal.dataRetention.title")}</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
           <ul>
-            <li><strong>Account data:</strong> Retained until you delete your account.</li>
-            <li><strong>Chat history:</strong> Retained until deleted by you or upon account deletion.</li>
-            <li><strong>Payment and billing data:</strong> Retained for 5 years to comply with tax and accounting obligations under Bulgarian law.</li>
-            <li><strong>Technical logs:</strong> Retained for 90 days, then automatically deleted.</li>
+            <li>{t("legal.dataRetention.accountData")}</li>
+            <li>{t("legal.dataRetention.chatHistory")}</li>
+            <li>{t("legal.dataRetention.paymentData")}</li>
+            <li>{t("legal.dataRetention.technicalLogs")}</li>
           </ul>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>7. Your Rights</CardTitle>
+          <CardTitle>{t("legal.yourRights.title")}</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
-          <p>Under GDPR Articles 15–22, you have the right to:</p>
+          <p>{t("legal.yourRights.intro")}</p>
           <ul>
-            <li><strong>Access</strong> — Obtain a copy of the personal data we hold about you (Art. 15)</li>
-            <li><strong>Rectification</strong> — Correct inaccurate or incomplete data (Art. 16)</li>
-            <li><strong>Erasure</strong> — Request deletion of your data ("right to be forgotten") (Art. 17)</li>
-            <li><strong>Restriction</strong> — Request restricted processing in certain circumstances (Art. 18)</li>
-            <li><strong>Data portability</strong> — Receive your data in a structured, machine-readable format (Art. 20)</li>
-            <li><strong>Object</strong> — Object to processing based on legitimate interest (Art. 21)</li>
-            <li><strong>Withdraw consent</strong> — Withdraw your consent at any time without affecting the lawfulness of prior processing</li>
+            <li>{t("legal.yourRights.access")}</li>
+            <li>{t("legal.yourRights.rectification")}</li>
+            <li>{t("legal.yourRights.erasure")}</li>
+            <li>{t("legal.yourRights.restriction")}</li>
+            <li>{t("legal.yourRights.portability")}</li>
+            <li>{t("legal.yourRights.object")}</li>
+            <li>{t("legal.yourRights.withdraw")}</li>
           </ul>
 
-          <h4>How to withdraw consent or delete your data</h4>
+          <h4>{t("legal.yourRights.howToTitle")}</h4>
           <ul>
-            <li>In the app: Settings → Delete account</li>
-            <li>By email: send a request to privacy@eterapp.io</li>
+            <li>{t("legal.yourRights.howToApp")}</li>
+            <li>{t("legal.yourRights.howToEmail")}</li>
           </ul>
 
-          <p>We will respond to your request within one month of receipt (GDPR Article 12(3)).</p>
+          <p>{t("legal.yourRights.responseTime")}</p>
 
-          <h4>Right to lodge a complaint</h4>
-          <p>You have the right to lodge a complaint with the Commission for Personal Data Protection (CPDP/КЗЛД):</p>
+          <h4>{t("legal.yourRights.complaintTitle")}</h4>
+          <p>{t("legal.yourRights.complaintIntro")}</p>
           <ul>
             <li>Website: <a href="https://www.cpdp.bg" target="_blank" rel="noopener noreferrer">cpdp.bg</a></li>
             <li>Phone: +359 2 915 3518</li>
@@ -217,54 +214,44 @@ export function PrivacyPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>8. Children</CardTitle>
+          <CardTitle>{t("legal.children.title")}</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
-          <p>
-            In accordance with Article 25c of the Bulgarian Personal Data Protection Act (ЗЗЛД), the minimum age for consenting to data processing in connection with information society services is <strong>14 years</strong>.
-          </p>
-          <p>
-            Children under the age of 14 may only use Eterapp with the consent of a parent or legal guardian. If we become aware that we have collected data from a child under 14 without appropriate parental consent, we will delete that data promptly.
-          </p>
+          <p>{t("legal.children.p1")}</p>
+          <p>{t("legal.children.p2")}</p>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>9. Crisis Situations</CardTitle>
+          <CardTitle>{t("legal.crisis.title")}</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
-          <p>
-            Eterapp is not a crisis service and does not replace professional emergency help. If you or someone you know is in a crisis situation or experiencing thoughts of self-harm, please contact:
-          </p>
+          <p>{t("legal.crisis.p1")}</p>
           <ul>
-            <li><strong>Emergency Services:</strong> 112</li>
-            <li><strong>National Child Helpline:</strong> 116 111</li>
+            <li><strong>{t("legal.crisis.emergency")}</strong></li>
+            <li><strong>{t("legal.crisis.childLine")}</strong></li>
           </ul>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>10. Changes to This Policy</CardTitle>
+          <CardTitle>{t("legal.policyChanges.title")}</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
-          <p>
-            We may update this Privacy Policy from time to time. We will notify you of material changes by posting the updated policy on this page and updating the "Last updated" date. For significant changes, we may also notify you via email.
-          </p>
-          <p>
-            Your continued use of Eterapp after changes take effect constitutes acceptance of the revised policy.
-          </p>
+          <p>{t("legal.policyChanges.p1")}</p>
+          <p>{t("legal.policyChanges.p2")}</p>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>11. Contact</CardTitle>
+          <CardTitle>{t("legal.contact.title")}</CardTitle>
         </CardHeader>
         <CardContent className="prose dark:prose-invert">
-          <p>For any questions about this Privacy Policy or our data practices:</p>
-          <p>Email: dpo@eterapp.io</p>
+          <p>{t("legal.contact.p1")}</p>
+          <p>{t("legal.contact.email")}</p>
         </CardContent>
       </Card>
     </div>
