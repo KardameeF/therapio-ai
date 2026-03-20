@@ -34,27 +34,36 @@ export function BillingPage() {
 
   useEffect(() => {
     if (!user) return;
-    supabase
-      .from("subscriptions")
-      .select("plan_type, status")
-      .eq("user_id", user.id)
-      .single()
-      .then(({ data }) => {
-        if (data?.status === "active") setCurrentPlan(data.plan_type);
-      });
+    const loadBilling = async () => {
+      const [{ data: subData }, { data: profileData }] = await Promise.all([
+        supabase
+          .from("subscriptions")
+          .select("plan_type, status")
+          .eq("user_id", user.id)
+          .single(),
+        supabase
+          .from("profiles")
+          .select("prepaid_credits, budget_cap, subscription_plan")
+          .eq("id", user.id)
+          .single(),
+      ]);
 
-    supabase
-      .from("profiles")
-      .select("prepaid_credits, budget_cap")
-      .eq("id", user.id)
-      .single()
-      .then(({ data }) => {
-        if (data) {
-          setPrepaidCredits(data.prepaid_credits ?? 0);
-          setBudgetCap(data.budget_cap ?? 0);
-          setBudgetCapInput(String((data.budget_cap ?? 0) / 100));
-        }
-      });
+      if (subData?.status === "active") {
+        setCurrentPlan(subData.plan_type);
+      } else if (
+        profileData?.subscription_plan &&
+        profileData.subscription_plan !== "first_step"
+      ) {
+        setCurrentPlan(profileData.subscription_plan);
+      }
+
+      if (profileData) {
+        setPrepaidCredits(profileData.prepaid_credits ?? 0);
+        setBudgetCap(profileData.budget_cap ?? 0);
+        setBudgetCapInput(String((profileData.budget_cap ?? 0) / 100));
+      }
+    };
+    loadBilling();
   }, [user]);
 
   const EUR_TO_BGN = 1.95583;
