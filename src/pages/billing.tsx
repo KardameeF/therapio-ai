@@ -243,11 +243,7 @@ export function BillingPage() {
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.aiMessages30")}</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.basicAi")}</span></div>
           <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" /><span>{t("billing.features.history30")}</span></div>
-          {currentPlan === "first_step" ? (
-            <Button variant="outline" className="w-full mt-4" onClick={handleManageBilling} disabled={loading}>
-              {loading ? t("billing.loading") : t("billing.manage")}
-            </Button>
-          ) : currentIdx > 0 && (
+          {currentPlan !== "first_step" && currentIdx > 0 && (
             <Button
               variant="outline"
               className="w-full mt-4 text-orange-500 border-orange-400/50 hover:bg-orange-500/10 hover:text-orange-500"
@@ -264,12 +260,17 @@ export function BillingPage() {
         <div className="mb-4">
           <h3 className="text-base font-semibold flex items-center justify-between">
             <span>{t("billing.plans.personal_growth.name")}</span>
-            {currentPlan === "personal_growth" && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                {t("billing.currentPlan")}
+            <div className="flex items-center gap-1">
+              <span className="inline-flex items-center gap-1 rounded-full bg-green-500/15 px-2.5 py-0.5 text-xs font-semibold text-green-500">
+                ⭐ {t("billing.recommended")}
               </span>
-            )}
+              {currentPlan === "personal_growth" && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  {t("billing.currentPlan")}
+                </span>
+              )}
+            </div>
           </h3>
           <div className="mt-1">
             <p className="text-sm text-muted-foreground">
