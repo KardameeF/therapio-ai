@@ -49,7 +49,7 @@ export function AppLayout() {
             <button
               onClick={() => setIsCollapsed((c) => !c)}
               title={isCollapsed ? "Разгъни" : "Свий"}
-              className={`mb-2 flex items-center justify-center h-8 w-8 rounded-lg hover:bg-secondary text-muted-foreground transition-colors ${isCollapsed ? "mx-auto" : ""}`}
+              className={`mb-2 flex items-center justify-center h-10 w-10 rounded-lg hover:bg-secondary text-muted-foreground transition-colors ${isCollapsed ? "mx-auto" : ""}`}
             >
               {isCollapsed
                 ? <PanelLeftOpen className="h-4 w-4" />
@@ -64,7 +64,7 @@ export function AppLayout() {
                 className={cn(
                   "flex items-center rounded-xl text-sm font-medium mb-2 transition-colors duration-200",
                   "bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20",
-                  isCollapsed ? "justify-center w-10 h-10 mx-auto" : "gap-3 px-3 py-2.5"
+                  isCollapsed ? "justify-center w-11 h-11 mx-auto" : "gap-3 px-3 py-2.5"
                 )}
               >
                 <MessageCircle className="w-4 h-4 shrink-0" />
@@ -83,7 +83,7 @@ export function AppLayout() {
                   className={({ isActive }) =>
                     cn(
                       "flex items-center rounded-xl text-sm font-medium transition-all duration-200",
-                      isCollapsed ? "justify-center w-10 h-10 mx-auto" : "gap-3 px-4 py-3",
+                      isCollapsed ? "justify-center w-11 h-11 mx-auto" : "gap-3 px-4 py-3",
                       isActive
                         ? "bg-secondary text-foreground"
                         : "text-foreground-muted hover:bg-secondary hover:text-foreground"
@@ -104,7 +104,7 @@ export function AppLayout() {
                 className={({ isActive }) =>
                   cn(
                     "flex items-center rounded-xl text-sm font-medium transition-all duration-200",
-                    isCollapsed ? "justify-center w-10 h-10 mx-auto" : "gap-3 px-4 py-3",
+                    isCollapsed ? "justify-center w-11 h-11 mx-auto" : "gap-3 px-4 py-3",
                     isActive
                       ? "bg-destructive/10 text-destructive"
                       : "text-muted-foreground hover:bg-destructive/5 hover:text-destructive"
@@ -125,28 +125,28 @@ export function AppLayout() {
                 <div className="space-y-1">
                   <button
                     onClick={() => openLegal("terms")}
-                    className="flex items-center gap-3 px-4 py-2 text-xs text-foreground-muted hover:text-primary hover:bg-primary/5 rounded-lg transition-colors w-full text-left"
+                    className="flex items-center gap-3 px-4 py-2.5 text-xs text-foreground-muted hover:text-primary hover:bg-primary/5 rounded-lg transition-colors w-full text-left"
                   >
                     <FileText className="h-4 w-4" />
                     {t("nav.terms")}
                   </button>
                   <button
                     onClick={() => openLegal("privacy")}
-                    className="flex items-center gap-3 px-4 py-2 text-xs text-foreground-muted hover:text-primary hover:bg-primary/5 rounded-lg transition-colors w-full text-left"
+                    className="flex items-center gap-3 px-4 py-2.5 text-xs text-foreground-muted hover:text-primary hover:bg-primary/5 rounded-lg transition-colors w-full text-left"
                   >
                     <FileText className="h-4 w-4" />
                     {t("nav.privacy")}
                   </button>
                   <button
                     onClick={() => openLegal("gdpr")}
-                    className="flex items-center gap-3 px-4 py-2 text-xs text-foreground-muted hover:text-primary hover:bg-primary/5 rounded-lg transition-colors w-full text-left"
+                    className="flex items-center gap-3 px-4 py-2.5 text-xs text-foreground-muted hover:text-primary hover:bg-primary/5 rounded-lg transition-colors w-full text-left"
                   >
                     <FileText className="h-4 w-4" />
                     {t("nav.gdpr")}
                   </button>
                   <button
                     onClick={() => openLegal("cookies")}
-                    className="flex items-center gap-3 px-4 py-2 text-xs text-foreground-muted hover:text-primary hover:bg-primary/5 rounded-lg transition-colors w-full text-left"
+                    className="flex items-center gap-3 px-4 py-2.5 text-xs text-foreground-muted hover:text-primary hover:bg-primary/5 rounded-lg transition-colors w-full text-left"
                   >
                     <FileText className="h-4 w-4" />
                     {t("nav.cookies")}

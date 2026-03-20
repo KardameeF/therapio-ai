@@ -842,17 +842,17 @@ export function ChatPage() {
               to="/billing"
               title={t("nav.billing")}
               onClick={() => setSidebarOpen(false)}
-              className="flex items-center justify-center w-8 h-8 rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
+              className="flex items-center justify-center w-10 h-10 rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
             >
-              <CreditCard className="h-4 w-4" />
+              <CreditCard className="h-5 w-5" />
             </Link>
             <Link
               to="/profile"
               title={t("nav.profile")}
               onClick={() => setSidebarOpen(false)}
-              className="flex items-center justify-center w-8 h-8 rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
+              className="flex items-center justify-center w-10 h-10 rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
             >
-              <User className="h-4 w-4" />
+              <User className="h-5 w-5" />
             </Link>
             <button
               title={t("auth.logout")}
@@ -860,9 +860,9 @@ export function ChatPage() {
                 await supabase.auth.signOut();
                 navigate("/");
               }}
-              className="flex items-center justify-center w-8 h-8 rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
+              className="flex items-center justify-center w-10 h-10 rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
             >
-              <LogOut className="h-4 w-4" />
+              <LogOut className="h-5 w-5" />
             </button>
           </div>
         </div>
@@ -886,7 +886,7 @@ export function ChatPage() {
             </button>
             <button
               onClick={() => setSidebarCollapsed((c) => !c)}
-              className="hidden md:flex p-1.5 rounded-lg hover:bg-secondary text-muted-foreground"
+              className="hidden md:flex p-2.5 rounded-lg hover:bg-secondary text-muted-foreground"
               aria-label="Toggle sidebar"
             >
               {sidebarCollapsed ? <PanelLeftOpen className="w-5 h-5" /> : <PanelLeftClose className="w-5 h-5" />}
