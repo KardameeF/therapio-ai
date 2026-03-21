@@ -142,6 +142,33 @@ async function handlePrepaidCheckout(session: Stripe.Checkout.Session) {
   }
 
   console.log(`Added ${credits} prepaid credits for user ${userId}`);
+
+  try {
+    const { data: userData } = await supabase.auth.admin.getUserById(userId);
+    const userEmail = userData?.user?.email;
+    const amountEur = parseInt(session.metadata?.amount ?? "0", 10);
+
+    if (userEmail && amountEur > 0) {
+      const newBalance = (profile?.prepaid_credits ?? 0) + credits;
+      const bgnEquiv: Record<number, string> = { 5: "9.78", 10: "19.56", 20: "39.12" };
+
+      await fetch(`${process.env.URL}/.netlify/functions/send-email`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "prepaid-success",
+          to: userEmail,
+          vars: {
+            AMOUNT_EUR: String(amountEur),
+            AMOUNT_BGN: bgnEquiv[amountEur] || String((amountEur * 1.95583).toFixed(2)),
+            CREDITS: String(newBalance),
+          },
+        }),
+      });
+    }
+  } catch (emailErr) {
+    console.error("Prepaid success email failed:", emailErr);
+  }
 }
 
 // Handle checkout.session.completed event
@@ -220,6 +247,45 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
   }
 
   console.log('Successfully synced subscription_plan to profiles for user:', userId);
+
+  try {
+    const planNames: Record<string, string> = {
+      personal_growth: "Личен Растеж",
+      expanded_horizons: "Разширени Хоризонти",
+    };
+    const planFeatures: Record<string, string[]> = {
+      personal_growth: ["500 AI съобщения на месец", "Бележки от сесии и задачи", "90 дни история на чата"],
+      expanded_horizons: ["1500 AI съобщения на месец", "Гласов асистент и аудио терапии", "180 дни история на чата"],
+    };
+
+    const { data: userData } = await supabase.auth.admin.getUserById(userId);
+    const userEmail = userData?.user?.email;
+
+    if (userEmail) {
+      const nextDate = new Date(subscription.current_period_end * 1000)
+        .toLocaleDateString("bg-BG", { day: "numeric", month: "long", year: "numeric" });
+      const features = planFeatures[planType] || ["Платени функции активирани", "", ""];
+
+      await fetch(`${process.env.URL}/.netlify/functions/send-email`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "payment-success",
+          to: userEmail,
+          vars: {
+            PLAN_NAME: planNames[planType] || planType,
+            NEXT_BILLING_DATE: nextDate,
+            FEATURE_1: features[0] || "",
+            FEATURE_2: features[1] || "",
+            FEATURE_3: features[2] || "",
+          },
+        }),
+      });
+    }
+  } catch (emailErr) {
+    console.error("Payment success email failed:", emailErr);
+  }
+
   console.log('Successfully processed checkout.session.completed for user:', userId);
 }
 
@@ -280,6 +346,28 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
       .from('profiles')
       .update({ subscription_plan: 'first_step' })
       .eq('id', userId);
+
+    try {
+      const { data: userData } = await supabase.auth.admin.getUserById(userId);
+      const userEmail = userData?.user?.email;
+
+      if (userEmail) {
+        const endDate = new Date(subscription.current_period_end * 1000)
+          .toLocaleDateString("bg-BG", { day: "numeric", month: "long", year: "numeric" });
+
+        await fetch(`${process.env.URL}/.netlify/functions/send-email`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            type: "payment-cancelled",
+            to: userEmail,
+            vars: { END_DATE: endDate },
+          }),
+        });
+      }
+    } catch (emailErr) {
+      console.error("Cancellation email failed:", emailErr);
+    }
   }
 
   console.log('Successfully processed customer.subscription.deleted for subscription:', subscription.id);

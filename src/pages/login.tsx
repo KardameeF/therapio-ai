@@ -123,6 +123,15 @@ function LoginFormInner({ defaultTab = "login" }: { defaultTab?: "login" | "regi
         if (displayName && data.user) {
           await supabase.from("profiles").update({ display_name: displayName }).eq("id", data.user.id);
         }
+        try {
+          await fetch("/.netlify/functions/send-email", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ type: "welcome", to: signupEmail, vars: {} }),
+          });
+        } catch {
+          // Welcome email failure should not block signup
+        }
         navigate(from, { replace: true });
       }
     } catch {
