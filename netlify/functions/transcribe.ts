@@ -24,14 +24,26 @@ const handler: Handler = async (event) => {
   } = await supabase.auth.getUser(token);
   if (authError || !user) return { statusCode: 401, body: "Unauthorized" };
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("subscription_plan")
-    .eq("id", user.id)
-    .single();
+  const [{ data: subscription }, { data: profile }] = await Promise.all([
+    supabase
+      .from("subscriptions")
+      .select("plan_type, status")
+      .eq("user_id", user.id)
+      .single(),
+    supabase
+      .from("profiles")
+      .select("subscription_plan")
+      .eq("id", user.id)
+      .single(),
+  ]);
 
   const allowedPlans = ["personal_growth", "expanded_horizons"];
-  if (!profile || !allowedPlans.includes(profile.subscription_plan)) {
+  const hasVoiceAccess =
+    (subscription?.status === "active" &&
+      allowedPlans.includes(subscription.plan_type)) ||
+    allowedPlans.includes(profile?.subscription_plan ?? "");
+
+  if (!hasVoiceAccess) {
     return { statusCode: 403, body: "Upgrade required" };
   }
 

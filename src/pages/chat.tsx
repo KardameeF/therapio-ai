@@ -98,6 +98,7 @@ export function ChatPage() {
   const [preferredVoice, setPreferredVoice] = useState<"alloy" | "onyx">("alloy");
   const voiceRecognitionRef = useRef<SpeechRecognition | null>(null);
   const voiceAudioRef = useRef<HTMLAudioElement | null>(null);
+  const startVoiceListeningRef = useRef<() => void>(() => {});
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -440,11 +441,13 @@ export function ChatPage() {
       audioEl.onended = () => {
         setVoiceSpeaking(false);
         URL.revokeObjectURL(url);
-        if (voiceMode) startVoiceListening();
+        if (voiceMode) startVoiceListeningRef.current();
       };
       await audioEl.play();
-    } catch {
+    } catch (err) {
+      console.error("TTS error:", err);
       setVoiceSpeaking(false);
+      if (voiceMode) startVoiceListeningRef.current();
     }
   }, [preferredVoice, voiceMode]);
 
@@ -471,12 +474,19 @@ export function ChatPage() {
       }
     };
 
-    recognition.onerror = () => setVoiceListening(false);
+    recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+      console.error("Speech recognition error:", event.error);
+      setVoiceListening(false);
+      if (event.error === "not-allowed") {
+        alert(t("chat.micPermissionDenied") || "Моля разреши достъп до микрофона в браузъра.");
+      }
+    };
     recognition.onend = () => setVoiceListening(false);
 
     setVoiceListening(true);
     recognition.start();
-  }, []);
+  }, [t]);
+  startVoiceListeningRef.current = startVoiceListening;
 
   const toggleVoiceMode = useCallback(() => {
     if (voiceMode) {

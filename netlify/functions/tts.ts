@@ -27,13 +27,26 @@ export const handler: Handler = async (event) => {
     return { statusCode: 401, body: JSON.stringify({ error: "Invalid token" }) };
   }
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("subscription_plan")
-    .eq("id", user.id)
-    .single();
+  const [{ data: subscription }, { data: profile }] = await Promise.all([
+    supabase
+      .from("subscriptions")
+      .select("plan_type, status")
+      .eq("user_id", user.id)
+      .single(),
+    supabase
+      .from("profiles")
+      .select("subscription_plan")
+      .eq("id", user.id)
+      .single(),
+  ]);
 
-  if (profile?.subscription_plan !== "expanded_horizons") {
+  const ttsPlans = ["expanded_horizons"];
+  const hasTTSAccess =
+    (subscription?.status === "active" &&
+      ttsPlans.includes(subscription.plan_type)) ||
+    ttsPlans.includes(profile?.subscription_plan ?? "");
+
+  if (!hasTTSAccess) {
     return {
       statusCode: 403,
       body: JSON.stringify({ error: "TTS requires Expanded Horizons plan" }),
